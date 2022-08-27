@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 
 
 
 4.Tatsumi
+=======
+1.aoki
+2.hagiwara
+3.iwamoto
+>>>>>>> 7536381dc518a3b99189b69d0de08b34b01dab10
