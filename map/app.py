@@ -30,7 +30,7 @@ Session(app)
 db = SQL("sqlite:///map.db")
 
 @app.route("/")
-def viaa():
+def via():
     return render_template("via.html")
 
 @app.route("/index")

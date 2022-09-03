@@ -1,8 +1,28 @@
-.via_system{
-    margin-top:4vh;
-    text-align:center;
+body{
+    font-family: "筑紫B丸ゴシック", "ヒラギノ丸ゴ ProN";
+    background-color: #F7F5F2;
 }
 
-.form-select{
-    font-size:2vw;
+select,input{
+    padding: 0rem 0.5em;
+    height: 2.5rem;
+    border-radius: 0.3rem;
+    border: 0.3px solid #8D8DAA;
+}
+
+.btn{
+    color: #ffffff;
+    padding: 0em 1em;
+    height: 2.5rem;
+    text-align: center;
+    border-radius: 0.3rem;
+    border: #F56D91;
+    background-color: #F56D91;
+}
+
+.btn:hover{
+    color: #ffffff;
+    outline: none;
+    background-color: #8D8DAA;
+    border: #F56D91;
 }
