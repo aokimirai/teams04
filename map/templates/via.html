@@ -1,21 +1,25 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    ホーム
+ホーム
 {% endblock %}
 
 {% block main %}
 <script src="/static/js/google.js"></script>
 <div class="via_system">
     <form method="POST" action="/via" style="text-align:center">
-    <div>
-        経由地
-        <select class="form-select" aria-label="Default select example" name="via">
-            <option value="1">名古屋テレビ塔</option>
-            <option value="2">大須商店街</option>
-            <option value="3">名古屋市科学館</option>
-        </select>
-    </div>
+        <div>
+            経由地
+            <select class="form-select" aria-label="Default select example" name="via">
+                <option value="1">名古屋テレビ塔</option>
+                <option value="2">大須商店街</option>
+                <option value="3">名古屋市科学館</option>
+            </select>
+        </div>
+        <div>
+            所要時間
+            <input name="limit">
+        </div>
         <div>
             目的地
             <select class="form-select" aria-label="Default select example" name="destination">
@@ -39,7 +43,9 @@
     <a href={{ url }} style="text-align:center">{{ url }}</a>
     {% endif %}
 
-    <div><p id="route-time"></p></div>
+    <div>
+        <p id="route-time"></p>
+    </div>
     <div id="map"></div>
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 </div>

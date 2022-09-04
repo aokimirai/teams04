@@ -1,6 +1,13 @@
 import os
 import time
 import cgi
+import urllib.request, json
+import urllib.parse
+import datetime
+import re
+
+endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
+api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -38,26 +45,102 @@ def index():
     return render_template("index.html")
 
 @app.route("/via", methods=["GET", "POST"])
-def via():
+def via_suggest():
+    #HTMLから値を受け取る
     place = request.form.get("via")
-    place2 = request.form.get("destination")
     means = request.form.get("means")
-    print(place)
-    print(place2)
-    latitude = 35.1706431
-    longitude = 136.8816945
-    via = db.execute("SELECT * FROM place WHERE id = ?", place)
-    print(via)
-    via_latitude = via[0]["latitude"]
-    via_longitude = via[0]["longitude"]
-    destination = db.execute("SELECT * FROM place WHERE id = ?", place2)
+    limit = request.form.get("limit")
+
+    #目的地を選択する場合はこれを使う。
+    destination = db.execute("SELECT * FROM place WHERE id = ?", place)
     destination_latitude = destination[0]["latitude"]
     destination_longitude = destination[0]["longitude"]
 
-    url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via_latitude)+","+str(via_longitude)
-    url2 = "https://maps.google.co.jp/maps?output=embed&q=名古屋駅&destination=名古屋城&travelmode=driving"
-    return render_template("via.html",url=url ,url2=url2 ,a=1)
+    suggest_via("東京駅",str(destination_latitude)+","+str(destination_longitude),means,limit)
 
-@app.route("/route")
-def route():
-    return render_template("route.html")
+    #Google Mapの経由地を含めたurlを生成
+    url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via_latitude)+","+str(via_longitude)
+    return render_template("via.html",url=url ,add_distance=add_distance ,add_duration=add_duration ,a=1)
+
+
+
+
+def suggest_via(origin,destination,means,limit):
+    via_candidate = []
+
+    #dbからデータを取り込む
+    place_db = db.execute('SELECT * FROM place')
+
+    #dbから読み取った値を一つずつ処理していく
+    #処理はroundで移動距離、移動時間を取得して足し算、足した値が入力した値より小さければlistに格納する
+    for cycle in place_db:
+        print(cycle)
+        route1 = route("名古屋駅",str(cycle['latitude'])+","+str(cycle['longitude']),means)
+        route2 = route(str(cycle['latitude'])+","+str(cycle['longitude']),destination,means)
+        add_distance = route1[0]+route2[0]
+        add_duration = route1[1]+route2[1]
+
+        #もし制限時間以内に経由できるのならばlistに加える
+        #場所が増えた場合は入力した時間の70%~100%のみ加える
+        if limit >= add_duration:
+            temp = {'add_distance' : add_distance, 'add_duration' : add_duration}
+            cycle.update(temp)
+            #cycleにはid,name,latitude,longitude,add_distance,add_durationが入っている
+            via_candidate.append(cycle)
+
+    #候補に入れた経由地の候補から一つ取り出して返す
+    return random.choice(via_candidate)
+
+
+# 引数で与えられた出発地点と目的地、移動手段から移動距離、移動時間を求める関数
+def route(origin,destination,means):
+
+    #現在時刻を取得
+    unix_time = int(time.time())
+
+    #デバッグ用-時間を表示
+    print('=====')
+    print('unixtime')
+    print(unix_time)
+    print('=====')
+
+    #GoogleApiを使ってjsonファイルを取得するための文字列を生成
+    nav_request = 'language=ja&origin={}&destination={}&departure_time={}&key={}&mode={}'.format(origin,destination,unix_time,api_key,means)
+    nav_request = urllib.parse.quote_plus(nav_request, safe='=&')
+    request = endpoint + nav_request
+
+    #デバッグ用_取得したjsonファイルを表示
+    print('')
+    print('=====')
+    print('url')
+    print(request)
+    print('=====')
+
+    #Google Maps Platform Directions APIを実行
+    response = urllib.request.urlopen(request).read()
+
+    #結果(JSON)を取得
+    directions = json.loads(response)
+    print("b")
+
+    #所要時間を取得
+    for key in directions['routes']:
+        #print(key) # titleのみ参照
+        #print(key['legs'])
+        print("a")
+        for key2 in key['legs']:
+            print('')
+            print('=====')
+            distance = key2['distance']['text']
+            if means == "driving":
+                #_in_trafficが付くと交通状態を加味した時間を取得できる。車で移動する時はこれを使う
+                duration = key2['duration_in_traffic']['text']
+                #車以外の交通状態を考えなくてよいものはこっちを使う
+            else:
+                duration = key2['duration']['text']
+            #デバッグ用＿道のりと必要時間を表示
+            print(distance)
+            print(duration)
+            print('=====')
+    #道のりと必要時間を返す
+    return distance,duration
