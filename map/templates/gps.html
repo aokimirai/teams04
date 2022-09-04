@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ホーム
+{% endblock %}
+
+{% block main %}
+<div class="center">
+    <div class="btn-margin">
+        <button id="btn" class="btn">
+            現在位置を取得する
+        </button>
+    </div>
+    <div class="txt-margin">
+        <p>緯度：<span id="latitude">???</span><span>度</span></p>
+        <p>経度：<span id="longitude">???</span><span>度</span></p>
+    </div>
+</div>
+<script src="/static/js/geo.js"></script>
+{% endblock %}

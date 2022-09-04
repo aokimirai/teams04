@@ -37,12 +37,12 @@ Session(app)
 db = SQL("sqlite:///map.db")
 
 @app.route("/")
-def via():
-    return render_template("via.html")
-
-@app.route("/index")
-def index():
+def home():
     return render_template("index.html")
+
+@app.route("/gps")
+def gps():
+    return render_template("gps.html")
 
 @app.route("/via", methods=["GET", "POST"])
 def via_suggest():
@@ -56,11 +56,17 @@ def via_suggest():
     destination_latitude = destination[0]["latitude"]
     destination_longitude = destination[0]["longitude"]
 
-    suggest_via("東京駅",str(destination_latitude)+","+str(destination_longitude),means,limit)
+    #関数を使って経由地を一つ提案
+    via = suggest_via("東京駅",str(destination_latitude)+","+str(destination_longitude),means,limit)
+    print(via)
 
     #Google Mapの経由地を含めたurlを生成
-    url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via_latitude)+","+str(via_longitude)
-    return render_template("via.html",url=url ,add_distance=add_distance ,add_duration=add_duration ,a=1)
+    #url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via_latitude)+","+str(via_longitude)
+    url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination=35.159772,136.8924791&travelmode=bicycling&waypoints=35.172339,136.908359"
+    return render_template("index.html",url=url ,a=1)
+
+
+
 
 
 
@@ -77,19 +83,24 @@ def suggest_via(origin,destination,means,limit):
         print(cycle)
         route1 = route("名古屋駅",str(cycle['latitude'])+","+str(cycle['longitude']),means)
         route2 = route(str(cycle['latitude'])+","+str(cycle['longitude']),destination,means)
-        add_distance = route1[0]+route2[0]
-        add_duration = route1[1]+route2[1]
+
+        #詰まっている為、所要時間を60分,道のりを10kmと仮定して進める
+        add_duration = 60
+        add_distance = 10
 
         #もし制限時間以内に経由できるのならばlistに加える
         #場所が増えた場合は入力した時間の70%~100%のみ加える
-        if limit >= add_duration:
+        if int(limit) >= int(add_duration):
             temp = {'add_distance' : add_distance, 'add_duration' : add_duration}
             cycle.update(temp)
             #cycleにはid,name,latitude,longitude,add_distance,add_durationが入っている
             via_candidate.append(cycle)
 
+    #候補を返す
+    return via_candidate
+
     #候補に入れた経由地の候補から一つ取り出して返す
-    return random.choice(via_candidate)
+    #return random.choice(via_candidate)
 
 
 # 引数で与えられた出発地点と目的地、移動手段から移動距離、移動時間を求める関数
