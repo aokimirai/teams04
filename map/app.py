@@ -87,9 +87,11 @@ def suggest_via(origin,destination,means,limit):
         route1 = route("名古屋駅",str(cycle['latitude'])+","+str(cycle['longitude']),means)
         route2 = route(str(cycle['latitude'])+","+str(cycle['longitude']),destination,means)
 
-        #詰まっている為、所要時間を60分,道のりを10kmと仮定して進める
-        add_duration = 60
-        add_distance = 10
+        #所要時間と移動距離を足し算する
+        add_duration = duration_function(route1[1],route2[1])
+        add_distance = distance_function(route1[0],route2[0])
+        print(add_duration)
+        print(add_distance)
 
         #もし制限時間以内に経由できるのならばlistに加える
         #場所が増えた場合は入力した時間の70%~100%のみ加える
@@ -158,3 +160,61 @@ def route(origin,destination,means):
             print('=====')
     #道のりと必要時間を返す
     return distance,duration
+
+
+#合計時間を計算する関数です
+def duration_function(time1,time2):
+    time = [time1,time2]
+    i,n,x,y,xx,yy = 0,0,0,0,0,0
+    hour,day,minutes = 0,0,0
+    while i != 2:
+        while n != len(time[i]):
+            if time[i][n] == "日":
+                #　日　が出てくるまでの数字を文字型から整数型に変換して変数に代入
+                day += int(time[i][0:n])
+                x = 1
+                xx = n+1
+            if time[i][n] == "時":
+                #　日　以降で　時間　が出てくるまでの数字を文字型から整数型に変換して変数に代入
+                hour += int(time[i][xx:n])
+                y = 1
+                yy = n+2
+            if time[i][n] == "分":
+                #　時間　以降で　分　が出てくるまでの数字を文字型から整数型に変換して変数に代入
+                minutes += int(time[i][yy:n])
+            n += 1
+        i += 1
+        x,y,n,xx,yy = 0,0,0,0,0
+
+    minutes += ((day * 24) + hour) * 60
+    print(minutes)
+    #if minutes >= 60:
+        #hour += minutes // 60
+        #minutes = minutes % 60
+    #if hour >= 24:
+        #day += hour // 24
+        #hour = hour % 24
+        # print(str(day)+'日'+str(hour)+'時間'+str(minutes)+'分')
+
+    return minutes
+
+#合計距離を計算する関数
+def distance_function(distance1,distance2):
+    distance = [distance1,distance2]
+    add_distance = 0
+    i,n,k = 0,0,0
+
+
+    #なぜか i!=2 にするとエラーが出ます。
+    while i != 1:
+        while n != len(distance[i]):
+            if distance[i][n] == "k":
+                #数字と単位(km)を分割してmへ変換。1.1のように小数点で出てくる可能性があるのでfloatにしてみました。
+                add_distance += float(distance[i].split('km')[0])*1000
+                k = 1
+            n += 1
+        if k == 0:
+            add_distance += float(distance[i].split("m")[0])
+        i += 1
+
+    return add_distance
