@@ -3,6 +3,10 @@ body{
     background-color: #F7F5F2;
 }
 
+.navbar{
+    background-color: #;
+}
+
 select,input{
     padding: 0rem 0.5em;
     height: 2.5rem;
