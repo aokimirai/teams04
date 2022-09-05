@@ -16,19 +16,18 @@
     </thead>
     <tbody>
         <script a=0></script>
-        <!-- TODO: Loop through the database entries to display them in this table -->
-        <!-- TODO: データベースエントリをループしてこのテーブルに表示します -->
+
+        {% set a = 0 %}
         {% for via in via %}
         <tr>
             <td>{{ via.name }}</td>
             <td>{{ via.add_duration }}</td>
             <td>{{ via.add_distance }}</td>
             <td>
-                <form action="/" method="POST">
-                    <button type="submit" class="btn btn-secondary bg-success">表示する</button>
-                </form>
+                <a href={{ url[a] }}>Mapで開く</a>
             </td>
         </tr>
+        {% set a = a + 1 %}
         {% endfor %}
     </tbody>
 </table>

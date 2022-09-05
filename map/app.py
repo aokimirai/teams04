@@ -7,6 +7,7 @@ import datetime
 import random
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
+api_key = 'APIkey'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -45,8 +46,9 @@ def gps():
 
 @app.route("/via", methods=["GET", "POST"])
 def via_suggest():
+    url = []
     #HTMLから値を受け取る
-    place = request.form.get("via")
+    place = request.form.get("destination")
     means = request.form.get("means")
     limit = request.form.get("limit")
 
@@ -58,10 +60,13 @@ def via_suggest():
     #関数を使って経由地を一つ提案
     via = suggest_via("東京駅",str(destination_latitude)+","+str(destination_longitude),means,limit)
 
-    #Google Mapの経由地を含めたurlを生成
-    #url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via['latitude'])+","+str(via['longitude'])
-    #return render_template("index.html",url=url,via_name=via['name'] ,duration=via['add_duration'] ,distance=via['add_distance'] ,a=1)
-    return render_template("via.html" ,via=via)
+    #GoogleMapのurlを生成してlistに追加
+    i = 0
+    while i != len(via):
+        url.append("https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via[i]['latitude'])+","+str(via[i]['longitude']))
+        i += 1
+
+    return render_template("via.html" ,via=via ,url=url)
 
 
 
