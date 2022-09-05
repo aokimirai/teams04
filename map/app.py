@@ -48,12 +48,12 @@ def gps():
 def via_suggest():
     url = []
     #HTMLから値を受け取る
-    place = request.form.get("destination")
+    destination = request.form.get("destination")
     means = request.form.get("means")
     limit = request.form.get("limit")
 
     #目的地を選択する場合はこれを使う。
-    destination = db.execute("SELECT * FROM place WHERE id = ?", place)
+    destination = db.execute("SELECT * FROM test WHERE id = ?", destination)
     destination_latitude = destination[0]["latitude"]
     destination_longitude = destination[0]["longitude"]
 
@@ -78,7 +78,7 @@ def suggest_via(origin,destination,means,limit):
     via_candidate = []
 
     #dbからデータを取り込む
-    place_db = db.execute('SELECT * FROM place')
+    place_db = db.execute('SELECT * FROM test')
 
     #dbから読み取った値を一つずつ処理していく
     #処理はroundで移動距離、移動時間を取得して足し算、足した値が入力した値より小さければlistに格納する
