@@ -9,20 +9,3 @@ select,input{
     border-radius: 0.3rem;
     border: 0.3px solid #8D8DAA;
 }
-
-.btn{
-    color: #8D8DAA;
-    padding: 0em 1em;
-    height: 2.5rem;
-    text-align: center;
-    border-radius: 0.3rem;
-    border: #F56D91;
-    background-color: #8D8DAA;
-}
-
-.btn:hover{
-    color: #ffffff;
-    outline: none;
-    background-color: #8D8DAA;
-    border: #F56D91;
-}
