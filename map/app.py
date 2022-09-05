@@ -7,7 +7,6 @@ import datetime
 import random
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -58,9 +57,6 @@ def via_suggest():
 
     #関数を使って経由地を一つ提案
     via = suggest_via("東京駅",str(destination_latitude)+","+str(destination_longitude),means,limit)
-    print(via)
-    print("---------------------------------------------")
-
 
     #Google Mapの経由地を含めたurlを生成
     #url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via['latitude'])+","+str(via['longitude'])
