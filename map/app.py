@@ -4,7 +4,7 @@ import cgi
 import urllib.request, json
 import urllib.parse
 import datetime
-import re
+import random
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
 api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
@@ -59,11 +59,13 @@ def via_suggest():
     #関数を使って経由地を一つ提案
     via = suggest_via("東京駅",str(destination_latitude)+","+str(destination_longitude),means,limit)
     print(via)
+    print("---------------------------------------------")
+
 
     #Google Mapの経由地を含めたurlを生成
-    #url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via_latitude)+","+str(via_longitude)
-    url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination=35.159772,136.8924791&travelmode=bicycling&waypoints=35.172339,136.908359"
-    return render_template("index.html",url=url ,a=1)
+    #url = "https://www.google.com/maps/dir/?api=1&origin=名古屋駅&destination="+str(destination_latitude)+","+str(destination_longitude)+"&travelmode="+ means +"&waypoints="+str(via['latitude'])+","+str(via['longitude'])
+    #return render_template("index.html",url=url,via_name=via['name'] ,duration=via['add_duration'] ,distance=via['add_distance'] ,a=1)
+    return render_template("via.html" ,via=via)
 
 
 

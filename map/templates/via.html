@@ -1,49 +1,35 @@
 {% extends "layout.html" %}
 
 {% block title %}
-ホーム
+経由地
 {% endblock %}
 
 {% block main %}
-<script src="/static/js/google.js"></script>
-<div class="via_system">
-    <form method="POST" action="/via" style="text-align:center">
-        <div>
-            経由地
-            <select class="form-select" aria-label="Default select example" name="via">
-                <option value="1">名古屋テレビ塔</option>
-                <option value="2">大須商店街</option>
-                <option value="3">名古屋市科学館</option>
-            </select>
-        </div>
-        <div>
-            所要時間
-            <input name="limit">
-        </div>
-        <div>
-            目的地
-            <select class="form-select" aria-label="Default select example" name="destination">
-                <option value="1">名古屋テレビ塔</option>
-                <option value="2">大須商店街</option>
-                <option value="3">名古屋市科学館</option>
-            </select>
-        </div>
-        <div>
-            手段
-            <select class="form-select" aria-label="Default select example" name="means">
-                <option value="driving">車</option>
-                <option value="bicycling">自転車</option>
-                <option value="walking">歩き</option>
-                <option value="transit">公共交通機関</option>
-            </select>
-        </div>
-        <button type="submit" class="btn" id="target" name="place">決定</button>
-    </form>
-    {% if a==1 %}
-    <a href={{ url }} style="text-align:center">{{ url }}</a>
-    {% endif %}
-
-    <div>
-        <p id="route-time"></p>
-    </div>
+<h2>経由地一覧</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>経由地名</th>
+            <th>所要時間</th>
+            <th>道のり</th>
+        </tr>
+    </thead>
+    <tbody>
+        <script a=0></script>
+        <!-- TODO: Loop through the database entries to display them in this table -->
+        <!-- TODO: データベースエントリをループしてこのテーブルに表示します -->
+        {% for via in via %}
+        <tr>
+            <td>{{ via.name }}</td>
+            <td>{{ via.add_duration }}</td>
+            <td>{{ via.add_distance }}</td>
+            <td>
+                <form action="/" method="POST">
+                    <button type="submit" class="btn btn-secondary bg-success">表示する</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
