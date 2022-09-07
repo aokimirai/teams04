@@ -280,6 +280,3 @@ def distance_function(distance1,distance2):
         i += 1
 
     return add_distance
-
-# 現在地の緯度、経度
-latitude = sys.stdin.readline()
