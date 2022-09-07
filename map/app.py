@@ -10,7 +10,7 @@ import requests
 import googlemaps
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
+api_key = 'APIkey'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -49,39 +49,52 @@ def gps():
 
 @app.route("/via", methods=["GET", "POST"])
 def via_suggest():
-    url = []
-    #HTMLから値を受け取る
-    destination = request.form.get("destination")
-    means = request.form.get("means")
-    limit = request.form.get("limit")
-    destination = request.form.get("destination")
-    origin = request.form.get("origin")
+    if request.method == "POST":
+        url = []
+        #HTMLから値を受け取る
+        means = request.form.get("means")
+        limit = request.form.get("limit")
+        print(limit.isdigit())
 
-    #関数を使って施設名から住所を取得
-    destination_cie = get_address(destination)
-    origin_cie = get_address(origin)
-    #関数をつかって経由地を検索数字は東京駅の座標
-    suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit)
+        if limit.isnumeric() == False:
+            return apology("数値を入力してください。", 400)
+        if not request.form.get("origin"):
+            return apology("出発地点を入力してください。",400)
+        if not request.form.get("destination"):
+            return apology("目的地を入力してください。",400)
 
-    #目的地を選択する場合はこれを使う。
-    #データベースから目的地の緯度経度を取得
-    """
-    destination = db.execute("SELECT * FROM test WHERE id = ?", destination)
-    destination_latitude = destination[0]["latitude"]
-    destination_longitude = destination[0]["longitude"]
-    """
+        origin = request.form.get("origin")
+        destination = request.form.get("destination")
+
+        #関数を使って施設名から住所を取得
+        destination_cie = get_address(destination)
+        if destination_cie == False:
+            return apology("住所が見つかりませんでした。",501)
+        origin_cie = get_address(origin)
+        if destination_cie == False:
+            return apology("住所が見つかりませんでした。",501)
+        #関数をつかって経由地を検索数字は東京駅の座標
+        suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit)
+
+        #目的地を選択する場合はこれを使う。
+        #データベースから目的地の緯度経度を取得
+        """
+        destination = db.execute("SELECT * FROM test WHERE id = ?", destination)
+        destination_latitude = destination[0]["latitude"]
+        destination_longitude = destination[0]["longitude"]
+        """
 
 
-    #関数を使って経由地を提案
-    via = suggest_via(origin,str(destination_cie[0])+","+str(destination_cie[1]),suggest_place,means,limit)
+        #関数を使って経由地を提案
+        via = suggest_via(origin,str(destination_cie[0])+","+str(destination_cie[1]),suggest_place,means,limit)
 
-    #GoogleMapのurlを生成してlistに追加
-    i = 0
-    while i != len(via):
-        url.append("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
-        i += 1
-    print(url)
-    return render_template("via.html" ,via=via ,url=url)
+        #GoogleMapのurlを生成してlistに追加
+        i = 0
+        while i != len(via):
+            url.append("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
+            i += 1
+        print(url)
+        return render_template("via.html" ,via=via ,url=url)
 
 
 #経由地候補を返す関数です。
@@ -272,7 +285,7 @@ def get_address(place):
 
     #なぜか上手くいかない...
     if answer['status'] == 'ZERO_RESULTS':
-        return apology("住所が見つかりませんでした.", 400)
+        return False
 
     #取得したデータから緯度経度を抽出し、　緯度,経度　の形にして変数に保存する
     #address = str(answer['results'][0]['geometry']['location']['lat']) + "," + str(answer['results'][0]['geometry']['location']['lng'])
