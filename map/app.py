@@ -10,7 +10,7 @@ import requests
 import googlemaps
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'APIkey'
+api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -78,7 +78,7 @@ def via_suggest():
     #GoogleMapのurlを生成してlistに追加
     i = 0
     while i != len(via):
-        url.append("https://www.google.com/maps/dir/?api=1&origin=東京駅&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
+        url.append("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
         i += 1
     print(url)
     return render_template("via.html" ,via=via ,url=url)
