@@ -70,11 +70,6 @@ def via_suggest():
     return render_template("via.html" ,via=via ,url=url)
 
 
-
-
-
-
-
 def suggest_via(origin,destination,means,limit):
     via_candidate = []
 
