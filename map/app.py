@@ -10,7 +10,7 @@ import requests
 import googlemaps
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
+api_key = 'APIkey'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
