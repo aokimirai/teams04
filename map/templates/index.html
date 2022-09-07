@@ -14,11 +14,7 @@
         </div>
         <div class="mb-3">
             目的地
-            <select class="form-select" aria-label="Default select example" name="destination">
-                <option value="1">名古屋テレビ塔</option>
-                <option value="2">大須商店街</option>
-                <option value="3">名古屋市科学館</option>
-            </select>
+            <input name="destination">
         </div>
         <div class="mb-3">
             手段
@@ -31,10 +27,6 @@
         </div>
         <button type="submit" class="btn" id="target" name="place" onclick="location.href='./via.html'">決定</button>
     </form>
-    {% if a==1 %}
-    <h2>経由地は{{ via_name }},所要時間は{{ duration }},移動距離は{{ distance }}です。</h2>
-    <a href={{ url }} style="text-align:center">{{ url }}</a>
-    {% endif %}
 
     <div>
         <p id="route-time"></p>

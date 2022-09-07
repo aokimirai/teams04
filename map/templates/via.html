@@ -17,17 +17,17 @@
     <tbody>
         <script a=0></script>
 
-        {% set a = 0 %}
+        {% set a = namespace(cnt=0) %}
         {% for via in via %}
         <tr>
             <td>{{ via.name }}</td>
-            <td>{{ via.add_duration }}分</td>
-            <td>{{ via.add_distance }}m</td>
+            <td>{{ via.add_duration }}</td>
+            <td>{{ via.add_distance }}</td>
             <td>
-                <a href={{ url[a] }}>Mapで開く</a>
+                <a href={{ url[a.cnt] }}>Mapで開く</a>
             </td>
         </tr>
-        {% set a = a + 1 %}
+        {% set a.cnt = a.cnt + 1 %}
         {% endfor %}
     </tbody>
 </table>
