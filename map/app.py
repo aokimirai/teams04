@@ -12,7 +12,6 @@ import googlemaps
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
 api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
 
-from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
@@ -37,7 +36,6 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 # SQLite データベースを使用するように CS50 ライブラリを構成する
-db = SQL("sqlite:///map.db")
 
 @app.route("/")
 def home():
@@ -153,12 +151,12 @@ def login():
         elif not request.form.get("password"):
             return apology("パスワードを入力してください", 403)
         # 入力されたユーザーネームのデータを取得
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        #rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
         # ユーザーネームとパスワードが正しいか確認
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+        #if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
             return apology("ユーザーネームまたはパスワードが無効です", 403)
         # ユーザーを記憶する
-        session["user_id"] = rows[0]["id"]
+        #session["user_id"] = rows[0]["id"]
         #メッセージ
         flash("ログインしました")
         # ホームに送る
@@ -183,8 +181,8 @@ def register():
         if not request.form.get("username"):
             return apology("ユーザーネームを入力してください", 400)
         # ユーザーネームが既に使われている
-        if len(db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))) != 0:
-            return apology("このユーザーネームは既に使われています", 400)
+        #if len(db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))) != 0:
+            #return apology("このユーザーネームは既に使われています", 400)
         # パスワードが入力されていない
         elif not request.form.get("password"):
             return apology("パスワードを入力してください", 400)
@@ -192,8 +190,8 @@ def register():
         elif request.form.get("password") != request.form.get("confirmation"):
             return apology("パスワードが一致しません", 400)
         # データベースに入れる
-        db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", request.form.get(
-            "username"), generate_password_hash(request.form.get("password")))
+        #db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", request.form.get(
+            #"username"), generate_password_hash(request.form.get("password")))
         #メッセージ
         flash("登録が完了しました")
         # ログインページに送る
