@@ -13,7 +13,7 @@ endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
 api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
 
 from flask import Flask, flash, redirect, render_template, request, session
-from flask_session import Session
+# from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -32,7 +32,7 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 # ファイルシステムを使用するようにセッションを構成します (署名付き Cookie の代わりに)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+# Session(app)
 
 # Configure CS50 Library to use SQLite database
 # SQLite データベースを使用するように CS50 ライブラリを構成する
