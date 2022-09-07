@@ -55,11 +55,13 @@ def via_suggest():
     means = request.form.get("means")
     limit = request.form.get("limit")
     destination = request.form.get("destination")
+    origin = request.form.get("origin")
 
     #関数を使って施設名から住所を取得
     destination_cie = get_address(destination)
+    origin_cie = get_address(origin)
     #関数をつかって経由地を検索数字は東京駅の座標
-    suggest_place = search_place(35.6812362,139.7671248,destination_cie[0],destination_cie[1],means,limit)
+    suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit)
 
     #目的地を選択する場合はこれを使う。
     #データベースから目的地の緯度経度を取得
@@ -71,7 +73,7 @@ def via_suggest():
 
 
     #関数を使って経由地を提案
-    via = suggest_via("東京駅",str(destination_cie[0])+","+str(destination_cie[1]),suggest_place,means,limit)
+    via = suggest_via(origin,str(destination_cie[0])+","+str(destination_cie[1]),suggest_place,means,limit)
 
     #GoogleMapのurlを生成してlistに追加
     i = 0
