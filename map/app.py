@@ -10,7 +10,7 @@ import requests
 import googlemaps
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'APIkey'
+api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -65,6 +65,7 @@ def via_suggest():
 
         origin = request.form.get("origin")
         destination = request.form.get("destination")
+        keyword = request.form.get("keyword")
 
         #関数を使って施設名から住所を取得
         destination_cie = get_address(destination)
@@ -74,7 +75,7 @@ def via_suggest():
         if destination_cie == False:
             return apology("住所が見つかりませんでした。",501)
         #関数をつかって経由地を検索数字は東京駅の座標
-        suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit)
+        suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit,keyword)
 
         #目的地を選択する場合はこれを使う。
         #データベースから目的地の緯度経度を取得
@@ -95,6 +96,8 @@ def via_suggest():
             i += 1
         print(url)
         return render_template("via.html" ,via=via ,url=url)
+    else:
+        return apology("未実装です。",500)
 
 
 #経由地候補を返す関数です。
@@ -291,7 +294,7 @@ def get_address(place):
     #address = str(answer['results'][0]['geometry']['location']['lat']) + "," + str(answer['results'][0]['geometry']['location']['lng'])
     return answer['results'][0]['geometry']['location']['lat'],answer['results'][0]['geometry']['location']['lng']
 
-def search_place(original_latitude,original_longitude,destination_latitude,destination_longitude,means,limit):
+def search_place(original_latitude,original_longitude,destination_latitude,destination_longitude,means,limit,keyword):
     client = googlemaps.Client(api_key) #インスタンス生成
     #loc = {'lat': 35.6288505, 'lng': 139.65863579999996} # 軽度・緯度を取り出す
 
@@ -310,7 +313,7 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     print(loc)
     print(radius)
 
-    place_results = client.places_nearby(location=loc, radius=radius ,language='ja') #半径1000m以内のカフェ情報を取得
+    place_results = client.places_nearby(location=loc, radius=radius ,keyword=keyword ,language='ja') #半径1000m以内のカフェ情報を取得
     #pprint.pprint(place_results)
     results = []
     suggest_place = []
