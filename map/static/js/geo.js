@@ -18,3 +18,24 @@ function successCallback(position){
 function errorCallback(error){
     alert("位置情報が取得できませんでした");
 };
+
+
+// FormDataオブジェクトの初期化
+const fd = new FormData();
+
+// FormDataオブジェクトにデータをセット
+fd.append('lat', latitude);
+fd.append('long', longitude);
+
+// フォームの入力値を送信
+fetch( 'http://127.0.0.1:8000/', {
+  method: 'POST',
+  body: fd
+})
+.then(response => response.json())
+.then(data => {
+  console.log(data);
+})
+.catch((error) => {
+  console.error(error);
+});
