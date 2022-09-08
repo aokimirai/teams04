@@ -10,7 +10,7 @@ import requests
 import googlemaps
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
+api_key = 'APIkey'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -47,6 +47,42 @@ def home():
 def gps():
     return render_template("gps.html")
 
+#ポイントカードの処理
+@app.route("/point", methods=["GET","POST"])
+def point():
+    #テスト段階はuseridは1とする
+    userid = 1
+    if request.method == "POST":
+        keyword = request.form.get("keyword")
+        print(keyword)
+        #データベースにあるキーワード分だけ回す
+        a = db.execute(("SELECT * FROM test_point"))
+        for cycle in a:
+            if cycle['string'] == keyword:
+                #もしキーワードがあっていれば、1ポイント追加する
+                points = db.execute("SELECT * FROM test_point_user WHERE id = ?", userid)[0]['point']
+                db.execute("UPDATE test_point_user SET point=? WHERE id=?",points+1 ,userid)
+                db.execute("DELETE FROM test_point WHERE string=?", keyword)
+                print("point取得")
+                break
+    #ポイント数を返す
+    return render_template("point.html",point = db.execute("SELECT * FROM test_point_user WHERE id = ?", userid)[0]['point'])
+
+#ポイントカード（店舗用）の処理、キーワードを生成してデータベースに保存
+@app.route("/point_store",methods=["GET","POST"])
+def point_store():
+    keyword=""
+    if request.method == "POST":
+        #一文字ずつ文字をランダムに生成して変数に追加する
+        i = 0
+        while i != 5:
+            keyword = keyword + chr(random.randint(97, 123))
+            i += 1
+        #生成したキーワードをデータベースに保存する
+        db.execute("INSERT INTO test_point (string) VALUES ( ? )",keyword)
+    return render_template("point_store.html",keyword=keyword)
+
+
 @app.route("/via", methods=["GET", "POST"])
 def via_suggest():
     if request.method == "POST":
@@ -57,7 +93,7 @@ def via_suggest():
         print(limit.isdigit())
 
         if limit.isnumeric() == False:
-            return apology("数値を入力してください。", 400)
+            return apology("所要時間を入力してください。", 400)
         if not request.form.get("origin"):
             return apology("出発地点を入力してください。",400)
         if not request.form.get("destination"):
@@ -308,20 +344,21 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     if means == 'walking':
         radius = 66 * int(limit)
     #placesAPIで検索する際の最大の半径は50kmなので50kmまでに統一する
-    if int(radius) > 500000:
-        radius == 500000
+    if radius > 500000:
+        radius = 500000
     print(loc)
     print(radius)
 
-    place_results = client.places_nearby(location=loc, radius=radius ,keyword=keyword ,language='ja') #半径1000m以内のカフェ情報を取得
-    #pprint.pprint(place_results)
+    #結果を表示
+    place_results = client.places_nearby(location=loc, radius=radius ,keyword=keyword ,language='ja')
+    print(place_results)
     results = []
     suggest_place = []
     for place_result in place_results['results']:
         results.append(place_result)
-    #for i != 10:
-    print(random.choice(results)['geometry']['location'])
-    print(random.choice(results)['name'])
+
+    #print(random.choice(results)['geometry']['location'])
+    #print(random.choice(results)['name'])
 
     i = 0
     while i != 3:

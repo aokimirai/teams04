@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    pointcard
+{% endblock %}
+
+{% block main %}
+<form action="/point_store" method="post">
+    <button class="btn" type="submit">キーワードを表示する</button>
+    {{ keyword }}
+</form>
+{{ string }}
+{% endblock %}
