@@ -1,4 +1,4 @@
-body{
+.body{
     font-family: "筑紫B丸ゴシック", "ヒラギノ丸ゴ ProN";
     background-color: #F7F5F2;
 }
@@ -7,12 +7,25 @@ body{
     background-color: #;
 }
 
+/*フォームの位置を整える方法がこの方法しか思いつきませんでした。他に良い方法があれば変えておいてもらえるとありがたいです。*/
+.input_form{
+    margin: 1vw 43vw 3vw 0vw;
+}
+
+.mb-3{
+    text-align: right;
+}
+
 select,input{
     padding: 0rem 0.5em;
     height: 2.5rem;
     width: 10rem;
     border-radius: 0.3rem;
     border: 0.3px solid #8D8DAA;
+}
+
+input::placeholder{
+    text-align:right;
 }
 
 .btn
