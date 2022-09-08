@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block main %}
-<script src="/static/js/google.js"></script>
 <div class="via_system">
     <form method="POST" action="/via" style="text-align:center">
         <div class="mb-3">
@@ -21,10 +20,6 @@
             <input name="destination">
         </div>
         <div class="mb-3">
-            経由地のキーワード（例:カフェ)
-            <input name="keyword">
-        </div>
-        <div class="mb-3">
             手段
             <select class="form-select" aria-label="Default select example" name="means">
                 <option value="driving">車</option>
@@ -32,6 +27,16 @@
                 <option value="walking">歩き</option>
             </select>
         </div>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()" id="btn">レストラン</button>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">飲食点</button>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">寿司</button>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">駅</button>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">遊園地</button>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">観光スポット</button><br>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">美術館、博物館</button>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">薬局</button>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">コンビニ</button>
+        <button type="button" class="btn btn-outline-danger rounded-pill" onclick="buttonClick()">カフェ</button><br>
         <button type="submit" class="btn" id="target" name="place" onclick="location.href='./via.html'">決定</button>
     </form>
 
