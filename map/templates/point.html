@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    pointcard
+{% endblock %}
+
+{% block main %}
+<h1>現在のポイントは{{ point }}点です。</h1>
+<form action="/point" method="post">
+    <div class="mb-3">
+        <input class="form-control mx-auto w-auto" id="keyword" name="keyword" type="text">
+    </div>
+    <button class="btn" type="submit">登録</button>
+</form>
+{% endblock %}
