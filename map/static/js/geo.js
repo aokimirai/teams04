@@ -30,7 +30,7 @@ function send (latitude, longitude){
   fd.append('long', longitude);
 
   // フォームの入力値を送信
-  fetch( 'http://127.0.0.1:8000/', {
+  fetch( '/gps', {
     method: 'POST',
     body: fd
   })
