@@ -46,7 +46,7 @@ def home():
 
 @app.route("/gps")
 def gps():
-    currentlocation = form.getvalue()
+    currentlocation = request.form.get()
     return render_template("gps.html")
 
 #ポイントカードの処理
