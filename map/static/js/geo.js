@@ -22,11 +22,23 @@ function errorCallback(error){
 
 // APIに緯度と経度を送る
 function send (latitude, longitude){
-  var s = document.createElement('script');
-  a = document.form1.a.value;
-  b = document.form1.b.value;
-  param = "?a="+a+"&b="+b
-  s.src = '/cgi-bin/jsonp.py'+param;
-  document.body.appendChild(s);
-  return false;
+  // FormDataオブジェクトの初期化
+  const fd = new FormData();
+
+  // FormDataオブジェクトにデータをセット
+  fd.append('lat', latitude);
+  fd.append('long', longitude);
+
+  // フォームの入力値を送信
+  fetch( 'http://127.0.0.1:8000/', {
+    method: 'POST',
+    body: fd
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 }
