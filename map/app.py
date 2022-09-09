@@ -45,6 +45,7 @@ def home():
 
 @app.route("/gps")
 def gps():
+    
     return render_template("gps.html")
 
 #ポイントカードの処理
