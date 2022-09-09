@@ -8,6 +8,7 @@ import random
 import sys
 import requests
 import googlemaps
+import io
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
 api_key = 'APIkey'
@@ -45,7 +46,7 @@ def home():
 
 @app.route("/gps")
 def gps():
-    requests.post("http://127.0.0.1:8000/", data=payload)
+    currentlocation = form.getfirst()
     return render_template("gps.html")
 
 #ポイントカードの処理
