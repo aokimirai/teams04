@@ -2,6 +2,7 @@
 document.getElementById("btn").onclick = function(){
     // 位置情報を取得する
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    send (latitude, longitude);
 };
 
 // 取得に成功した場合の処理
@@ -19,23 +20,25 @@ function errorCallback(error){
     alert("位置情報が取得できませんでした");
 };
 
+// APIに緯度と経度を送る
+function send (latitude, longitude){
+  // FormDataオブジェクトの初期化
+  const fd = new FormData();
 
-// FormDataオブジェクトの初期化
-const fd = new FormData();
+  // FormDataオブジェクトにデータをセット
+  fd.append('lat', latitude);
+  fd.append('long', longitude);
 
-// FormDataオブジェクトにデータをセット
-fd.append('lat', latitude);
-fd.append('long', longitude);
-
-// フォームの入力値を送信
-fetch( 'http://127.0.0.1:8000/', {
-  method: 'POST',
-  body: fd
-})
-.then(response => response.json())
-.then(data => {
-  console.log(data);
-})
-.catch((error) => {
-  console.error(error);
-});
+  // フォームの入力値を送信
+  fetch( 'http://127.0.0.1:8000/', {
+    method: 'POST',
+    body: fd
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
