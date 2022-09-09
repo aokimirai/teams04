@@ -44,7 +44,7 @@ db = SQL("sqlite:///map.db")
 def home():
     return render_template("index.html")
 
-@app.route("/gps")
+@app.route("/gps", methods=['POST'])
 def gps():
     lat = request.form['lat']
     long = request.form['long']
