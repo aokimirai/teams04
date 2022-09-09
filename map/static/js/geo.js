@@ -2,7 +2,7 @@
 document.getElementById("btn").onclick = function(){
     // 位置情報を取得する
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    send (latitude, longitude);
+    send (position.coords.latitude, position.coords.longitude);
 };
 
 // 取得に成功した場合の処理
