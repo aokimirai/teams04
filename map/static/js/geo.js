@@ -2,7 +2,6 @@
 document.getElementById("btn").onclick = function(){
     // 位置情報を取得する
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    send (latitude, longitude);
 };
 
 // 取得に成功した場合の処理
@@ -13,7 +12,7 @@ function successCallback(position){
     // 経度を取得し画面に表示
     var longitude = position.coords.longitude;
     document.getElementById("longitude").innerHTML = longitude;
-    console.log(latitude);
+    send (latitude, longitude);
 };
 
 // 取得に失敗した場合の処理
