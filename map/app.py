@@ -399,3 +399,11 @@ def route(origin,destination,means):
 
     #取得したデータを返す
     return parsed_response
+
+@app.route("/history")
+def history:
+    return render_template("history.html")
+
+@app.route("/mypage")
+def mypage:
+    return render_template("mypage.html")

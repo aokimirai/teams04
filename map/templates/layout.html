@@ -14,17 +14,13 @@
             <div class="navbar-collapse collapse justify-content-stretch" id="navbar">
                     {% if session["user_id"] %}
                         <ul class="navbar-nav me-auto mt-2">
-                            
-                            <li class="nav-item"><a class="nav-link" href="/point">ポイントカード</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/point_store">ポイントカード(店舗)</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/history">履歴</a></li>
                         </ul>
                         <ul class="navbar-nav ms-auto mt-2">
+                            <li class="nav-item"><a class="nav-link" href="/mypage">マイページ</a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout">ログアウト</a></li>
                         </ul>
                     {% else %}
                         <ul class="navbar-nav me-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/gps">現在地</a></li>
                         </ul>
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item"><a class="nav-link" href="/register">新規登録</a></li>
