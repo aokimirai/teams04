@@ -400,9 +400,32 @@ def route(origin,destination,means):
 def mypage():
     return render_template("mypage.html")
 
-@app.route("/profile")
+
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template("profile.html")
+    if request.method == "POST":
+        userid = session["user_id"]
+        nickname = request.form.get("nickname")
+        comment = request.form.get("comment")
+        if db.execute("SELECT icon FROM users WHERE userid = ?",userid)[0]["icon"] == None:
+            filepath=None
+        else:
+            filepath=db.execute("SELECT icon FROM users WHERE userid = ?",userid)[0]["icon"]
+
+        img = request.files['imgfile']
+        if img:
+            filepath = datetime.now().strftime("%Y%m%d_%H%M%S_") \
+            + werkzeug.utils.secure_filename(img.filename)
+            img.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/iconimg', filepath))
+
+        db.execute("UPDATE users SET display_name=(?), icon=(?), comment=(?) WHERE userid=(?)",nickname,filepath,comment,userid)
+        return redirect("/mypage")
+    else:
+        #userid = session["user_id"]
+        #users = db.execute("SELECT display_name,icon,comment FROM users WHERE userid = (?)", userid)
+        return render_template("profile.html")
+        #,users=users
+
 
 @app.route("/history")
 def history():

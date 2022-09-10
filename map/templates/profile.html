@@ -1,3 +1,4 @@
+
 {% extends "layout.html" %}
 
 {% block title %}
@@ -5,5 +6,27 @@
 {% endblock %}
 
 {% block main %}
+    <form action="/profile" method="post" enctype="multipart/form-data">
+        {% for user in users %}
+            <div class="mb-3">
+                <p>ニックネーム</p>
+                <input name="nickname" type="text" value={{ user.nick_name }}>
+            </div>
+            <p>アイコン</p>
+            <div class="mb-3">
+                {% if user.icon != None %}
+                    <img src=../upload/iconimg/{{ user.icon }} width="20%" class="icon">
+                    {% else %}
+                    <img src=../static/upload/icon/icon-default.png width="20%" class="icon">
+                {% endif %}
+                <input class="form-control" type="file" name="imgfile" accept=".jpg,.gif,.png,image/gif,image/jpeg,image/png" style="width:50%; display:revert">
+            </div>
+            <div class="mb-3">
+                <p>ひとこと</p>
+                <textarea name="comment" type="text" class="comment" >{{ user.comment }}</textarea>
+            </div>
+        {% endfor %}
+        <button class="btn btn-primary" type="submit">設定</button>
+    </form>
 
 {% endblock %}
