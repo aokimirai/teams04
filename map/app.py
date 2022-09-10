@@ -400,8 +400,14 @@ def route(origin,destination,means):
     #取得したデータを返す
     return parsed_response
 
+@app.route("/mypage")
+def mypage():
+    return render_template("mypage.html")
+
 @app.route("/history")
+def history():
     return render_template("history.html")
 
-@app.route("/mypage")
-    return render_template("mypage.html")
+@app.route("/favorite")
+def favorite():
+    return render_template("favorite.html")
