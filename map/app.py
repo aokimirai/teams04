@@ -45,10 +45,10 @@ def gps():
     if request.method == "POST":
         lat = request.form['lat']
         long = request.form['long']
-        print(lat)
-        return render_template("gps.html")
+        print("緯度",lat)
+        return render_template("index.html")
     else:
-        return render_template("gps.html")
+        return render_template("index.html")
 
 def home():
     return render_template("index.html")
