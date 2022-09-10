@@ -401,9 +401,7 @@ def route(origin,destination,means):
     return parsed_response
 
 @app.route("/history")
-def history:
     return render_template("history.html")
 
 @app.route("/mypage")
-def mypage:
     return render_template("mypage.html")
