@@ -404,6 +404,10 @@ def route(origin,destination,means):
 def mypage():
     return render_template("mypage.html")
 
+@app.route("/profile")
+def profile():
+    return render_template("profile.html")
+
 @app.route("/history")
 def history():
     return render_template("history.html")
