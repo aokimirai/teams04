@@ -50,9 +50,6 @@ def gps():
     else:
         return render_template("index.html")
 
-def home():
-    return render_template("index.html")
-
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
 def point():
