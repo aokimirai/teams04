@@ -9,6 +9,8 @@ import sys
 import requests
 import googlemaps
 import io
+import werkzeug
+from datetime import datetime
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
 api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
@@ -433,5 +435,4 @@ def history():
 
 @app.route("/favorite")
 def favorite():
-    favorite = SELECT favorite_name favorite_url FROM users
     return render_template("favorite.html")
