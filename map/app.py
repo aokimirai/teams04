@@ -40,7 +40,7 @@ Session(app)
 # SQLite データベースを使用するように CS50 ライブラリを構成する
 db = SQL("sqlite:///map.db")
 
-@app.route("/")
+@app.route("/", methods=["GET","POST"])
 def gps():
     if request.method == "POST":
         lat = request.form['lat']
