@@ -41,10 +41,6 @@ Session(app)
 db = SQL("sqlite:///map.db")
 
 @app.route("/")
-def home():
-    return render_template("index.html")
-
-@app.route("/gps", methods=["GET","POST"])
 def gps():
     if request.method == "POST":
         lat = request.form['lat']
@@ -52,6 +48,9 @@ def gps():
         return render_template("gps.html")
     else:
         return render_template("gps.html")
+
+def home():
+    return render_template("index.html")
 
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
