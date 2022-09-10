@@ -410,5 +410,5 @@ def history():
 
 @app.route("/favorite")
 def favorite():
-    SELECT favorite_name favorite_url FROM users
+    favorite = SELECT favorite_name favorite_url FROM users
     return render_template("favorite.html")
