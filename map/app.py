@@ -408,7 +408,7 @@ def profile():
     if request.method == "POST":
         userid = session["user_id"]
         nickname = request.form.get("nickname")
-        comment = request.form.get("comment")
+        #comment = request.form.get("comment")
         if db.execute("SELECT icon FROM users WHERE userid = ?",userid)[0]["icon"] == None:
             filepath=None
         else:
@@ -420,7 +420,7 @@ def profile():
             + werkzeug.utils.secure_filename(img.filename)
             img.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/iconimg', filepath))
 
-        db.execute("UPDATE users SET display_name=(?), icon=(?), comment=(?) WHERE userid=(?)",nickname,filepath,comment,userid)
+        db.execute("UPDATE users SET display_name=(?), icon=(?) WHERE userid=(?)",nickname,filepath,userid)
         return redirect("/mypage")
     else:
         #userid = session["user_id"]
