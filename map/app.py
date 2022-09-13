@@ -406,10 +406,11 @@ def profile():
 
 @app.route("/history")
 def history():
+    
     return render_template("history.html")
 
 @app.route("/favorite")
 # お気に入りを表示
 def favorite():
-    favorite = SELECT name,url FROM favorites WHERE user_id=session["user_id"]
+    favorite = db.execute('SELECT name url FROM favorites WHERE user_id = session["user_id"]')
     return render_template("favorite.html", favorite = favorite)
