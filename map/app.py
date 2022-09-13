@@ -11,7 +11,7 @@ import googlemaps
 import io
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
+api_key = 'APIkey'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -411,4 +411,4 @@ def history():
 @app.route("/favorite")
 def favorite():
     favorite = SELECT favorite_name favorite_url FROM users
-    return render_template("favorite.html")
+    return render_template("favorite.html", favorite = favorite)
