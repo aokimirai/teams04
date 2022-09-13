@@ -406,8 +406,8 @@ def profile():
 
 @app.route("/history")
 def history():
-    
-    return render_template("history.html")
+    history = db.execute('SELECT  FROM histories WHERE user_id = session["user_id"]')
+    return render_template("history.html", history = history)
 
 @app.route("/favorite")
 # お気に入りを表示
