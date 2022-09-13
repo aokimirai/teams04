@@ -13,7 +13,7 @@ import werkzeug
 from datetime import datetime
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'APIkey'
+api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session

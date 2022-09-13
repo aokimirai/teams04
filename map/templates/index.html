@@ -3,7 +3,7 @@
 {% block title %}
 ホーム
 {% endblock %}
-
+<link rel="stylesheet" href="../static/index_style.css">
 {% block main %}
 <div class="via_system">
     <div class="input_form">
@@ -41,13 +41,13 @@
                 </select>
             </div>
     </div>
-    {% set a = namespace(cnt=0) %}
     <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(1)" id="btn">レストラン</button>
     <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(2)" id="btn">飲食店</button>
     <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(3)" id="btn">寿司</button>
     <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(4)" id="btn">駅</button>
     <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(5)" id="btn">遊園地</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(6)" id="btn">観光スポット</button><br>
+    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(6)"
+        id="btn">観光スポット</button><br>
     <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(7)" id="btn">美術館、博物館</button>
     <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(8)" id="btn">薬局</button>
     <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(9)" id="btn">コンビニ</button>
@@ -55,7 +55,13 @@
     <script src="../static/js/google.js"></script>
     <button type="submit" class="btn" id="target" name="place" onclick="location.href='./via.html'">決定</button>
     </form>
-    <div>
-        <p id="route-time"></p>
+    <div class="iii">
+        <span class="distance">6.3km</span><br>
+        <span class="rating">☆☆☆☆☆</span><br>
+        <span><img src="../static/img/181_1.jpg"></span>
+        <span>東京駅</span>
+        <span>東京都千代田区丸の内１丁目</span><br>
+        <button onclick="location.href='http://www.tokyostationcity.com/'">WEBで開く</button>
+        <span>000-0000-0000</span>
     </div>
     {% endblock %}
