@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+経由地
+{% endblock %}
+
+{% block main %}
+<h2>経由地一覧</h2>
+<form method="POST" action="/ranking">
+    <div class="mb-3">
+        手段
+        <select class="form-select" aria-label="Default select example" name="means">
+            <option value="driving">車</option>
+            <option value="bicycling">自転車</option>
+            <option value="walking">歩き</option>
+        </select>
+    </div>
+    <button style="text-align:right;" type="submit" class="btn" id="target" name="place" onclick="location.href='./via.html'">決定</button>
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>順位</th>
+            <th>名前</th>
+            <th>距離</th>
+        </tr>
+    </thead>
+    <tbody>
+        <script a=0></script>
+
+        {% set a = namespace(cnt=0) %}
+        {% for score in score %}
+        <tr>
+            <td>{{ a.cnt + 1 }}位</td>
+            <td>{{ user[a.cnt] }}</td>
+            <td>{{ score }}</td>
+        </tr>
+        {% set a.cnt = a.cnt + 1 %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

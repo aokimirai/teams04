@@ -86,6 +86,28 @@ def point_store():
         db.execute("INSERT INTO test_point (string) VALUES ( ? )",keyword)
     return render_template("point_store.html",keyword=keyword)
 
+@app.route("/ranking", methods=["GET", "POST"])
+def ranking():
+    if request.method == "POST":
+        means = request.form.get('means')
+    else:
+        means = "driving"
+    score = {"walking": [], "bicycling": [], "driving": []}
+    user = db.execute("SELECT name FROM test_user")
+    name = []
+    for cycle in user:
+        score["walking"].append(0)
+        score["bicycling"].append(0)
+        score["driving"].append(0)
+        name.append(cycle['name'])
+    temp = db.execute("SELECT * FROM test_history")
+    for cycle in temp:
+        score[cycle["means"]][cycle["userid"] - 1] += float(cycle["distance"])
+
+    #score = {'driving':2,'walking':3,'bicycling':4}
+    print(score)
+
+    return render_template("ranking.html",score=score[means],user=name,means=means)
 
 @app.route("/via", methods=["GET", "POST"])
 def via_suggest():
