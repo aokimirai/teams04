@@ -409,6 +409,7 @@ def history():
     return render_template("history.html")
 
 @app.route("/favorite")
+# お気に入りを表示
 def favorite():
-    favorite = SELECT name url FROM favorites WHERE user_id=
+    favorite = SELECT name,url FROM favorites WHERE user_id=session["user_id"]
     return render_template("favorite.html", favorite = favorite)
