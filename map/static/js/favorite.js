@@ -42,3 +42,23 @@ $(".removefavorite").click(function(){
     localStorage.setItem('favorite_pages',JSON.stringify(favorite_pages));
     removeFavorite();
 });
+
+function removeFavorite() {
+    $(".removefavorite").addClass('hidden');
+    $(".addtofavorite").removeClass('hidden');
+}
+
+var favorite = JSON.parse(localStorage.getItem('favorite'));
+var selected = false;
+if (favorite) {
+    for(i=0;i<;i++) {
+        if (!selected && favorite[i] && !isNaN(favorite[i]['url'])) {
+            if (CCM_CID == favorite[i]['url']){
+                selected = true;
+            }
+        }
+    }
+}
+if(selected) {
+    addFavorite();
+}
