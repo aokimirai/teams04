@@ -1,15 +1,11 @@
 $(".addtofavorite").click(function(){
     var favorite_start = JSON.parse(localStorage.getItem('favorite'));
-    var name = $("{{ via.name }}").text(); // 経由地名を取得
-    var duration = $("{{ via.add_duration }}").text(); // 所要時間を取得
-    var distance = $("{{ via.add_distance }}").text(); // 道のりを取得
-    var url = $("{{ url[a.cnt] }}").text(); // URLを取得
-
+    
     var favorite = [{
-        name = name
-        duration = duration
-        distance = distance
-        url = url
+        name = {{ via.name }}
+        duration = {{ via.add_duration }}
+        distance = {{ via.add_distance }}
+        url = {{ url[a.cnt] }}
     }];
 
 
