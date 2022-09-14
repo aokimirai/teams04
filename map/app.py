@@ -11,6 +11,7 @@ import googlemaps
 import io
 import werkzeug
 from datetime import datetime
+import sqlite3
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
 api_key = 'APIkey'
@@ -206,21 +207,28 @@ def suggest_via(origin,destination,place,means,limit):
 def login():
     #　ユーザーidをクリアする
     session.clear()
+    username = request.form.get("username")
+    password = request.form.get("password")
     # POSTの場合
     if request.method == "POST":
         # ユーザーネームが入力されていない
-        if not request.form.get("username"):
+        if not username:
             return apology("ユーザーネームを入力してください", 403)
         # パスワードが入力されていない
-        elif not request.form.get("password"):
+        elif not password:
             return apology("パスワードを入力してください", 403)
         # 入力されたユーザーネームのデータを取得
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("SELECT * FROM users WHERE username = ?", (username,))
+        rows = db.fetchall()
+        con.close()
         # ユーザーネームとパスワードが正しいか確認
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+        print(rows)
+        if rows == None or not check_password_hash(rows[0][2], password):
             return apology("ユーザーネームまたはパスワードが無効です", 403)
         # ユーザーを記憶する
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0][0]
         #メッセージ
         flash("ログインしました")
         # ホームに送る
@@ -242,20 +250,31 @@ def register():
     # POSTの場合
     if request.method == "POST":
         # ユーザーネームが入力されていない
-        if not request.form.get("username"):
+        username = request.form.get("username")
+        password = request.form.get("password")
+        if not username:
             return apology("ユーザーネームを入力してください", 400)
         # ユーザーネームが既に使われている
-        if len(db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))) != 0:
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("SELECT * FROM users where username=?", (username,))
+        user = db.fetchone()
+        if user != None:
             return apology("このユーザーネームは既に使われています", 400)
         # パスワードが入力されていない
-        elif not request.form.get("password"):
+        elif not password:
             return apology("パスワードを入力してください", 400)
         # パスワードが一致しない
-        elif request.form.get("password") != request.form.get("confirmation"):
+        elif password != request.form.get("confirmation"):
             return apology("パスワードが一致しません", 400)
+        con.close()
+        password = generate_password_hash(password)
         # データベースに入れる
-        db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", request.form.get(
-            "username"), generate_password_hash(request.form.get("password")))
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, password))
+        con.commit()
+        con.close()
         #メッセージ
         flash("登録が完了しました")
         # ログインページに送る
