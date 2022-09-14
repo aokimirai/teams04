@@ -1,6 +1,6 @@
 $(".addtofavorite").click(function(){
     var favorite_start = JSON.parse(localStorage.getItem('favorite'));
-    
+
     var favorite = [{
         name = {{ via.name }}
         duration = {{ via.add_duration }}
@@ -10,7 +10,7 @@ $(".addtofavorite").click(function(){
 
 
     if (favorite_start) {
-        for(i=0;i<10;i++) {
+        for(i=0; ;i++) {
             if (favorite_start[i] && favorite[0].url !== favorite_start[i].url) {
                 favorite.push(favorite_start[i]);
             }
