@@ -5,41 +5,30 @@
 {% endblock %}
 
 {% block main %}
-<{if $favorite_num != 0}>
-  <div class="section__block favorite__section">
-    <h2 class="section__title-h2 txt--c border--none">お気に入り</h2>
-    <ul class="via-list">
-      <{section name=num loop=$favorite}>
-        <li class="via-list__unit via-list__unit-sm">
-          <a href="<{$favorite[num].link_url}>">
-            <{if $favorite[num].img_url != ""}>
-              <img src="<{$favorite[num].img_url}>" alt="<{$favorite[num].name}>" class="product-list__image" />
-            <{else}>
-              <img src="https://img.shop-pro.jp/tmpl_img/81/noimage.png" alt="<{$favorite[num].name}>" class="product-list__image" />
-            <{/if}>
-          </a>
-          <p class="product-list__prices">
-            <{if !$favorite[num].soldout_flg}>
-              <{if $members_login_flg && $favorite[num].discount_flg}>
-                <span class="product-list__price-regular product-list__text">
-                  <{$favorite[num].regular_price}>
-                </span>
-              <{/if}>
-              <span class="product-list__price product-list__text<{if $members_login_flg && $favorite[num].discount_flg}> txt--red<{/if}>">
-                <{$favorite[num].price}>
-              </span>
-              <{if $members_login_flg && $favorite[num].discount_flg}>
-                <span class="product-list__discount-rate product-list__text">
-                  <{$favorite[num].discount_rate}>OFF
-                </span>
-              <{/if}>
-            <{else}>
-             
-            <{/if}>
-          </p>
-        </li>
-      <{/section}>
-    </ul>
-  </div>
-<{/if}>
+
+<table>
+    <thead>
+        <tr>
+            <th>経由地名</th>
+            <th>所要時間</th>
+            <th>道のり</th>
+        </tr>
+    </thead>
+    <tbody>
+        <script a=0></script>
+
+        {% set a = namespace(cnt=0) %}
+        {% for via in via %}
+        <tr>
+            <td>{{ via.name }}</td>
+            <td>{{ via.add_duration }}</td>
+            <td>{{ via.add_distance }}</td>
+            <td>
+                <a href={{ url[a.cnt] }}>Mapで開く</a>
+            </td>
+        </tr>
+        {% set a.cnt = a.cnt + 1 %}
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
