@@ -24,6 +24,9 @@
             <td>{{ via.add_duration }}</td>
             <td>{{ via.add_distance }}</td>
             <td>
+                <form method="POST" action="/add_history">
+                    <button type="submit" class="btn" id="target" name="place" value=[{{ url[a.cnt] }},{{ via.name }},{{ via.add_distance }},{{ means }}]>Mapで開く</button>
+                </form>
                 <a href={{ url[a.cnt] }}>Mapで開く</a>
             </td>
         </tr>

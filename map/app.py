@@ -157,7 +157,7 @@ def via_suggest():
             url.append("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
             i += 1
         print(url)
-        return render_template("via.html" ,via=via ,url=url)
+        return render_template("via.html" ,via=via ,url=url ,means=means)
     else:
         return apology("未実装です。",500)
 
@@ -462,3 +462,15 @@ def favorite():
     return render_template("favorite.html")
     favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
     return render_template("favorite.html", favorite = favorite)
+
+@app.route("/add_history" ,methods=["GET","POST"])
+def add_history():
+    history = request.form.get("place")
+    history_list = history.tolist()
+    print(history_list)
+    print(history_list[1])
+    print(history_list[3])
+    userid = 1
+    name = "ryohei"
+    #db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? )",name,history[1],history[2],history[3],userid)
+    return redirect(history[0])
