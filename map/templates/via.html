@@ -20,6 +20,12 @@
         {% set a = namespace(cnt=0) %}
         {% for via in via %}
         <tr>
+            <td>
+                <button type="button" class="favorite-button" <{favorite_button_attribute added_class="fav-items"}>>
+                <svg role="img" aria-hidden="true"><use xlink:href="#heart"></use></svg>
+                  お気に入り
+                </button>
+            </td>
             <td>{{ via.name }}</td>
             <td>{{ via.add_duration }}</td>
             <td>{{ via.add_distance }}</td>
