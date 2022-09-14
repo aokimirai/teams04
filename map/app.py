@@ -14,7 +14,10 @@ from datetime import datetime
 import sqlite3
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'APIkey'
+with open("APIkey.txt") as f:
+    APIkey = f.read()
+    print(APIkey)
+api_key = APIkey
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
