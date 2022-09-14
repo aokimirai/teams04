@@ -5,5 +5,30 @@
 {% endblock %}
 
 {% block main %}
-    
+
+<table>
+    <thead>
+        <tr>
+            <th>経由地名</th>
+            <th>所要時間</th>
+            <th>道のり</th>
+        </tr>
+    </thead>
+    <tbody>
+        <script a=0></script>
+
+        {% set a = namespace(cnt=0) %}
+        {% for via in via %}
+        <tr>
+            <td>{{ via.name }}</td>
+            <td>{{ via.add_duration }}</td>
+            <td>{{ via.add_distance }}</td>
+            <td>
+                <a href={{ url[a.cnt] }}>Mapで開く</a>
+            </td>
+        </tr>
+        {% set a.cnt = a.cnt + 1 %}
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

@@ -13,7 +13,7 @@ import werkzeug
 from datetime import datetime
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
-api_key = 'AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs'
+api_key = 'APIkey'
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -431,8 +431,9 @@ def profile():
 
 @app.route("/history")
 def history():
-    return render_template("history.html")
+    return render_template("history.html", history = history)
 
 @app.route("/favorite")
+# お気に入りを表示
 def favorite():
     return render_template("favorite.html")

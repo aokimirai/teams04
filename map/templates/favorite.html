@@ -5,5 +5,24 @@
 {% endblock %}
 
 {% block main %}
-    
+<table>
+    <thead>
+        <tr style="text-align:center">
+            <th>タイトル</style></th>
+            <th>期限</th>
+            <th>残日数</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%- set ns = namespace(i=0) -%}
+        {% for row in favorite %}
+            <td> {{ row["favorite_name"] }} </td>
+            <td>
+                <a href= {{ row["favorite_url"] }}>Mapで開く</a>
+            </td>
+        </tr>
+        {%- set ns.i = ns.i + 1 -%}
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

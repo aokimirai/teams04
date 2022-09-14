@@ -20,6 +20,10 @@
         {% set a = namespace(cnt=0) %}
         {% for via in via %}
         <tr>
+            <td>
+                <button class="btn btn-primary addtofavorite">☆</button>
+                <button class="btn btn-primary removefavorite hidden">★</button>
+            </td>
             <td>{{ via.name }}</td>
             <td>{{ via.add_duration }}</td>
             <td>{{ via.add_distance }}</td>
