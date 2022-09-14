@@ -21,7 +21,9 @@
         {% for via in via %}
         <tr>
             <td>
-                <input type="button" onclick="window.external.AddFavorite('via.name','via.add_duration',via.add_distance,url[a.cnt])" value="お気に入りに追加">
+                <button type="button" class="favorite-button" <{favorite_button_attribute product_id=$productlist[num].id added_class="fav-items"}>>
+                    <svg role="img" aria-hidden="true"><use xlink:href="#heart"></use></svg>
+                </button>
             </td>
             <td>{{ via.name }}</td>
             <td>{{ via.add_duration }}</td>
