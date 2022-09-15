@@ -172,14 +172,15 @@ def via_suggest():
 
         #関数を使って経由地を提案
         via = suggest_via(origin,str(destination_cie[0])+","+str(destination_cie[1]),suggest_place,means,limit)
-
+        print(via)
         #GoogleMapのurlを生成してlistに追加
         i = 0
         while i != len(via):
             url.append("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
             i += 1
-        print(url)
-        return render_template("via.html" ,via=via ,url=url ,means=means)
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print(suggest_place)
+        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=suggest_place ,key=api_key)
     else:
         return apology("未実装です。",500)
 

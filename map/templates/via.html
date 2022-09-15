@@ -9,7 +9,10 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>お気に入り</th>
+            <th>評価</th>
             <th>経由地名</th>
+            <th>写真</th>
             <th>所要時間</th>
             <th>道のり</th>
         </tr>
@@ -24,6 +27,9 @@
                 <button class="btn btn-primary addtofavorite">☆</button>
                 <button class="btn btn-primary removefavorite hidden">★</button>
             </td>
+            <td>{{ detail[a.cnt]['rating'] }}</td>
+            <td><img
+                src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=150&photoreference={{ detail[a.cnt]['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></td>
             <td>{{ via.name }}</td>
             <td>{{ via.add_duration }}</td>
             <td>{{ via.add_distance }}</td>
