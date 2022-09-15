@@ -434,7 +434,10 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
             print(temp)
         temp1 = temp['geometry']['location']
         temp2 = {'name':temp['name']}
-        temp3 = {'rating':temp['rating']}
+        if not 'rating' in temp.keys():
+            temp3=""
+        else:
+            temp3 = {'rating':temp['rating']}
         temp4 = {'vicinity':temp['vicinity']}
         temp5 = {'photo_reference':temp['photos']}
         temp1.update(temp2)
@@ -514,11 +517,11 @@ def favorite():
 
 @app.route("/add_history" ,methods=["GET","POST"])
 def add_history():
-    history = request.form.get("place")
-    #history_list = history.tolist()
-    #print(history_list)
-    #print(history_list[1])
-    #print(history_list[3])
+    history =request.form.get("place") + "}"
+    print(history)
+    history = json.loads(history)
+    print(history)
+    print(history['url'])
     userid = 1
     name = "ryohei"
     #db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? )",name,history[1],history[2],history[3],userid)
