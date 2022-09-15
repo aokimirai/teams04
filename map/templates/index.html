@@ -41,27 +41,28 @@
                 </select>
             </div>
     </div>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(1)" id="btn">レストラン</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(2)" id="btn">飲食店</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(3)" id="btn">寿司</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(4)" id="btn">駅</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(5)" id="btn">遊園地</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(6)"
-        id="btn">観光スポット</button><br>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(7)" id="btn">美術館、博物館</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(8)" id="btn">薬局</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(9)" id="btn">コンビニ</button>
-    <button type="button" class="btn btn-outline-info rounded-pill" onclick="buttonClick(10)" id="btn">カフェ</button><br>
+    <div class="mb-3">
+        目的地
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(1)" id="btn" name="via_btn" value="1">レストラン</input>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(2)" id="btn" name="via_btn" value="2">飲食店</input>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(3)" id="btn" name="via_btn" value="3">寿司</input>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(4)" id="btn" name="via_btn" value="4">駅</input>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(5)" id="btn" name="via_btn" value="5">遊園地</input>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(6)" id="btn">観光スポット</input><br>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(7)" id="btn">美術館、博物館</input>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(8)" id="btn">薬局</input>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(9)" id="btn">コンビニ</input>
+        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(10)" id="btn">カフェ</input><br>
+    </div>
     <script src="../static/js/google.js"></script>
     <button type="submit" class="btn" id="target" name="place" onclick="location.href='./via.html'">決定</button>
     </form>
     <div class="iii">
-        <span class="distance">6.3km</span><br>
-        <span class="rating">☆☆☆☆☆</span><br>
-        <span><img src="../static/img/181_1.jpg"></span>
-        <span>東京駅</span>
-        <span>東京都千代田区丸の内１丁目</span><br>
-        <button onclick="location.href='http://www.tokyostationcity.com/'">WEBで開く</button>
+        <span>{{ place['name'] }}</span><br>
+        <span class="rating">星{{ place['rating'] }}</span><br>
+        <span><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
+        <span>{{ place['vicinity'] }}</span><br>
+        <button onclick="location.href='https://www.google.com/search?q={{ place['name'] }}'">WEBで開く</button>
         <span>000-0000-0000</span>
     </div>
     {% endblock %}

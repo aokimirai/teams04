@@ -53,7 +53,14 @@ def gps():
         long = request.form['long']
         return render_template("index.html")
     else:
-        return render_template("index.html")
+        latitude = 	35.6809591
+        longitude = 139.7673068
+        keyword = ""
+        place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
+        #for i in range(5):
+        #    print(random.choice(place))
+        a = random.choice(place)
+        return render_template("index.html",place = a,key = api_key)
 
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
@@ -90,27 +97,33 @@ def point_store():
         db.execute("INSERT INTO test_point (string) VALUES ( ? )",keyword)
     return render_template("point_store.html",keyword=keyword)
 
+#ランキングを処理
 @app.route("/ranking", methods=["GET", "POST"])
 def ranking():
     if request.method == "POST":
         means = request.form.get('means')
+    #デバッグ用
     else:
         means = "driving"
+    #辞書式で値を保存(listの中身は左からuseridが1の人、2の人,3の人...といった具合)
     score = {"walking": [], "bicycling": [], "driving": []}
     user = db.execute("SELECT name FROM test_user")
     name = []
+    #ユーザー数だけlistに0を入れる
     for cycle in user:
         score["walking"].append(0)
         score["bicycling"].append(0)
         score["driving"].append(0)
         name.append(cycle['name'])
     temp = db.execute("SELECT * FROM test_history")
+    #辞書式のやつに値を保存
     for cycle in temp:
         score[cycle["means"]][cycle["userid"] - 1] += float(cycle["distance"])
 
     #score = {'driving':2,'walking':3,'bicycling':4}
     print(score)
 
+    #辞書式で保存した値とユーザー名、移動手段を返す
     return render_template("ranking.html",score=score[means],user=name,means=means)
 
 @app.route("/via", methods=["GET", "POST"])
@@ -120,7 +133,10 @@ def via_suggest():
         #HTMLから値を受け取る
         means = request.form.get("means")
         limit = request.form.get("limit")
+        via_btn = request.form.get("via_btn")
         print(limit.isdigit())
+        print("----------------------------------------")
+        print(via_btn)
 
         if limit.isnumeric() == False:
             return apology("所要時間を入力してください。", 400)
@@ -140,7 +156,7 @@ def via_suggest():
         origin_cie = get_address(origin)
         if destination_cie == False:
             return apology("住所が見つかりませんでした。",501)
-        #関数をつかって経由地を検索数字は東京駅の座標
+        #関数をつかって経由地を検索
         suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit,keyword)
 
         #目的地を選択する場合はこれを使う。
@@ -394,12 +410,12 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     #placesAPIで検索する際の最大の半径は50kmなので50kmまでに統一する
     if radius > 500000:
         radius = 500000
-    print(loc)
-    print(radius)
+    #print(loc)
+    #print(radius)
 
     #結果を表示
     place_results = client.places_nearby(location=loc, radius=radius ,keyword=keyword ,language='ja')
-    print(place_results)
+    #print(place_results)
     results = []
     suggest_place = []
     for place_result in place_results['results']:
@@ -411,9 +427,17 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     i = 0
     while i != 3:
         temp = random.choice(results)
+        if i == 1:
+            print(temp)
         temp1 = temp['geometry']['location']
         temp2 = {'name':temp['name']}
+        temp3 = {'rating':temp['rating']}
+        temp4 = {'vicinity':temp['vicinity']}
+        temp5 = {'photo_reference':temp['photos']}
         temp1.update(temp2)
+        temp1.update(temp3)
+        temp1.update(temp4)
+        temp1.update(temp5)
         suggest_place.append(temp1)
         i += 1
 
@@ -488,11 +512,11 @@ def favorite():
 @app.route("/add_history" ,methods=["GET","POST"])
 def add_history():
     history = request.form.get("place")
-    history_list = history.tolist()
-    print(history_list)
-    print(history_list[1])
-    print(history_list[3])
+    #history_list = history.tolist()
+    #print(history_list)
+    #print(history_list[1])
+    #print(history_list[3])
     userid = 1
     name = "ryohei"
     #db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? )",name,history[1],history[2],history[3],userid)
-    return redirect(history[0])
+    return redirect('https://www.google.com/maps/dir/?api=1&origin=35.68123620000001,139.7671248&destination=35.7056396,139.7518913&travelmode=driving&waypoints=35.6919205,139.7584545')
