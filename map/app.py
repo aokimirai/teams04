@@ -56,11 +56,13 @@ def gps():
         latitude = 	35.6809591
         longitude = 139.7673068
         keyword = ""
+        b = []
         place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
-        #for i in range(5):
-        #    print(random.choice(place))
-        a = random.choice(place)
-        return render_template("index.html",place = a,key = api_key)
+        for i in range(3):
+            a = random.choice(place)
+            place.remove(a)
+            b.append(a)
+        return render_template("index.html",place = b,key = api_key)
 
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
@@ -133,7 +135,7 @@ def via_suggest():
         #HTMLから値を受け取る
         means = request.form.get("means")
         limit = request.form.get("limit")
-        via_btn = request.form.get("via_btn")
+        via_btn = request.form.get("via_btn[]")
         print(limit.isdigit())
         print("----------------------------------------")
         print(via_btn)

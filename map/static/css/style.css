@@ -46,3 +46,11 @@ input::placeholder{
     background-color: #8D8DAA;
     border: #F56D91;
 }
+
+.suggest_place{
+    text-align:left;
+}
+
+.map{
+    text-align:right;
+}
