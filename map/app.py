@@ -58,11 +58,7 @@ def gps():
         keyword = ""
         b = []
         place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
-        for i in range(3):
-            a = random.choice(place)
-            place.remove(a)
-            b.append(a)
-        return render_template("index.html",place = b,key = api_key)
+        return render_template("index.html",place = place,key = api_key)
 
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
@@ -161,6 +157,9 @@ def via_suggest():
         #関数をつかって経由地を検索
         suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit,keyword)
 
+        #3つ経由先を提案する
+        place = random.sample(suggest_place,3)
+        
         #目的地を選択する場合はこれを使う。
         #データベースから目的地の緯度経度を取得
         """
@@ -171,7 +170,7 @@ def via_suggest():
 
 
         #関数を使って経由地を提案
-        via = suggest_via(origin,str(destination_cie[0])+","+str(destination_cie[1]),suggest_place,means,limit)
+        via = suggest_via(origin,str(destination_cie[0])+","+str(destination_cie[1]),place,means,limit)
         print(via)
         #GoogleMapのurlを生成してlistに追加
         i = 0
@@ -428,10 +427,9 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     #print(random.choice(results)['name'])
 
     i = 0
-    while i != 3:
-        temp = random.choice(results)
-        if i == 1:
-            print(temp)
+    for temp in results:
+        #temp = random.choice(results)
+        #results.remove(temp)
         temp1 = temp['geometry']['location']
         temp2 = {'name':temp['name']}
         if not 'rating' in temp.keys():
@@ -445,7 +443,6 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
         temp1.update(temp4)
         temp1.update(temp5)
         suggest_place.append(temp1)
-        i += 1
 
     #print(random.choice(results))
     print(suggest_place)
