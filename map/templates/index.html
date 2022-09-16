@@ -81,7 +81,7 @@
                     <span class="rating">星{{ place['rating'] }}</span><br>
                     <span class="name">{{ place['name'] }}</span><br>
                 </div>
-                <span><img src="../static/img/181_1.jpg"></span>
+                <span><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
                 <div class="detail2">
                     <span class="vicinity">{{ place['vicinity'] }}</span><br>
                     <button
