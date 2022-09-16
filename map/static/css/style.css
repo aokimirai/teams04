@@ -5,9 +5,13 @@
 
 .navbar{
     background-color: #;
+    padding:0 20px;
 }
 
-/*フォームの位置を整える方法がこの方法しか思いつきませんでした。他に良い方法があれば変えておいてもらえるとありがたいです。*/
+.navbar-brand{
+    margin:10px 0;
+}
+
 .input_form{
     text-align:center;
 }

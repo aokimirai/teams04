@@ -120,7 +120,6 @@ def ranking():
         score[cycle["means"]][cycle["userid"] - 1] += float(cycle["distance"])
 
     #score = {'driving':2,'walking':3,'bicycling':4}
-    print(score)
 
     #辞書式で保存した値とユーザー名、移動手段を返す
     return render_template("ranking.html",score=score[means],user=name,means=means)
@@ -179,6 +178,10 @@ def via_suggest():
         return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key)
     else:
         return apology("未実装です。",500)
+
+@app.route("/detail_search", methods=["GET", "POST"])
+def detail_search():
+    return render_template("detail_search.html")
 
 
 #経由地候補を返す関数です。
@@ -516,7 +519,7 @@ def favorite():
 def add_history():
     history =request.form.get("place")
     print(history)
-    history = re.split('url:|name:|distance:|means:',history)
+    history = re.split('url:|name:|distance:|kmmeans:',history)
     print(history)
     userid = 1
     name = "ryohei"

@@ -46,44 +46,54 @@
             </div>
     </div>
     <div class="checkbox">
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)" id="btn"
-            name="via_btn" value="restaurant">レストラン</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)" id="btn"
-            name="via_btn" value="Italian">イタリアン</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)" id="btn"
-            name="via_btn" value="sushi">寿司</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)" id="btn"
-            name="via_btn" value="station">駅</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)" id="btn"
-            name="via_btn" value="amusement park">遊園地</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(6)" id="btn"
-            name="via_btn" value="Tourist attractions">観光スポット</input></label><br>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)" id="btn"
-            name="via_btn" value="museum">美術館、博物館</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)" id="btn"
-            name="via_btn" value="pharmacy">薬局</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)" id="btn"
-            name="via_btn" value="convenience store">コンビニ</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)" id="btn"
-            name="via_btn" value="cafe">カフェ</input></label><br>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)"
+                id="btn" name="via_btn" value="restaurant">レストラン</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)"
+                id="btn" name="via_btn" value="Italian">イタリアン</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)"
+                id="btn" name="via_btn" value="sushi">寿司</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)"
+                id="btn" name="via_btn" value="station">駅</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)"
+                id="btn" name="via_btn" value="amusement park">遊園地</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(6)"
+                id="btn" name="via_btn" value="Tourist attractions">観光スポット</input></label><br>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)"
+                id="btn" name="via_btn" value="museum">美術館、博物館</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)"
+                id="btn" name="via_btn" value="pharmacy">薬局</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)"
+                id="btn" name="via_btn" value="convenience store">コンビニ</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)"
+                id="btn" name="via_btn" value="cafe">カフェ</input></label><br>
     </div>
     <script src="../static/js/google.js"></script>
+    <button type="button" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
+    onclick="location.href='/'">クリア</button>
+    <button type="button" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
+    onclick="location.href='/detail_search'">詳細検索</button>
     </form>
     <div class="decoration">
         <div class="suggest_place col-xl-7">
             {% for place in place %}
-            <span>{{ place['name'] }}</span><br>
-            <span class="rating">星{{ place['rating'] }}</span><br>
-            <span><img
-                    src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
-            <span>{{ place['vicinity'] }}</span><br>
-            <button onclick="location.href='https://www.google.com/search?q={{ place['name'] }}'">WEBで開く</button>
-            <span>000-0000-0000</span>
+            <div class="suggest_box">
+                <div class="detail1">
+                    <span class="rating">星{{ place['rating'] }}</span><br>
+                    <span class="name">{{ place['name'] }}</span><br>
+                </div>
+                <span><img src="../static/img/181_1.jpg"></span>
+                <div class="detail2">
+                    <span class="vicinity">{{ place['vicinity'] }}</span><br>
+                    <button
+                        onclick="location.href='https://www.google.com/search?q={{ place['name'] }}'" class="btn btn-outline-danger">WEBで開く</button>
+                </div>
+            </div>
             {% endfor %}
         </div>
         <div class="map col-xl-3">
             <iframe src="https://maps.google.co.jp/maps?output=embed&t=m&hl=ja&z=18&ll=35.689634,139.692101"
-                frameborder="0" scrolling="no" width="900px" height="620px" style="filter:hue-rotate(200deg);-webkit-filter:hue-rotate(200deg)"></iframe>
+                frameborder="0" scrolling="no" width="900px" height="620px"
+                style="filter:hue-rotate(200deg);-webkit-filter:hue-rotate(200deg)"></iframe>
         </div>
     </div>
 </div>
