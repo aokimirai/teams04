@@ -132,9 +132,7 @@ def via_suggest():
         #HTMLから値を受け取る
         means = request.form.get("means")
         limit = request.form.get("limit")
-        via_btn = request.form.get("via_btn[]")
-        print(limit.isdigit())
-
+        keyword_list = request.form.getlist("via_btn")
         if limit.isnumeric() == False:
             return apology("所要時間を入力してください。", 400)
         if not request.form.get("origin"):
@@ -144,8 +142,12 @@ def via_suggest():
 
         origin = request.form.get("origin")
         destination = request.form.get("destination")
-        keyword = request.form.get("keyword")
 
+        keyword = ""
+        for keyword_list in keyword_list:
+            keyword += "|" + keyword_list
+        keyword = keyword[1:]
+        print(keyword)
         #関数を使って施設名から住所を取得
         destination_cie = get_address(destination)
         if destination_cie == False:
@@ -158,7 +160,6 @@ def via_suggest():
 
         #3つ経由先を提案する
         place = random.sample(suggest_place,3)
-
         #目的地を選択する場合はこれを使う。
         #データベースから目的地の緯度経度を取得
         """
@@ -166,7 +167,6 @@ def via_suggest():
         destination_latitude = destination[0]["latitude"]
         destination_longitude = destination[0]["longitude"]
         """
-
 
         #関数を使って経由地を提案
         via = suggest_via(origin,str(destination_cie[0])+","+str(destination_cie[1]),place,means,limit)
@@ -176,7 +176,7 @@ def via_suggest():
         while i != len(via):
             url.append("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
             i += 1
-        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=suggest_place ,key=api_key)
+        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key)
     else:
         return apology("未実装です。",500)
 
@@ -434,7 +434,10 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
         else:
             temp3 = {'rating':temp['rating']}
         temp4 = {'vicinity':temp['vicinity']}
-        temp5 = {'photo_reference':temp['photos']}
+        if not 'photos' in temp.keys():
+            temp5=""
+        else:
+            temp5 = {'photo_reference':temp['photos']}
         temp1.update(temp2)
         temp1.update(temp3)
         temp1.update(temp4)
