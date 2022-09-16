@@ -7,7 +7,7 @@
 {% block main %}
 <div class="via_system">
     <div class="input_form">
-        <div class="center">
+        <!--<div class="center">
             <div class="btn-margin mb-3">
                 <button id="btn" class="btn">
                     現在位置を取得する
@@ -17,57 +17,61 @@
                 <p>緯度：<span id="latitude">???</span><span>度</span></p>
                 <p>経度：<span id="longitude">???</span><span>度</span></p>
             </div>
-        </div>
+        </div>-->
         <script src="/static/js/geo.js"></script>
         <form method="POST" action="/via">
-            <div class="mb-3">
-                所要時間
-                <input name="limit" placeholder="分">
-            </div>
-            <div class="mb-3">
-                出発地点
-                <input name="origin">
-            </div>
-            <div class="mb-3">
-                目的地
-                <input name="destination">
-            </div>
-            <div class="mb-3">
-                手段
-                <select class="form-select" aria-label="Default select example" name="means">
-                    <option value="driving">車</option>
-                    <option value="bicycling">自転車</option>
-                    <option value="walking">歩き</option>
-                </select>
+            <div class="search">
+                <div class="mb-3">
+                    所要時間
+                    <input name="limit" placeholder="分">
+                </div>
+                <div class="mb-3">
+                    出発地点
+                    <input name="origin">
+                </div>
+                <div class="mb-3">
+                    目的地
+                    <input name="destination">
+                </div>
+                <div class="mb-3 select_class">
+                    <select class="form-select" aria-label="Default select example" name="means" style="display:inline">
+                        <option value="driving">車</option>
+                        <option value="bicycling">自転車</option>
+                        <option value="walking">歩き</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn submit_btn btn-outline-danger" id="target" name="place"
+                        onclick="location.href='./via.html'">検索</button>
+                </div>
             </div>
     </div>
-    <div class="mb-3">
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(1)" id="btn"
+    <div class="checkbox">
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)" id="btn"
             name="via_btn" value="restaurant">レストラン</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(2)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)" id="btn"
             name="via_btn" value="Italian">イタリアン</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(3)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)" id="btn"
             name="via_btn" value="sushi">寿司</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(4)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)" id="btn"
             name="via_btn" value="station">駅</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(5)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)" id="btn"
             name="via_btn" value="amusement park">遊園地</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(6)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(6)" id="btn"
             name="via_btn" value="Tourist attractions">観光スポット</input><br>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(7)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)" id="btn"
             name="via_btn" value="museum">美術館、博物館</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(8)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)" id="btn"
             name="via_btn" value="pharmacy">薬局</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(9)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)" id="btn"
             name="via_btn" value="convenience store">コンビニ</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill" onclick="buttonClick(10)" id="btn"
+        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)" id="btn"
             name="via_btn" value="cafe">カフェ</input><br>
     </div>
     <script src="../static/js/google.js"></script>
-    <button type="submit" class="btn" id="target" name="place" onclick="location.href='./via.html'">決定</button>
     </form>
     <div class="decoration">
-        <div class="suggest_place">
+        <div class="suggest_place col-xl-7">
             {% for place in place %}
             <span>{{ place['name'] }}</span><br>
             <span class="rating">星{{ place['rating'] }}</span><br>
@@ -78,9 +82,10 @@
             <span>000-0000-0000</span>
             {% endfor %}
         </div>
-        <div class="map">
+        <div class="map col-xl-3">
             <iframe src="https://maps.google.co.jp/maps?output=embed&t=m&hl=ja&z=18&ll=35.689634,139.692101"
-                frameborder="0" scrolling="no" width="450px" height="450px"></iframe>
+                frameborder="0" scrolling="no" width="900px" height="620px"></iframe>
         </div>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
