@@ -3,7 +3,6 @@
 {% block title %}
 ホーム
 {% endblock %}
-<link rel="stylesheet" href="../static/index_style.css">
 {% block main %}
 <div class="via_system">
     <div class="input_form">
@@ -33,40 +32,40 @@
                     目的地
                     <input name="destination">
                 </div>
-                <div class="mb-3 select_class">
-                    <select class="form-select" aria-label="Default select example" name="means" style="display:inline">
+                <div class="mb-3 selectwrap">
+                    <select aria-label="Default select example" name="means" style="display:inline">
                         <option value="driving">車</option>
                         <option value="bicycling">自転車</option>
                         <option value="walking">歩き</option>
                     </select>
                 </div>
                 <div class="mb-3">
-                    <button type="submit" class="btn submit_btn btn-outline-danger" id="target" name="place"
+                    <button type="submit" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
                         onclick="location.href='./via.html'">検索</button>
                 </div>
             </div>
     </div>
     <div class="checkbox">
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)" id="btn"
-            name="via_btn" value="restaurant">レストラン</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)" id="btn"
-            name="via_btn" value="Italian">イタリアン</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)" id="btn"
-            name="via_btn" value="sushi">寿司</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)" id="btn"
-            name="via_btn" value="station">駅</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)" id="btn"
-            name="via_btn" value="amusement park">遊園地</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(6)" id="btn"
-            name="via_btn" value="Tourist attractions">観光スポット</input><br>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)" id="btn"
-            name="via_btn" value="museum">美術館、博物館</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)" id="btn"
-            name="via_btn" value="pharmacy">薬局</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)" id="btn"
-            name="via_btn" value="convenience store">コンビニ</input>
-        <input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)" id="btn"
-            name="via_btn" value="cafe">カフェ</input><br>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)" id="btn"
+            name="via_btn" value="restaurant">レストラン</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)" id="btn"
+            name="via_btn" value="Italian">イタリアン</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)" id="btn"
+            name="via_btn" value="sushi">寿司</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)" id="btn"
+            name="via_btn" value="station">駅</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)" id="btn"
+            name="via_btn" value="amusement park">遊園地</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(6)" id="btn"
+            name="via_btn" value="Tourist attractions">観光スポット</input></label><br>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)" id="btn"
+            name="via_btn" value="museum">美術館、博物館</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)" id="btn"
+            name="via_btn" value="pharmacy">薬局</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)" id="btn"
+            name="via_btn" value="convenience store">コンビニ</input></label>
+        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)" id="btn"
+            name="via_btn" value="cafe">カフェ</input></label><br>
     </div>
     <script src="../static/js/google.js"></script>
     </form>
