@@ -12,6 +12,7 @@ import io
 import werkzeug
 from datetime import datetime
 import sqlite3
+import re
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
 with open("APIkey.txt") as f:
@@ -133,8 +134,6 @@ def via_suggest():
         limit = request.form.get("limit")
         via_btn = request.form.get("via_btn[]")
         print(limit.isdigit())
-        print("----------------------------------------")
-        print(via_btn)
 
         if limit.isnumeric() == False:
             return apology("所要時間を入力してください。", 400)
@@ -159,7 +158,7 @@ def via_suggest():
 
         #3つ経由先を提案する
         place = random.sample(suggest_place,3)
-        
+
         #目的地を選択する場合はこれを使う。
         #データベースから目的地の緯度経度を取得
         """
@@ -177,8 +176,6 @@ def via_suggest():
         while i != len(via):
             url.append("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
             i += 1
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print(suggest_place)
         return render_template("via.html" ,via=via ,url=url ,means=means ,detail=suggest_place ,key=api_key)
     else:
         return apology("未実装です。",500)
@@ -514,12 +511,11 @@ def favorite():
 
 @app.route("/add_history" ,methods=["GET","POST"])
 def add_history():
-    history =request.form.get("place") + "}"
+    history =request.form.get("place")
     print(history)
-    history = json.loads(history)
+    history = re.split('url:|name:|distance:|means:',history)
     print(history)
-    print(history['url'])
     userid = 1
     name = "ryohei"
-    #db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? )",name,history[1],history[2],history[3],userid)
-    return redirect('https://www.google.com/maps/dir/?api=1&origin=35.68123620000001,139.7671248&destination=35.7056396,139.7518913&travelmode=driving&waypoints=35.6919205,139.7584545')
+    db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? ,? ,? ,? ,? )",name,history[2],history[3],history[4],userid)
+    return redirect(history[1])
