@@ -525,3 +525,77 @@ def add_history():
     print(history[2],history[3],history[4])
     db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? ,? ,? ,? ,? )",name,history[2],history[3],history[4],userid)
     return redirect(history[1])
+
+@app.route("/tenantregister", methods=["GET", "POST"])
+def tenantregister():
+    # POSTの場合
+    if request.method == "POST":
+        # ユーザーネームが入力されていない
+        username = request.form.get("username")
+        password = request.form.get("password")
+        if not username:
+            return apology("ユーザーネームを入力してください", 400)
+        # ユーザーネームが既に使われている
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("SELECT * FROM users where username=?", (username,))
+        user = db.fetchone()
+        if user != None:
+            return apology("このユーザーネームは既に使われています", 400)
+        # パスワードが入力されていない
+        elif not password:
+            return apology("パスワードを入力してください", 400)
+        # パスワードが一致しない
+        elif password != request.form.get("confirmation"):
+            return apology("パスワードが一致しません", 400)
+        con.close()
+        password = generate_password_hash(password)
+        # データベースに入れる
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, password))
+        con.commit()
+        con.close()
+        #メッセージ
+        flash("登録が完了しました")
+        # ログインページに送る
+        return redirect("/login")
+    else:
+        return render_template("tenantregister.html")
+
+@app.route("/tenanthome", methods=["GET", "POST"])
+def tenanthome():
+    # POSTの場合
+    if request.method == "POST":
+        # ユーザーネームが入力されていない
+        username = request.form.get("name")
+        password = request.form.get("password")
+        if not username:
+            return apology("ユーザーネームを入力してください", 400)
+        # ユーザーネームが既に使われている
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("SELECT * FROM users where username=?", (username,))
+        user = db.fetchone()
+        if user != None:
+            return apology("このユーザーネームは既に使われています", 400)
+        # パスワードが入力されていない
+        elif not password:
+            return apology("パスワードを入力してください", 400)
+        # パスワードが一致しない
+        elif password != request.form.get("confirmation"):
+            return apology("パスワードが一致しません", 400)
+        con.close()
+        password = generate_password_hash(password)
+        # データベースに入れる
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, password))
+        con.commit()
+        con.close()
+        #メッセージ
+        flash("登録が完了しました")
+        # ログインページに送る
+        return redirect("/tenanthome")
+    else:
+        return render_template("tenanthome.html")
