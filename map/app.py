@@ -52,6 +52,8 @@ def gps():
     if request.method == "POST":
         lat = request.form['lat']
         long = request.form['long']
+        print("緯度",lat)
+        print(long)
         return render_template("index.html")
     else:
         latitude = 	35.6809591
