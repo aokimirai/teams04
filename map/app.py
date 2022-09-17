@@ -52,8 +52,6 @@ def gps():
     if request.method == "POST":
         lat = request.form['lat']
         long = request.form['long']
-        print("緯度",lat)
-        print(long)
         return render_template("index.html")
     else:
         latitude = 	35.6809591
@@ -513,7 +511,6 @@ def history():
 @app.route("/favorite")
 # お気に入りを表示
 def favorite():
-    return render_template("favorite.html")
     favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
     return render_template("favorite.html", favorite = favorite)
 
