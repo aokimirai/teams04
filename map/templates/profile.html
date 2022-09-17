@@ -7,15 +7,10 @@
 
 {% block main %}
     <form action="/profile" method="post" enctype="multipart/form-data">
-        <img src=../static/upload/icon/icon-default.png width="20%" class="icon">
-        <div class="mb-3">
-            <p>ニックネーム</p>
-            <input name="nickname" type="text">
-        </div>
         {% for user in users %}
             <div class="mb-3">
                 <p>ニックネーム</p>
-                <input name="nickname" type="text" value={{ user.nick_name }}>
+                <input name="nickname" type="text" value={{ user.display_name }}>
             </div>
             <p>アイコン</p>
             <div class="mb-3">

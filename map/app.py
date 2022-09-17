@@ -483,10 +483,10 @@ def profile():
         userid = session["user_id"]
         nickname = request.form.get("nickname")
         #comment = request.form.get("comment")
-        if db.execute("SELECT icon FROM users WHERE userid = ?",userid)[0]["icon"] == None:
+        if db.execute("SELECT icon FROM users WHERE id = ?",userid)[0]["icon"] == None:
             filepath=None
         else:
-            filepath=db.execute("SELECT icon FROM users WHERE userid = ?",userid)[0]["icon"]
+            filepath=db.execute("SELECT icon FROM users WHERE id = ?",userid)[0]["icon"]
 
         img = request.files['imgfile']
         if img:
@@ -494,13 +494,12 @@ def profile():
             + werkzeug.utils.secure_filename(img.filename)
             img.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/iconimg', filepath))
 
-        db.execute("UPDATE users SET display_name=(?), icon=(?) WHERE userid=(?)",nickname,filepath,userid)
+        db.execute("UPDATE users SET display_name=(?), icon=(?) WHERE id=(?)",nickname,filepath,userid)
         return redirect("/mypage")
     else:
-        #userid = session["user_id"]
-        #users = db.execute("SELECT display_name,icon,comment FROM users WHERE userid = (?)", userid)
-        return render_template("profile.html")
-        #,users=users
+        userid = session["user_id"]
+        users = db.execute("SELECT display_name,icon FROM users WHERE id = (?)", userid)
+        return render_template("profile.html",users=users)
 
 
 @app.route("/history")
