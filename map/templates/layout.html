@@ -13,26 +13,37 @@
 </head>
     <body class="body">
         <nav class="navbar navbar-expand-md navbar-dark bg-danger">
+            {% if session["user_id"] %}
             <a class="navbar-brand" href="/">わざと遠回り</a>
             <div class="navbar-collapse collapse justify-content-stretch" id="navbar">
-                    {% if session["user_id"] %}
-                        <ul class="navbar-nav me-auto mt-2">
-                        </ul>
-                        <ul class="navbar-nav ms-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/mypage">マイページ</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/logout">ログアウト</a></li>
-                        </ul>
-                    {% else %}
-                        <ul class="navbar-nav me-auto mt-2">
-                        </ul>
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item"><a class="nav-link" href="/tenantregister">テナント用新規登録</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/register">新規登録</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/login">ログイン</a></li>
-                        </ul>
-                    {% endif %}
-                </div>
+                <ul class="navbar-nav me-auto mt-2">
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/mypage">マイページ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">ログアウト</a></li>
+                </ul>
             </div>
+            {% elif session["tenant_user_id"] %}
+            <a class="navbar-brand" href="/tenanthome">わざと遠回り</a>
+            <div class="navbar-collapse collapse justify-content-stretch" id="navbar">
+                <ul class="navbar-nav me-auto mt-2">
+                </ul>
+                <ul class="navbar-nav ms-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/logout">ログアウト</a></li>
+                </ul>
+            </div>
+            {% else %}
+            <a class="navbar-brand" href="/">わざと遠回り</a>
+            <div class="navbar-collapse collapse justify-content-stretch" id="navbar">
+                <ul class="navbar-nav me-auto mt-2">
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/tenantregister">テナント用新規登録</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register">新規登録</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">ログイン</a></li>
+                </ul>
+            </div>
+            {% endif %}
         </nav>
         {% if get_flashed_messages() %}
             <header>

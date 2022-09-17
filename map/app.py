@@ -26,7 +26,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required
 
 # Configure application
 # アプリケーションの構成
@@ -43,9 +43,15 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# 画像保存用
+UPLOAD_POST_FOLDER = './static/upload'
+ALLOWED_EXTENSIONS = set(['.jpg','.gif','.png','image/gif','image/jpeg','image/png'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_POST_FOLDER
+
 # Configure CS50 Library to use SQLite database
 # SQLite データベースを使用するように CS50 ライブラリを構成する
 db = SQL("sqlite:///map.db")
+
 
 @app.route("/", methods=["GET","POST"])
 def gps():
@@ -238,22 +244,31 @@ def login():
         # パスワードが入力されていない
         elif not password:
             return apology("パスワードを入力してください", 403)
-        # 入力されたユーザーネームのデータを取得
+
         con = sqlite3.connect('./map.db')
         db = con.cursor()
         db.execute("SELECT * FROM users WHERE username = ?", (username,))
-        rows = db.fetchall()
+        users = db.fetchone()
+        db.execute("SELECT * FROM tenantusers WHERE username = ?", (username,))
+        tenantusers = db.fetchone()
         con.close()
         # ユーザーネームとパスワードが正しいか確認
-        print(rows)
-        if rows == None or not check_password_hash(rows[0][2], password):
-            return apology("ユーザーネームまたはパスワードが無効です", 403)
-        # ユーザーを記憶する
-        session["user_id"] = rows[0][0]
-        #メッセージ
-        flash("ログインしました")
-        # ホームに送る
-        return redirect("/")
+        if users != None:
+            if check_password_hash(users[2], password):
+                # ユーザーを記憶する
+                session["user_id"] = users[0]
+                #メッセージ
+                flash("ログインしました")
+                return redirect("/")
+        elif tenantusers != None:
+            if check_password_hash(tenantusers[2], password):
+                session["tenant_user_id"] = tenantusers[0]
+                #メッセージ
+                flash("ログインしました")
+                return redirect("/tenanthome")
+        else:
+            return apology("ユーザネームが無効です", 403)
+
     else:
         return render_template("login.html")
 
@@ -482,7 +497,6 @@ def profile():
     if request.method == "POST":
         userid = session["user_id"]
         nickname = request.form.get("nickname")
-        #comment = request.form.get("comment")
         if db.execute("SELECT icon FROM users WHERE id = ?",userid)[0]["icon"] == None:
             filepath=None
         else:
@@ -492,7 +506,7 @@ def profile():
         if img:
             filepath = datetime.now().strftime("%Y%m%d_%H%M%S_") \
             + werkzeug.utils.secure_filename(img.filename)
-            img.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/iconimg', filepath))
+            img.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/icon', filepath))
 
         db.execute("UPDATE users SET display_name=(?), icon=(?) WHERE id=(?)",nickname,filepath,userid)
         return redirect("/mypage")
@@ -510,7 +524,7 @@ def history():
 @app.route("/favorite")
 # お気に入りを表示
 def favorite():
-    
+
     favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
     return render_template("favorite.html", favorite = favorite)
 
@@ -535,12 +549,15 @@ def tenantregister():
         # ユーザーネームが既に使われている
         con = sqlite3.connect('./map.db')
         db = con.cursor()
+        db.execute("SELECT * FROM tenantusers where username=?", (username,))
+        tenantuser = db.fetchone()
         db.execute("SELECT * FROM users where username=?", (username,))
         user = db.fetchone()
-        if user != None:
+        if user != None or tenantuser != None:
             return apology("このユーザーネームは既に使われています", 400)
+        con.close()
         # パスワードが入力されていない
-        elif not password:
+        if not password:
             return apology("パスワードを入力してください", 400)
         # パスワードが一致しない
         elif password != request.form.get("confirmation"):
@@ -550,7 +567,7 @@ def tenantregister():
         # データベースに入れる
         con = sqlite3.connect('./map.db')
         db = con.cursor()
-        db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, password))
+        db.execute("INSERT INTO tenantusers (username, hash) VALUES(?, ?)", (username, password))
         con.commit()
         con.close()
         #メッセージ
@@ -564,35 +581,38 @@ def tenantregister():
 def tenanthome():
     # POSTの場合
     if request.method == "POST":
-        # ユーザーネームが入力されていない
-        username = request.form.get("name")
-        password = request.form.get("password")
-        if not username:
-            return apology("ユーザーネームを入力してください", 400)
-        # ユーザーネームが既に使われている
-        con = sqlite3.connect('./map.db')
-        db = con.cursor()
-        db.execute("SELECT * FROM users where username=?", (username,))
-        user = db.fetchone()
-        if user != None:
-            return apology("このユーザーネームは既に使われています", 400)
-        # パスワードが入力されていない
-        elif not password:
-            return apology("パスワードを入力してください", 400)
-        # パスワードが一致しない
-        elif password != request.form.get("confirmation"):
-            return apology("パスワードが一致しません", 400)
-        con.close()
-        password = generate_password_hash(password)
+        userid = session["tenant_user_id"]
+        name = request.form.get("name")
+        tel = request.form.get("tel")
+        postcode = request.form.get("password")
+        addr= request.form.get("addr")
+        img = request.files['imgfile']
+
         # データベースに入れる
         con = sqlite3.connect('./map.db')
         db = con.cursor()
-        db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, password))
+        db.execute("INSERT INTO tenants (id, name, post, addr,number) VALUES(?, ?)", (userid, name, postcode, addr, tel))
         con.commit()
         con.close()
+        # 画像がある場合画像を追加する
+        if img:
+            filepath = datetime.now().strftime("%Y%m%d_%H%M%S_") \
+            + werkzeug.utils.secure_filename(img.filename)
+            img.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/tenantimg', filepath))
+            con = sqlite3.connect('./map.db')
+            db = con.cursor()
+            db.execute("UPDATE tenants SET photo=? WHERE id=?",(filepath,userid))
+            con.commit()
+            con.close()
         #メッセージ
         flash("登録が完了しました")
         # ログインページに送る
-        return redirect("/tenanthome")
+        return redirect("/")
     else:
-        return render_template("tenanthome.html")
+        userid=session["tenant_user_id"]
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("SELECT * FROM tenants WHERE id = ?",(userid,))
+        tenants = db.fetchone()
+        con.close()
+        return render_template("tenanthome.html",tenants=tenants)
