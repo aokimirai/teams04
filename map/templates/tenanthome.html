@@ -9,7 +9,7 @@
     <form action="/tenantregister" method="post">
         <p style="font-weight:bold">店舗名</p>
         <div class="mb-3">
-            <input autocomplete="off" autofocus id="name" name="name" placeholder="店舗名" type="text">
+            <input autocomplete="off" autofocus id="name" name="name" placeholder="店舗名" type="text" class="form-control mx-auto w-auto">
         </div>
         <p style="font-weight:bold">店舗の写真</p>
         <div class="mb-3">
@@ -17,17 +17,17 @@
         </div>
         <p style="font-weight:bold">電話番号(ハイフンなし)</p>
         <div class="mb-3">
-            <input type="tel" name="tel" size="15" maxlength="15" placeholder="電話番号">
+            <input type="tel" name="tel" size="15" maxlength="15" placeholder="電話番号" class="form-control mx-auto w-auto">
         </div>
         <p style="font-weight:bold">郵便番号</p>
         <div class="mb-3">
             <!-- ▼郵便番号入力フィールド(7桁) -->
-            <input type="text" name="postcode" size="10" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','addr11','addr11');" placeholder="郵便番号">
+            <input type="text" name="postcode" size="10" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','addr','addr');" placeholder="郵便番号" class="form-control mx-auto w-auto">
         </div>
         <p style="font-weight:bold">都道府県＋以降の住所</p>
         <div class="mb-3">
             <!-- ▼住所入力フィールド(都道府県+以降の住所) -->
-            <input type="text" name="addr" size="60" placeholder="住所">
+            <input type="text" name="addr" size="60" placeholder="住所" class="form-control mx-auto w-auto">
         </div>
         <button class="btn" type="submit">登録</button>
     </form>
