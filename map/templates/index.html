@@ -5,18 +5,11 @@
 {% endblock %}
 {% block main %}
 <div class="via_system">
-    <div class="input_form">
-        <!--<div class="center">
-            <div class="btn-margin mb-3">
-                <button id="btn" class="btn">
-                    現在位置を取得する
-                </button>
-            </div>
-            <div class="txt-margin">
-                <p>緯度：<span id="latitude">???</span><span>度</span></p>
-                <p>経度：<span id="longitude">???</span><span>度</span></p>
-            </div>
-        </div>-->
+    <div class="btn-margin mb-3">
+        <button id="btn" class="btn">
+            現在地から出発する
+        </button>
+    </div>
         <script src="/static/js/geo.js"></script>
         <form method="POST" action="/via">
             <div class="search">
