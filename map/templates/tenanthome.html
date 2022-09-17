@@ -1,23 +1,33 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    テナント新規登録
+    テナント情報入力
 {% endblock %}
-
 {% block main %}
+
+    <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
     <form action="/tenantregister" method="post">
+        <p style="font-weight:bold">店舗名</p>
         <div class="mb-3">
             <input autocomplete="off" autofocus id="name" name="name" placeholder="店舗名" type="text">
         </div>
+        <p style="font-weight:bold">店舗の写真</p>
         <div class="mb-3">
             <input class="form-control" type="file" name="imgfile" accept=".jpg,.gif,.png,image/gif,image/jpeg,image/png" style="width:50%; display:revert">
         </div>
+        <p style="font-weight:bold">電話番号(ハイフンなし)</p>
         <div class="mb-3">
-            <p>電話番号(ハイフンなし)</p>
             <input type="tel" name="tel" size="15" maxlength="15" placeholder="電話番号">
         </div>
+        <p style="font-weight:bold">郵便番号</p>
         <div class="mb-3">
-            <input type="postal-code" name="postal-code" autocomplete="postal-code" placeholder="郵便番号">
+            <!-- ▼郵便番号入力フィールド(7桁) -->
+            <input type="text" name="zip11" size="10" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','addr11','addr11');" placeholder="郵便番号">
+        </div>
+        <p style="font-weight:bold">都道府県＋以降の住所</p>
+        <div class="mb-3">
+            <!-- ▼住所入力フィールド(都道府県+以降の住所) -->
+            <input type="text" name="addr11" size="60" placeholder="住所">
         </div>
         <button class="btn" type="submit">登録</button>
     </form>
