@@ -607,7 +607,7 @@ def tenanthome():
         #メッセージ
         flash("登録が完了しました")
         # ログインページに送る
-        return redirect("/")
+        return redirect("/tenanthome")
     else:
         userid=session["tenant_user_id"]
         con = sqlite3.connect('./map.db')
@@ -616,3 +616,10 @@ def tenanthome():
         tenants = db.fetchone()
         con.close()
         return render_template("tenanthome.html",tenants=tenants)
+
+@app.route("/keyword", methods=["GET", "POST"])
+def keyword():
+    if request.method == "POST":
+        return redirect("/keyword")
+    else:
+        return render_template("keyword.html")
