@@ -511,6 +511,7 @@ def history():
 @app.route("/favorite")
 # お気に入りを表示
 def favorite():
+    
     favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
     return render_template("favorite.html", favorite = favorite)
 
