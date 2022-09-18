@@ -584,16 +584,32 @@ def tenanthome():
         userid = session["tenant_user_id"]
         name = request.form.get("name")
         tel = request.form.get("tel")
-        postcode = request.form.get("password")
+        postcode = request.form.get("postcode")
         addr= request.form.get("addr")
         img = request.files['imgfile']
 
         # データベースに入れる
         con = sqlite3.connect('./map.db')
         db = con.cursor()
-        db.execute("INSERT INTO tenants (id, name, post, addr,number) VALUES(?, ?)", (userid, name, postcode, addr, tel))
-        con.commit()
+        db.execute("SELECT * FROM tenants WHERE id = ?",(userid,))
+        tenant = db.fetchone()
         con.close()
+        if tenant == None:
+            con = sqlite3.connect('./map.db')
+            db = con.cursor()
+            db.execute("INSERT INTO tenants (id, name, post, addr,number) VALUES(?, ?, ?, ?, ?)", (userid, name, postcode, addr, tel))
+            con.commit()
+            con.close()
+            #メッセージ
+            flash("登録が完了しました")
+        else:
+            con = sqlite3.connect('./map.db')
+            db = con.cursor()
+            db.execute("UPDATE tenants SET name=?, post=?, addr=?, number=? WHERE id=?", (name,postcode,addr,tel,userid))
+            con.commit()
+            con.close()
+            #メッセージ
+            flash("変更が完了しました")
         # 画像がある場合画像を追加する
         if img:
             filepath = datetime.now().strftime("%Y%m%d_%H%M%S_") \
@@ -604,8 +620,6 @@ def tenanthome():
             db.execute("UPDATE tenants SET photo=? WHERE id=?",(filepath,userid))
             con.commit()
             con.close()
-        #メッセージ
-        flash("登録が完了しました")
         # ログインページに送る
         return redirect("/tenanthome")
     else:

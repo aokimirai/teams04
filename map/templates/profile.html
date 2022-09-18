@@ -15,8 +15,8 @@
             <p>アイコン</p>
             <div class="mb-3">
                 {% if user.icon != None %}
-                    <img src=../upload/iconimg/{{ user.icon }} width="20%" class="icon">
-                    {% else %}
+                    <img src=../static/upload/icon/{{ user.icon }} width="20%" class="icon">
+                {% else %}
                     <img src=../static/upload/icon/icon-default.png width="20%" class="icon">
                 {% endif %}
                 <input class="form-control" type="file" name="imgfile" accept=".jpg,.gif,.png,image/gif,image/jpeg,image/png" style="width:50%; display:revert">
