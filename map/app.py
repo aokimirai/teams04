@@ -63,6 +63,7 @@ def gps():
         latitude = 	35.6809591
         longitude = 139.7673068
         keyword = ""
+        geo = 0
         b = []
         place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
         return render_template("index.html",place = place,key = api_key ,lat=latitude ,long=longitude ,geo=geo)
@@ -196,9 +197,24 @@ def via_suggest():
         while i != len(via):
             url.append("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via[i]['lat'])+","+str(via[i]['lng']))
             i += 1
-        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key)
+
+        userid=1
+        favorite=[0,0,0]
+        favorite_temp = db.execute("SELECT place FROM test_favorite WHERE userid = ?", userid)
+        print("==================================================================================================================")
+        print(favorite_temp[0]['place'])
+        print(via)
+        x = 0
+        for cycle in via:
+            for favorite_cycle in favorite_temp:
+                print(favorite_cycle['place'])
+                if cycle['name'] == favorite_cycle['place']:
+                    favorite[x] = 1
+                    break
+            x += 1
+        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite)
     else:
-        return apology("未実装です。",500)
+        return apology("パラメータが入力されていません",501)
 
 @app.route("/detail_search", methods=["GET", "POST"])
 def detail_search():
@@ -434,7 +450,7 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     loc = {'lat': str((float(original_latitude) + destination_latitude)/2), 'lng': str((original_longitude + destination_longitude)/2)}
     #それぞれの手段によって半径を変える
     if means == 'driving':
-        radius = 333 * int(limit)
+        radius = 250 * int(limit)
     if means == 'bicycling':
         radius = 166 * int(limit)
     if means == 'walking':
@@ -468,7 +484,7 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
             temp3 = {'rating':temp['rating']}
         temp4 = {'vicinity':temp['vicinity']}
         if not 'photos' in temp.keys():
-            temp5=""
+            temp5={'photo_reference':''}
         else:
             temp5 = {'photo_reference':temp['photos']}
         temp1.update(temp2)
@@ -533,13 +549,22 @@ def profile():
 
 @app.route("/history")
 def history():
-    history = db.execute("SELECT  FROM histories WHERE user_id = ?", session["user_id"])
+    #history = db.execute("SELECT  FROM histories WHERE user_id = ?", session["user_id"])
+    if request.method == "POST":
+        means = request.form.get('means')
+    #デバッグ用
+    else:
+        means = "driving"
+    userid = 1
+    user = db.execute("SELECT name FROM test_user WHERE id=?",userid)
+
+    history = db.execute("SELECT * FROM test_history WHERE userid=?",userid)
+
     return render_template("history.html", history = history)
 
 @app.route("/favorite")
 # お気に入りを表示
 def favorite():
-
     favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
     return render_template("favorite.html", favorite = favorite)
 
@@ -668,10 +693,15 @@ def geo():
     place = search_place(lat,long,lat,long,"driving",60,keyword)
     return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
 
-@app.route("/add_favorite")
+@app.route("/add_favorite", methods=["GET", "POST"])
 def add_favorite():
-    history = request.form.get("place")
-    userid = 1
-    name = "ryohei"
-    db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? ,? ,? ,? ,? )",name,history[2],history[3],history[4],userid)
-    return redirect("via.html")
+    if request.method == "POST":
+        favorite_temp = request.form.get("place")
+        print(favorite_temp)
+        favorite = re.split(" : ",favorite_temp)
+        print(favorite)
+        userid = 1
+        if favorite[0] == "add":
+            db.execute("INSERT INTO test_favorite (userid,place) VALUES (? ,?)",userid ,favorite[1])
+        else:
+            db.execute("DELETE FROM test_favorite WHERE userid=? AND place=?" ,userid,favorite[1])
