@@ -32,8 +32,8 @@
         {% for score in score %}
         <tr>
             <td>{{ a.cnt + 1 }}位</td>
-            <td>{{ user[a.cnt] }}</td>
-            <td>{{ score }}</td>
+            <td>{{ score[0] }}</td>
+            <td>{{ score[1] }}</td>
         </tr>
         {% set a.cnt = a.cnt + 1 %}
         {% endfor %}

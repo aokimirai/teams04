@@ -126,7 +126,20 @@ def ranking():
     for cycle in temp:
         score[cycle["way"]][cycle["userid"] - 1] += float(cycle["distance"])
 
+    print(score['driving'])
+    driving_score = {}
+    bicycling_score = {}
+    walking_score = {}
+    r = 0
+    for temp_name in name:
+        driving_score.update({temp_name:score["driving"][r]})
+        bicycling_score.update({temp_name:score["bicycling"][r]})
+        walking_score.update({temp_name:score["walking"][r]})
+        r += 1
+    print(driving_score)
     #score = {'driving':2,'walking':3,'bicycling':4}
+    score = {"walking": sorted(walking_score.items()), "bicycling": sorted(bicycling_score.items()), "driving": sorted(driving_score.items())}
+    print(score)
 
     #辞書式で保存した値とユーザー名、移動手段を返す
     return render_template("ranking.html",score=score[means],user=name,means=means)
@@ -732,11 +745,9 @@ def add_favorite():
         else:
             db.execute("DELETE FROM favorite WHERE userid=? AND place=?" ,session['user_id'] ,favorites[1])
 
-        return render_template("index.html")
-
         #上手くいかない...試行錯誤中
-        """
         place =[0,0,0]
+        destination = "東京駅"
 
         print("===============================================================================")
         print(favorites[2])
@@ -746,5 +757,21 @@ def add_favorite():
         print(favorites[5])
         print("===============================================================================")
         print(favorites[1])
-        return render_template("via.html" ,via=favorites[5],url=favorites[3],means=favorites[4],detail=favorites[5],key=api_key,favorite=place)
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+        favorites[5] = favorites[5][1:][:-1]
+        favorites[5] = re.split('}, {',favorites[5])
+        for y in range(3):
+            favorites[5][y] = "{" + favorites[5][y] + "}"
+        favorites[5][0] = favorites[5][0][1:]
+        favorites[5][2] = favorites[5][2][:-1]
+
         """
+        with open('../static/json/test.json', 'w') as f:
+            json.dump(str, f, ensure_ascii=False)
+        with open('../static/json/test.json') as f:
+            temp_json = json.load(f)
+            print(temp_json)
+        """
+
+        return render_template("via.html" ,via=favorites[5] ,url=favorites[3] ,means=favorites[4] ,detail=favorites[5] ,key=api_key ,favorite=place ,destination=destination)
