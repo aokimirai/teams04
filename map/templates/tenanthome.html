@@ -9,16 +9,16 @@
     <p>店舗情報が登録されていません</p>
     <h3>店舗登録</h3>
     {% else %}
-            <p>店舗名</p>
+            <p style="font-weight:bold">店舗名</p>
             <p>{{ tenants[1] }}</p>
             {% if tenants[5] != None %}
                     <img src=../static/upload/tenantimg/{{ tenants[5] }} width="40%" style="margin-bottom: 10px;">
             {% endif %}
-            <p>郵便番号</p>
+            <p style="font-weight:bold">郵便番号</p>
             <p>{{ tenants[2] }}</p>
-            <p>住所</p>
+            <p style="font-weight:bold">住所</p>
             <p>{{ tenants[3] }}</p>
-            <p>電話番号</p>
+            <p style="font-weight:bold">電話番号</p>
             <p>{{ tenants[4] }}</p>
             <h3>店舗情報変更</h3>
     {% endif %}
@@ -26,7 +26,7 @@
     <form action="/tenanthome" method="post" enctype="multipart/form-data">
         <p style="font-weight:bold">店舗名</p>
         <div class="mb-3">
-            <input autocomplete="off" autofocus id="name" name="name" placeholder="店舗名" type="text" class="form-control mx-auto w-auto">
+            <input id="name" name="name" placeholder="店舗名" type="text" class="form-control mx-auto w-auto">
         </div>
         <p style="font-weight:bold">店舗の写真</p>
         <div class="mb-3">

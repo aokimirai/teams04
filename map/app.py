@@ -674,9 +674,38 @@ def tenanthome():
 @app.route("/keyword", methods=["GET", "POST"])
 def keyword():
     if request.method == "POST":
+        userid=session["tenant_user_id"]
+        mode = int(request.form.get("mode"))
+        if mode == 1:
+            con = sqlite3.connect('./map.db')
+            db = con.cursor()
+            db.execute("UPDATE tenantkeys SET 'set'=? WHERE id=?", (mode,userid))
+            con.commit()
+            con.close()
+        elif mode == 0:
+            con = sqlite3.connect('./map.db')
+            db = con.cursor()
+            db.execute("UPDATE tenantkeys SET 'set'=? WHERE id=?", (mode,userid))
+            con.commit()
+            con.close()
         return redirect("/keyword")
     else:
-        return render_template("keyword.html")
+        userid=session["tenant_user_id"]
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("SELECT * FROM tenantkeys WHERE id = ?",(userid,))
+        tenantkey=db.fetchone()
+        con.close()
+        if tenantkey == None:
+            con = sqlite3.connect('./map.db')
+            db = con.cursor()
+            db.execute("INSERT INTO tenantkeys (id) VALUES(?)",(userid,))
+            con.commit()
+            db.execute("SELECT * FROM tenantkeys WHERE id = ?",(userid,))
+            tenantkey=db.fetchone()
+            con.close()
+        print(tenantkey)
+        return render_template("keyword.html",tenantkey=tenantkey)
 
 @app.route("/geo")
 def geo():

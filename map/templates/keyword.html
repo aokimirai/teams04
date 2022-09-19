@@ -5,5 +5,41 @@
 {% endblock %}
 
 {% block main %}
-    
+<!--   jQueryライブラリ読み込み -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+    {% if tenantkey[2] == 0 %}
+        <h3>今日のキーワード</h3>
+        <p style="font-size:xxx-large">ねこじゃらし</p>
+        <p>キーワード設定モード</p>
+        <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-on="ON" date-off="OFF" id="mode">
+    {% elif tenantkey[2] == 1 %}
+        <form action="/keyword" method="post" enctype="multipart/form-data">
+            <input type="text" name="keyword" size="15" maxlength="20" placeholder="キーワード">
+            <button class="btn" type="submit">設定</button>
+        </form>
+        <p>キーワード設定モード</p>
+        <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-on="ON" date-off="OFF" id="mode" checked>
+    {% endif %}
+
+    <script>
+        $("#mode").change(function(){
+        if($(this).prop("checked") == true){
+            $.ajax({
+            url: 'keyword',
+            type: 'post',
+            data: {mode:1}
+            })
+        }else{
+            $.ajax({
+            url: 'keyword',
+            type: 'post',
+            data: {mode:0}
+            })
+        }
+        });
+    </script>
 {% endblock %}
