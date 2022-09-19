@@ -31,8 +31,14 @@
                     <button class="btn removefavorite hidden">★</button>
             </td>
             <td>{{ detail[a.cnt]['rating'] }}</td>
+            <!--できてるかな？？？よくわからん？？？？-->
+            {% if detail[a.cnt]["photo_reference"] == "" %}
+            <td><span>画像が無いよ！！</span></td>
+            {% else %}
             <td><img
-                src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=150&photoreference={{ detail[a.cnt]['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></td>
+                    src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ detail[a.cnt]['photo_reference'][0]['photo_reference'] }}&key={{ key }}">
+            </td>
+            {% endif %}
             <td>{{ via.name }}</td>
             <td>{{ via.add_duration }}</td>
             <td>{{ via.add_distance }}</td>

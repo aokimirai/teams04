@@ -5,89 +5,105 @@
 {% endblock %}
 {% block main %}
 <div class="via_system">
+    <script src="/static/js/geo.js"></script>
+    <form method="POST" action="/via">
+        <div class="search">
+            <div class="mb-3">
+                所要時間
+                <input name="limit" placeholder="分">
+            </div>
+            <div class="mb-3">
+                出発地点
+                <input name="origin">
+            </div>
+            <div class="mb-3">
+                目的地
+                <input name="destination">
+            </div>
+            <div class="mb-3 selectwrap">
+                <select aria-label="Default select example" name="means" style="display:inline">
+                    <option value="driving | {{lat}},{{long}}">車</option>
+                    <option value="bicycling | {{lat}},{{long}}">自転車</option>
+                    <option value="walking | {{lat}},{{long}}">歩き</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
+                    onclick="location.href='./via.html'">検索</button>
+            </div>
+        </div>
+</div>
+<div class="checkbox">
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)" id="btn"
+            name="via_btn" value="restaurant">レストラン</input></label>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)" id="btn"
+            name="via_btn" value="Italian">イタリアン</input></label>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)" id="btn"
+            name="via_btn" value="sushi">寿司</input></label>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)" id="btn"
+            name="via_btn" value="station">駅</input></label>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)" id="btn"
+            name="via_btn" value="amusement park">遊園地</input></label>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(6)" id="btn"
+            name="via_btn" value="Tourist attractions">観光スポット</input></label><br>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)" id="btn"
+            name="via_btn" value="museum">美術館、博物館</input></label>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)" id="btn"
+            name="via_btn" value="pharmacy">薬局</input></label>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)" id="btn"
+            name="via_btn" value="convenience store">コンビニ</input></label>
+    <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)" id="btn"
+            name="via_btn" value="cafe">カフェ</input></label><br>
+</div>
+
+<script src="../static/js/google.js"></script>
+<div class="button">
     <div class="btn-margin mb-3">
-        <button id="btn" class="btn">
+        {% if geo == 0 %}
+        <button type="button" id="btn target" class="btn submit_btn btn-outline-danger btn-default btn_btn"
+            onclick="location.href='/geo'">
             現在地から出発する
         </button>
+        {% endif %}
+        {% if geo == 1 %}
+        <button type="button" id="btn target" class="btn submit_btn btn-outline-danger btn-default btn_btn"
+            onclick="location.href='/'">
+            出発地点を設定する
+        </button>
+        {% endif %}
     </div>
-        <script src="/static/js/geo.js"></script>
-        <form method="POST" action="/via">
-            <div class="search">
-                <div class="mb-3">
-                    所要時間
-                    <input name="limit" placeholder="分">
-                </div>
-                <div class="mb-3">
-                    出発地点
-                    <input name="origin">
-                </div>
-                <div class="mb-3">
-                    目的地
-                    <input name="destination">
-                </div>
-                <div class="mb-3 selectwrap">
-                    <select aria-label="Default select example" name="means" style="display:inline">
-                        <option value="driving">車</option>
-                        <option value="bicycling">自転車</option>
-                        <option value="walking">歩き</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <button type="submit" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
-                        onclick="location.href='./via.html'">検索</button>
-                </div>
-            </div>
-    </div>
-    <div class="checkbox">
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)"
-                id="btn" name="via_btn" value="restaurant">レストラン</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)"
-                id="btn" name="via_btn" value="Italian">イタリアン</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)"
-                id="btn" name="via_btn" value="sushi">寿司</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)"
-                id="btn" name="via_btn" value="station">駅</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)"
-                id="btn" name="via_btn" value="amusement park">遊園地</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(6)"
-                id="btn" name="via_btn" value="Tourist attractions">観光スポット</input></label><br>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)"
-                id="btn" name="via_btn" value="museum">美術館、博物館</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)"
-                id="btn" name="via_btn" value="pharmacy">薬局</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)"
-                id="btn" name="via_btn" value="convenience store">コンビニ</input></label>
-        <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)"
-                id="btn" name="via_btn" value="cafe">カフェ</input></label><br>
-    </div>
-    <script src="../static/js/google.js"></script>
     <button type="button" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
-    onclick="location.href='/'">クリア</button>
+        onclick="location.href='/'">クリア</button>
     <button type="button" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
-    onclick="location.href='/detail_search'">詳細検索</button>
-    </form>
-    <div class="decoration">
-        <div class="suggest_place col-xl-7">
-            {% for place in place %}
-            <div class="suggest_box">
-                <div class="detail1">
-                    <span class="rating">星{{ place['rating'] }}</span><br>
-                    <span class="name">{{ place['name'] }}</span><br>
-                </div>
-                <span><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
-                <div class="detail2">
-                    <span class="vicinity">{{ place['vicinity'] }}</span><br>
-                    <button
-                        onclick="location.href='https://www.google.com/search?q={{ place['name'] }}'" class="btn btn-outline-danger">WEBで開く</button>
-                </div>
+        onclick="location.href='/detail_search'">詳細検索</button>
+</div>
+</form>
+<div class="decoration">
+    <div class="suggest_place col-xl-7">
+        {% for place in place %}
+        <div class="suggest_box">
+            <div class="detail1">
+                <span class="rating">星{{ place['rating'] }}</span><br>
+                <span class="name">{{ place['name'] }}</span><br>
             </div>
-            {% endfor %}
+            {% if place['photo_reference'][0]=="" %}
+            <span>画像が無いよ！！</span>
+            {% else %}
+            <span><img src="static/img/181_1.jpg"></span>
+            {% endif %}
+            <div class="detail2">
+                <span class="vicinity">{{ place['vicinity'] }}</span><br>
+                <button onclick="location.href='https://www.google.com/search?q={{ place['name'] }}'"
+                    class="btn btn-outline-danger">WEBで開く</button>
+            </div>
         </div>
-        <div class="map col-xl-3">
-            <iframe src="https://maps.google.co.jp/maps?output=embed&t=m&hl=ja&z=18&ll=35.689634,139.692101"
-                frameborder="0" scrolling="no" width="900px" height="620px"
-                style="filter:hue-rotate(200deg);-webkit-filter:hue-rotate(200deg)"></iframe>
-        </div>
+        {% endfor %}
     </div>
+    <div class="map col-xl-3">
+        <iframe src="https://maps.google.co.jp/maps?output=embed&t=m&hl=ja&z=18&ll={{ lat }},{{ long }}" frameborder="0"
+        scrolling="no" width="700px" height="420px"
+        style="filter:hue-rotate(200deg);-webkit-filter:hue-rotate(200deg)"></iframe>
+    </div>
+</div>
 </div>
 {% endblock %}

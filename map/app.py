@@ -65,7 +65,7 @@ def gps():
         keyword = ""
         b = []
         place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
-        return render_template("index.html",place = place,key = api_key)
+        return render_template("index.html",place = place,key = api_key ,lat=latitude ,long=longitude ,geo=geo)
 
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
@@ -137,6 +137,21 @@ def via_suggest():
         #HTMLから値を受け取る
         means = request.form.get("means")
         limit = request.form.get("limit")
+        origin = request.form.get("origin")
+
+        #かなり無理やりですが実装しました。
+        #緯度経度を取得するボタンを押すと緯度経度が移動手段の値の後ろに | 緯度、経度　のように格納されます。
+        #それを無理やり抜き出す方法です。
+        if "|" in means:
+            temp_means = re.split(" | ",means)
+            #temp_meansには　["移動手段"," | ","緯度経度"]　のように格納されています
+            print(temp_means)
+            means = temp_means[0]
+            origin = temp_means[2]
+        else:
+            means = means[:-2]
+
+
         keyword_list = request.form.getlist("via_btn")
         if limit.isnumeric() == False:
             return apology("所要時間を入力してください。", 400)
@@ -145,7 +160,7 @@ def via_suggest():
         if not request.form.get("destination"):
             return apology("目的地を入力してください。",400)
 
-        origin = request.form.get("origin")
+
         destination = request.form.get("destination")
 
         keyword = ""
@@ -637,3 +652,26 @@ def keyword():
         return redirect("/keyword")
     else:
         return render_template("keyword.html")
+
+@app.route("/geo")
+def geo():
+
+    #lat = request.form['lat']
+    #long = request.form['long']
+
+    #デバッグ用(名古屋駅の座標)
+    lat = 35.1706431
+    long =136.8816945
+
+    keyword = ""
+    geo = 1
+    place = search_place(lat,long,lat,long,"driving",60,keyword)
+    return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
+
+@app.route("/add_favorite")
+def add_favorite():
+    history = request.form.get("place")
+    userid = 1
+    name = "ryohei"
+    db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? ,? ,? ,? ,? )",name,history[2],history[3],history[4],userid)
+    return redirect("via.html")

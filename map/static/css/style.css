@@ -1,15 +1,18 @@
 .body{
     font-family: "筑紫B丸ゴシック", "ヒラギノ丸ゴ ProN";
     background-color: #F7F5F2;
+    margin:0;
+    padding:0;
 }
 
 .navbar{
     background-color: #;
-    padding:0 20px;
+    padding:0 0.5vw;
 }
 
-.navbar-brand{
-    margin:10px 0;
+.navbar-brand img{
+    width:100px;
+    margin:0.15vw 0;
 }
 
 .input_form{
@@ -18,8 +21,8 @@
 
 select,input{
     padding: 0rem 0.5em;
-    height: 2.5rem;
-    width: 10rem;
+    height: 3rem;
+    width: 20rem;
     border-radius: 0.3rem;
     border: 0.3px solid #8D8DAA;
     background-color: rgba(256, 0, 0, 0.1);
