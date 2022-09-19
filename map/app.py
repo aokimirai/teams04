@@ -3,7 +3,7 @@ import time
 import cgi
 import urllib.request, json
 import urllib.parse
-import datetime
+import datetime as dt
 import random
 import sys
 import requests
@@ -113,18 +113,18 @@ def ranking():
         means = "driving"
     #辞書式で値を保存(listの中身は左からuseridが1の人、2の人,3の人...といった具合)
     score = {"walking": [], "bicycling": [], "driving": []}
-    user = db.execute("SELECT name FROM test_user")
+    user = db.execute("SELECT username FROM users")
     name = []
     #ユーザー数だけlistに0を入れる
     for cycle in user:
         score["walking"].append(0)
         score["bicycling"].append(0)
         score["driving"].append(0)
-        name.append(cycle['name'])
-    temp = db.execute("SELECT * FROM test_history")
+        name.append(cycle['username'])
+    temp = db.execute("SELECT * FROM history")
     #辞書式のやつに値を保存
     for cycle in temp:
-        score[cycle["means"]][cycle["userid"] - 1] += float(cycle["distance"])
+        score[cycle["way"]][cycle["userid"] - 1] += float(cycle["distance"])
 
     #score = {'driving':2,'walking':3,'bicycling':4}
 
@@ -201,7 +201,7 @@ def via_suggest():
 
         userid=1
         favorite=[0,0,0]
-        favorite_temp = db.execute("SELECT place FROM test_favorite WHERE userid = ?", userid)
+        favorite_temp = db.execute("SELECT name FROM favorite WHERE userid = ?", userid)
         x = 0
         for cycle in via:
             for favorite_cycle in favorite_temp:
@@ -211,7 +211,7 @@ def via_suggest():
                     break
             x += 1
         print(place)
-        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite)
+        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite ,destination=destination)
     else:
         return apology("パラメータが入力されていません",501)
 
@@ -554,9 +554,8 @@ def history():
     #デバッグ用
     else:
         means = "driving"
-    userid = 1
 
-    history = db.execute("SELECT * FROM test_history WHERE userid=?",userid)
+    history = db.execute("SELECT * FROM history WHERE userid=?",session['user_id'])
 
     return render_template("history.html", history = history)
 
@@ -565,16 +564,16 @@ def history():
 def favorite():
     #favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
     userid = 1
-    favorite = db.execute("SELECT * FROM test_favorite WHERE userid=?",userid)
+    favorite = db.execute("SELECT * FROM favorite WHERE userid=?",userid)
     return render_template("favorite_test.html", favorite = favorite)
 
 @app.route("/add_history" ,methods=["GET","POST"])
 def add_history():
     history =request.form.get("place")
-    history = re.split('url:|name:|distance:|kmmeans:',history)
-    userid = 1
-    name = "ryohei"
-    db.execute("INSERT INTO test_history (name,place,distance,means,userid) VALUES ( ? ,? ,? ,? ,? )",name,history[2],history[3],history[4],userid)
+    history = re.split('url:|name:|distance:|kmmeans:|duration:|destination:',history)
+    dt_now = time.time()
+    db.execute("INSERT INTO history (userid ,url ,used_at ,required_at ,distance ,way ,first ,second) VALUES ( ? ,? ,? ,? ,? ,? ,? ,? )",
+    session["user_id"] ,history[1] ,dt_now ,history[5] ,history[3] ,history[4] ,history[6] ,history[2])
     return redirect(history[1])
 
 @app.route("/tenantregister", methods=["GET", "POST"])
@@ -728,11 +727,10 @@ def add_favorite():
         favorite_temp = request.form.get("place")
         favorites = re.split(" _=_ ",favorite_temp)
         print(favorites[0])
-        userid = 1
         if favorites[0] == "add":
-            db.execute("INSERT INTO test_favorite (userid,place) VALUES (? ,?)",userid ,favorites[1])
+            db.execute("INSERT INTO favorite (userid ,name ,url) VALUES (? ,? ,?)" ,session['user_id'] ,favorites[1] ,favorites[3])
         else:
-            db.execute("DELETE FROM test_favorite WHERE userid=? AND place=?" ,userid,favorites[1])
+            db.execute("DELETE FROM favorite WHERE userid=? AND place=?" ,session['user_id'] ,favorites[1])
 
         return render_template("index.html")
 

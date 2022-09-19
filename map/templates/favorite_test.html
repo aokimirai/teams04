@@ -11,6 +11,7 @@
         <tr>
             <th>id</th>
             <th>地名</th>
+            <th>URL</th>
         </tr>
     </thead>
     <tbody>
@@ -20,7 +21,8 @@
         {% for favorite in favorite %}
         <tr>
             <td>{{ favorite.id }}</td>
-            <td>{{ favorite.place }}</td>
+            <td>{{ favorite.name }}</td>
+            <td>{{ favorite.url }}</td>
         </tr>
         {% set a.cnt = a.cnt + 1 %}
         {% endfor %}

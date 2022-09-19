@@ -20,9 +20,9 @@
         {% set a = namespace(cnt=0) %}
         {% for history in history %}
         <tr>
-            <td>{{ history.name }}</td>
+            <td>{{ history.second }}</td>
+            <td>{{ history.required_at }}</td>
             <td>{{ history.distance }}</td>
-            <td>{{ history.place }}</td>
         </tr>
         {% set a.cnt = a.cnt + 1 %}
         {% endfor %}
