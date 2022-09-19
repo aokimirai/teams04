@@ -5,10 +5,16 @@
 {% endblock %}
 
 {% block main %}
-<ul class="navbar-nav ms-auto mt-2">
+<!-- <ul class="navbar-nav ms-auto mt-2">
     <li class="nav-item"><a class="nav-link" href="/profile">プロフィール</a></li>
     <li class="nav-item"><a class="nav-link" href="/favorite">お気に入り</a></li>
     <li class="nav-item"><a class="nav-link" href="/history">履歴</a></li>
-
-</ul>
+</ul>  -->
+<button type="button" class="btn submit_btn btn-outline-danger btn-default" id="target" style="margin: 0.5vw;"
+onclick="location.href='/profile'">プロフィール</button><br>
+<button type="button" class="btn submit_btn btn-outline-danger btn-default" id="target" style="margin: 0.5vw;"
+onclick="location.href='/favorite'">お気に入り</button><br>
+<button type="button" class="btn submit_btn btn-outline-danger btn-default" id="target" style="margin: 0.5vw;"
+onclick="location.href='/history'">履歴</button><br>
+</div>
 {% endblock %}
