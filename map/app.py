@@ -149,15 +149,16 @@ def via_suggest():
             print(temp_means)
             means = temp_means[0]
             origin = temp_means[2]
-        else:
-            means = means[:-2]
 
+        print(origin)
+        print(means)
 
         keyword_list = request.form.getlist("via_btn")
         if limit.isnumeric() == False:
             return apology("所要時間を入力してください。", 400)
         if not request.form.get("origin"):
-            return apology("出発地点を入力してください。",400)
+            if origin == "":
+                return apology("出発地点を入力してください。",400)
         if not request.form.get("destination"):
             return apology("目的地を入力してください。",400)
 
@@ -201,9 +202,6 @@ def via_suggest():
         userid=1
         favorite=[0,0,0]
         favorite_temp = db.execute("SELECT place FROM test_favorite WHERE userid = ?", userid)
-        print("==================================================================================================================")
-        print(favorite_temp[0]['place'])
-        print(via)
         x = 0
         for cycle in via:
             for favorite_cycle in favorite_temp:
@@ -212,6 +210,7 @@ def via_suggest():
                     favorite[x] = 1
                     break
             x += 1
+        print(place)
         return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite)
     else:
         return apology("パラメータが入力されていません",501)
@@ -556,7 +555,6 @@ def history():
     else:
         means = "driving"
     userid = 1
-    user = db.execute("SELECT name FROM test_user WHERE id=?",userid)
 
     history = db.execute("SELECT * FROM test_history WHERE userid=?",userid)
 
@@ -565,8 +563,10 @@ def history():
 @app.route("/favorite")
 # お気に入りを表示
 def favorite():
-    favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
-    return render_template("favorite.html", favorite = favorite)
+    #favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
+    userid = 1
+    favorite = db.execute("SELECT * FROM test_favorite WHERE userid=?",userid)
+    return render_template("favorite_test.html", favorite = favorite)
 
 @app.route("/add_history" ,methods=["GET","POST"])
 def add_history():
@@ -697,11 +697,27 @@ def geo():
 def add_favorite():
     if request.method == "POST":
         favorite_temp = request.form.get("place")
-        print(favorite_temp)
-        favorite = re.split(" : ",favorite_temp)
-        print(favorite)
+        favorites = re.split(" _=_ ",favorite_temp)
+        print(favorites[0])
         userid = 1
-        if favorite[0] == "add":
-            db.execute("INSERT INTO test_favorite (userid,place) VALUES (? ,?)",userid ,favorite[1])
+        if favorites[0] == "add":
+            db.execute("INSERT INTO test_favorite (userid,place) VALUES (? ,?)",userid ,favorites[1])
         else:
-            db.execute("DELETE FROM test_favorite WHERE userid=? AND place=?" ,userid,favorite[1])
+            db.execute("DELETE FROM test_favorite WHERE userid=? AND place=?" ,userid,favorites[1])
+
+        return render_template("index.html")
+
+        #上手くいかない...試行錯誤中
+        """
+        place =[0,0,0]
+
+        print("===============================================================================")
+        print(favorites[2])
+        print("===============================================================================")
+        print(favorites[3])
+        print("===============================================================================")
+        print(favorites[5])
+        print("===============================================================================")
+        print(favorites[1])
+        return render_template("via.html" ,via=favorites[5],url=favorites[3],means=favorites[4],detail=favorites[5],key=api_key,favorite=place)
+        """

@@ -27,7 +27,7 @@
             <td>
                 {% if favorite[a.cnt] == 0 %}
                 <form method="POST" action="/add_favorite">
-                    <button type="submit" class="btn addtofavorite" id="target" name="place" value="add : {{ via.name }}">☆</button>
+                    <button type="submit" class="btn addtofavorite" id="target" name="place" value="add _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }}">☆</button>
                 </form>
                 {% else %}
                 <form method="POST" action="/add_favorite">
@@ -41,7 +41,7 @@
             <td><span>画像が無いよ！！</span></td>
             {% else %}
             <td><img
-                    src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ detail[a.cnt]['photo_reference'][0]['photo_reference'] }}&key={{ key }}">
+                    src="../static/img/181_1.jpg">
             </td>
             {% endif %}
             <td>{{ via.name }}</td>

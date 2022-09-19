@@ -12,20 +12,30 @@
                 所要時間
                 <input name="limit" placeholder="分">
             </div>
+            {% if geo == 0 %}
             <div class="mb-3">
                 出発地点
                 <input name="origin">
             </div>
+            {% endif %}
             <div class="mb-3">
                 目的地
                 <input name="destination">
             </div>
             <div class="mb-3 selectwrap">
+                {% if geo == 1 %}
                 <select aria-label="Default select example" name="means" style="display:inline">
                     <option value="driving | {{lat}},{{long}}">車</option>
                     <option value="bicycling | {{lat}},{{long}}">自転車</option>
                     <option value="walking | {{lat}},{{long}}">歩き</option>
                 </select>
+                {% else %}
+                <select aria-label="Default select example" name="means" style="display:inline">
+                    <option value="driving">車</option>
+                    <option value="bicycling" >自転車</option>
+                    <option value="walking" >歩き</option>
+                </select>
+                {% endif %}
             </div>
             <div class="mb-3">
                 <button type="submit" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
