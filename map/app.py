@@ -738,7 +738,7 @@ def geo():
     if request.method == "POST":
         lat = request.form['lat']
         long = request.form['long']
-        print(lat)
+        print("緯度",lat)
         keyword = ""
         geo = 1
         place = search_place(lat,long,lat,long,"driving",60,keyword)
