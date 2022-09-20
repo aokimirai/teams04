@@ -576,7 +576,7 @@ def history():
 # お気に入りを表示
 def favorite():
     #favorite = db.execute("SELECT name, url FROM favorites WHERE user_id =?", session["user_id"])
-    userid = 1
+    userid = session['user_id']
     favorite = db.execute("SELECT * FROM favorite WHERE userid=?",userid)
     return render_template("favorite_test.html", favorite = favorite)
 

@@ -75,7 +75,7 @@ input::placeholder{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin:0.5vw 0 0.8vw;
+    margin:0.3vw 0 0.8vw;
     color:#E95B6B;
 }
 
@@ -177,5 +177,9 @@ img{
 }
 
 .btn_btn{
-    margin:0.5vw;
+    margin-top:0.8vw;
+}
+
+.btn_clear{
+    margin-right:1vw;
 }

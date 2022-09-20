@@ -22,7 +22,7 @@
         <tr>
             <td>{{ favorite.id }}</td>
             <td>{{ favorite.name }}</td>
-            <td>{{ favorite.url }}</td>
+            <td><a href="{{ favorite.url[0] }}">開く</a></td>
         </tr>
         {% set a.cnt = a.cnt + 1 %}
         {% endfor %}
