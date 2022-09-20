@@ -540,12 +540,13 @@ def route(origin,destination,means):
 
 @app.route("/mypage")
 def mypage():
+    userid= session["user_id"]
     con = sqlite3.connect('./map.db')
     db = con.cursor()
-    db.execute("SELECT * FROM tenantusers where username=?", (username,))
-    tenantuser = db.fetchone()
+    db.execute("SELECT * FROM users where id=?", (userid,))
+    user = db.fetchone()
     con.close()
-    return render_template("mypage.html",tenantuser=tenantuser)
+    return render_template("mypage.html",user=user)
 
 
 @app.route("/profile", methods=["GET", "POST"])
