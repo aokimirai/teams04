@@ -68,6 +68,7 @@ def gps():
             place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
             return render_template("index.html",place = place,key = api_key ,lat=latitude ,long=longitude ,geo=geo)
 
+
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
 def point():
@@ -730,16 +731,15 @@ def keyword():
 
 @app.route("/geo", methods=["GET","POST"])
 def geo():
-    if request.method == "POST":
+    
         lat = request.form['lat']
         long = request.form['long']
-        print("緯度",lat)
         keyword = ""
         geo = 1
         place = search_place(lat,long,lat,long,"driving",60,keyword)
         return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
-    else:
-        return apology("位置情報が取得できませんでした。", 400)
+
+
 
 @app.route("/add_favorite", methods=["GET", "POST"])
 def add_favorite():
