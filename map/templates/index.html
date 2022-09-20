@@ -97,7 +97,7 @@
             {% if place['photo_reference'][0]=="" %}
             <span>画像が無いよ！！</span>
             {% else %}
-            <span><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference']['photo_reference'] }}&key={{ key }}"></span>
+            <span><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
             {% endif %}
             <div class="detail2">
                 <span class="vicinity">{{ place['vicinity'] }}</span><br>
