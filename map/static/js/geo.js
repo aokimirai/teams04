@@ -1,5 +1,5 @@
 // ボタンを押した時の処理
-console.log(document.getElementById("btn_target"));
+console.log(document.getElementById("btntarget"));
 document.getElementById("btntarget").onclick = function(){
     // 位置情報を取得する
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
