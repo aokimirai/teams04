@@ -738,6 +738,8 @@ def geo():
         geo = 1
         place = search_place(lat,long,lat,long,"driving",60,keyword)
         return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
+    else:
+        return
 
 @app.route("/add_favorite", methods=["GET", "POST"])
 def add_favorite():
