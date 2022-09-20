@@ -2,7 +2,7 @@
 document.getElementById("btn_target").onclick = function(){
     // 位置情報を取得する
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    window.location.href = '/geo';
+    // window.location.href = '/geo';
 };
 
 // 取得に成功した場合の処理
