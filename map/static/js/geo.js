@@ -1,7 +1,8 @@
 // ボタンを押した時の処理
-document.getElementById("btn target").onclick = function(){
+document.getElementById("btn_target").onclick = function(){
     // 位置情報を取得する
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    // window.location.href = '/geo';
 };
 
 // 取得に成功した場合の処理
