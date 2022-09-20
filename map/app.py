@@ -462,7 +462,7 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     #loc = {'lat': 35.6288505, 'lng': 139.65863579999996} # 軽度・緯度を取り出す
 
     #目的地とスタート地点の中心を起点とする
-    loc = {'lat': str((float(original_latitude) + destination_latitude)/2), 'lng': str((float(original_longitude) + destination_longitude)/2)}
+    loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
     #それぞれの手段によって半径を変える
     if means == 'driving':
         radius = 250 * int(limit)
