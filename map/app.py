@@ -223,8 +223,11 @@ def via_suggest():
                     favorite[x] = 1
                     break
             x += 1
-        print(place)
-        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite ,destination=destination)
+
+        session_id = 0
+        if len(session) == 0:
+            session_id = 1
+        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite ,destination=destination ,session_id=session_id)
     else:
         return apology("パラメータが入力されていません",501)
 
@@ -738,10 +741,21 @@ def geo():
 def add_favorite():
     if request.method == "POST":
         favorite_temp = request.form.get("place")
+        #値を取り出す
         favorites = re.split(" _=_ ",favorite_temp)
-        print(favorites[0])
+        #受け取った値は文字列になってしまっているので気合で配列に戻す
+        favorites[3] = favorites[3][1:]
+        favorites[3] = favorites[3][:-1]
+        favorites[3] = re.split("', '",favorites[3])
+        for b in range(3):
+            favorites[3][b] = "'" + favorites[3][b] + "'"
+            favorites[3][b] = favorites[3][b][1:]
+            favorites[3][b] = favorites[3][b][:-1]
+        favorites[3][0] = favorites[3][0][1:]
+        favorites[3][2] = favorites[3][2][:-1]
+
         if favorites[0] == "add":
-            db.execute("INSERT INTO favorite (userid ,name ,url) VALUES (? ,? ,?)" ,session['user_id'] ,favorites[1] ,favorites[3])
+            db.execute("INSERT INTO favorite (userid ,name ,url) VALUES (? ,? ,?)" ,session['user_id'] ,favorites[1] ,favorites[3][int(favorites[7][1])])
         else:
             db.execute("DELETE FROM favorite WHERE userid=? AND place=?" ,session['user_id'] ,favorites[1])
 
@@ -765,13 +779,14 @@ def add_favorite():
             favorites[5][y] = "{" + favorites[5][y] + "}"
         favorites[5][0] = favorites[5][0][1:]
         favorites[5][2] = favorites[5][2][:-1]
+        return render_template("favorite_test.html")
 
-        """
+"""
         with open('../static/json/test.json', 'w') as f:
             json.dump(str, f, ensure_ascii=False)
         with open('../static/json/test.json') as f:
             temp_json = json.load(f)
             print(temp_json)
-        """
+"""
 
-        return render_template("via.html" ,via=favorites[5] ,url=favorites[3] ,means=favorites[4] ,detail=favorites[5] ,key=api_key ,favorite=place ,destination=destination)
+        #return render_template("via.html" ,via=favorites[5] ,url=favorites[3] ,means=favorites[4] ,detail=favorites[5] ,key=api_key ,favorite=place ,destination=destination)

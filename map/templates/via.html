@@ -27,7 +27,7 @@
             <td>
                 {% if favorite[a.cnt] == 0 %}
                 <form method="POST" action="/add_favorite">
-                    <button type="submit" class="btn addtofavorite" id="target" name="place" value="add _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }}">☆</button>
+                    <button type="submit" class="btn addtofavorite" id="target" name="place" value="add _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ [a.cnt] }}">☆</button>
                 </form>
                 {% else %}
                 <form method="POST" action="/add_favorite">
@@ -48,10 +48,14 @@
             <td>{{ via.add_duration }}</td>
             <td>{{ via.add_distance }}</td>
             <td>
+                {% if session_id == 0 %}
                 <form method="POST" action="/add_history">
                     <button type="submit" class="btn" id="target" name="place"
                         value="url:{{ url[a.cnt] }}name:{{ via.name }}distance:{{ via.add_distance }}means:{{ means }}duration:{{ via.add_duration }}destination:{{ destination }}">Mapで開く</button>
                 </form>
+                {% else %}
+                <button type="button" class="btn" id="target" onclick="location.href='{{ url[a.cnt] }}'">MAPで開く</button>
+                {% endif %}
             </td>
         </tr>
         {% set a.cnt = a.cnt + 1 %}
