@@ -60,13 +60,17 @@ def gps():
         long = request.form['long']
         return render_template("index.html")
     else:
-        latitude = 	35.6809591
-        longitude = 139.7673068
-        keyword = ""
-        geo = 0
-        b = []
-        place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
-        return render_template("index.html",place = place,key = api_key ,lat=latitude ,long=longitude ,geo=geo)
+        try:
+            if session["tenant_user_id"]:
+                return redirect("/tenanthome")
+        except KeyError:
+            latitude = 	35.6809591
+            longitude = 139.7673068
+            keyword = ""
+            geo = 0
+            b = []
+            place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
+            return render_template("index.html",place = place,key = api_key ,lat=latitude ,long=longitude ,geo=geo)
 
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
@@ -535,7 +539,12 @@ def route(origin,destination,means):
 
 @app.route("/mypage")
 def mypage():
-    return render_template("mypage.html")
+    con = sqlite3.connect('./map.db')
+    db = con.cursor()
+    db.execute("SELECT * FROM tenantusers where username=?", (username,))
+    tenantuser = db.fetchone()
+    con.close()
+    return render_template("mypage.html",tenantuser=tenantuser)
 
 
 @app.route("/profile", methods=["GET", "POST"])
