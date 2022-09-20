@@ -138,7 +138,7 @@ def ranking():
         r += 1
     print(driving_score)
     #score = {'driving':2,'walking':3,'bicycling':4}
-    score = {"walking": sorted(walking_score.items()), "bicycling": sorted(bicycling_score.items()), "driving": sorted(driving_score.items())}
+    score = {"walking": sorted(walking_score.items() ,key=lambda x:x[1], reverse=True), "bicycling": sorted(bicycling_score.items() ,key=lambda x:x[1], reverse=True), "driving": sorted(driving_score.items() ,key=lambda x:x[1], reverse=True)}
     print(score)
 
     #辞書式で保存した値とユーザー名、移動手段を返す
