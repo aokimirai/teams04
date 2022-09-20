@@ -9,8 +9,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>id</th>
-            <th>地名</th>
+            <th>経由地名</th>
             <th>URL</th>
         </tr>
     </thead>
@@ -20,9 +19,9 @@
         {% set a = namespace(cnt=0) %}
         {% for favorite in favorite %}
         <tr>
-            <td>{{ favorite.id }}</td>
             <td>{{ favorite.name }}</td>
-            <td><a href="{{ favorite.url[0] }}">開く</a></td>
+            <td><button onclick="location.href='{{favorite.url}}'"
+                class="btn btn-outline-danger">MAPを開く</button></td>
         </tr>
         {% set a.cnt = a.cnt + 1 %}
         {% endfor %}
