@@ -33,12 +33,14 @@
             type: 'post',
             data: {mode:1}
             })
+            location.reload()
         }else{
             $.ajax({
             url: 'keyword',
             type: 'post',
             data: {mode:0}
             })
+            location.reload()
         }
         });
     </script>
