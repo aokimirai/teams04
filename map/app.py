@@ -739,7 +739,7 @@ def geo():
         place = search_place(lat,long,lat,long,"driving",60,keyword)
         return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
     else:
-        return
+        return apology("位置情報が取得できませんでした。", 400)
 
 @app.route("/add_favorite", methods=["GET", "POST"])
 def add_favorite():
