@@ -5,7 +5,6 @@
 {% endblock %}
 {% block main %}
 <div class="via_system">
-    <script src="/static/js/geo.js"></script>
     <form method="POST" action="/via">
         <div class="search">
             <div class="mb-3">
@@ -70,7 +69,7 @@
 <div class="button">
     <div class="btn-margin mb-3">
         {% if geo == 0 %}
-        <button type="button" id="btntarget" class="btn submit_btn btn-outline-danger btn-default btn_btn">
+        <button type="button" id="btn_target" class="btn submit_btn btn-outline-danger btn-default btn_btn">
             現在地から出発する
         </button>
         {% endif %}
@@ -115,4 +114,5 @@
     </div>
 </div>
 </div>
+<script src="/static/js/geo.js"></script>
 {% endblock %}

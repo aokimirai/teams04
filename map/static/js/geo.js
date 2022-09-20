@@ -1,13 +1,14 @@
 // ボタンを押した時の処理
-console.log(document.getElementById("btntarget"));
-document.getElementById("btntarget").onclick = function(){
+document.getElementById("btn_target").onclick = function(){
     // 位置情報を取得する
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    // window.location.href = '/geo';
+    window.location.href = '/geo';
 };
 
 // 取得に成功した場合の処理
 function successCallback(position){
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
     send (latitude, longitude);
 };
 
