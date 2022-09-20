@@ -13,6 +13,7 @@ import werkzeug
 from datetime import datetime
 import sqlite3
 import re
+import json
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
 with open("APIkey.txt") as f:
@@ -740,7 +741,9 @@ def geo():
 @app.route("/add_favorite", methods=["GET", "POST"])
 def add_favorite():
     if request.method == "POST":
-        favorite_temp = request.form.get("place")
+        favorite_temp = request.json['url']
+        #favorite_temp = request.form.get("place")
+        print(favorite_temp)
         #値を取り出す
         favorites = re.split(" _=_ ",favorite_temp)
         #受け取った値は文字列になってしまっているので気合で配列に戻す
