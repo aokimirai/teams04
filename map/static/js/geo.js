@@ -6,7 +6,6 @@ document.getElementById("btn_target").onclick = function(){
 
 // 取得に成功した場合の処理
 function successCallback(position){
-    window.location.href = '/geo';
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
     send (latitude, longitude);
@@ -27,7 +26,7 @@ function send (latitude, longitude){
   fd.append('long', longitude);
 
   // フォームの入力値を送信
-  fetch( '/geo', {
+  fetch( '', {
     method: 'POST',
     body: fd
   })

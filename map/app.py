@@ -54,8 +54,15 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_POST_FOLDER
 db = SQL("sqlite:///map.db")
 
 
-@app.route("/")
+@app.route("/",methods=["GET", "POST"])
 def gps():
+        if request.method == "POST":
+            lat = request.form['lat']
+            long = request.form['long']
+            keyword = ""
+            geo = 1
+            place = search_place(lat,long,lat,long,"driving",60,keyword)
+            return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
         try:
             if session["tenant_user_id"]:
                 return redirect("/tenanthome")
