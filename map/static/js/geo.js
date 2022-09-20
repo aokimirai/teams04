@@ -30,7 +30,7 @@ function send (latitude, longitude){
   fd.append('long', longitude);
 
   // フォームの入力値を送信
-  fetch( '', {
+  fetch( '/geo', {
     method: 'POST',
     body: fd
   })

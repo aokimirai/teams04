@@ -735,14 +735,10 @@ def keyword():
 
 @app.route("/geo")
 def geo():
-
-    #lat = request.form['lat']
-    #long = request.form['long']
-
-    #デバッグ用(名古屋駅の座標)
-    lat = 35.1706431
-    long =136.8816945
-
+    if request.method == "POST":
+        lat = request.form['lat']
+        long = request.form['long']
+        print(lat)
     keyword = ""
     geo = 1
     place = search_place(lat,long,lat,long,"driving",60,keyword)
