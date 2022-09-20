@@ -54,14 +54,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_POST_FOLDER
 db = SQL("sqlite:///map.db")
 
 
-@app.route("/", methods=["GET","POST"])
+@app.route("/")
 def gps():
-    if request.method == "POST":
-        lat = request.form['lat']
-        long = request.form['long']
-        print("緯度",lat)
-        return render_template("index.html")
-    else:
         try:
             if session["tenant_user_id"]:
                 return redirect("/tenanthome")
@@ -734,7 +728,7 @@ def keyword():
         print(tenantkey)
         return render_template("keyword.html",tenantkey=tenantkey)
 
-@app.route("/geo")
+@app.route("/geo", methods=["GET","POST"])
 def geo():
     if request.method == "POST":
         lat = request.form['lat']

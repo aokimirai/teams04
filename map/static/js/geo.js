@@ -6,12 +6,6 @@ document.getElementById("btn target").onclick = function(){
 
 // 取得に成功した場合の処理
 function successCallback(position){
-    // 緯度を取得し画面に表示
-    var latitude = position.coords.latitude;
-    document.getElementById("latitude").innerHTML = latitude;
-    // 経度を取得し画面に表示
-    var longitude = position.coords.longitude;
-    document.getElementById("longitude").innerHTML = longitude;
     send (latitude, longitude);
 };
 
@@ -30,7 +24,7 @@ function send (latitude, longitude){
   fd.append('long', longitude);
 
   // フォームの入力値を送信
-  fetch( '', {
+  fetch( '/geo', {
     method: 'POST',
     body: fd
   })
