@@ -54,8 +54,15 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_POST_FOLDER
 db = SQL("sqlite:///map.db")
 
 
-@app.route("/")
+@app.route("/",methods=["GET", "POST"])
 def gps():
+        if request.method == "POST":
+            lat = request.form['lat']
+            long = request.form['long']
+            keyword = ""
+            geo = 1
+            place = search_place(lat,long,lat,long,"driving",60,keyword)
+            return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
         try:
             if session["tenant_user_id"]:
                 return redirect("/tenanthome")
@@ -67,6 +74,7 @@ def gps():
             b = []
             place = search_place(latitude,longitude,latitude,longitude,"driving",60,keyword)
             return render_template("index.html",place = place,key = api_key ,lat=latitude ,long=longitude ,geo=geo)
+
 
 #ポイントカードの処理
 @app.route("/point", methods=["GET","POST"])
@@ -733,13 +741,18 @@ def geo():
     if request.method == "POST":
         lat = request.form['lat']
         long = request.form['long']
-        print("緯度",lat)
         keyword = ""
         geo = 1
         place = search_place(lat,long,lat,long,"driving",60,keyword)
         return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
     else:
-        return apology("位置情報が取得できませんでした。", 400)
+        lat = 35.1706431
+        long = 136.8816945
+        keyword = ""
+        geo = 1
+        place = search_place(lat,long,lat,long,"driving",60,keyword)
+        return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
+
 
 @app.route("/add_favorite", methods=["GET", "POST"])
 def add_favorite():

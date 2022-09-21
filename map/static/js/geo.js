@@ -2,7 +2,6 @@
 document.getElementById("btn_target").onclick = function(){
     // 位置情報を取得する
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    window.location.href = '/geo';
 };
 
 // 取得に成功した場合の処理
@@ -10,6 +9,7 @@ function successCallback(position){
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
     send (latitude, longitude);
+    window.location.reload();
 };
 
 // 取得に失敗した場合の処理
@@ -27,7 +27,7 @@ function send (latitude, longitude){
   fd.append('long', longitude);
 
   // フォームの入力値を送信
-  fetch( '/geo', {
+  fetch( '', {
     method: 'POST',
     body: fd
   })
