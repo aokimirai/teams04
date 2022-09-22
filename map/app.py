@@ -517,7 +517,7 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
         suggest_place.append(temp1)
 
     #print(random.choice(results))
-    print(suggest_place)
+    #print(suggest_place)
     return suggest_place
 
 #distance matrix apiで距離・時間を取得する関数
