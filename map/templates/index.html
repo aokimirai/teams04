@@ -72,6 +72,10 @@
         <button type="button" id="btn_target" class="btn submit_btn btn-outline-danger btn-default btn_btn">
             現在地から出発する
         </button>
+        <form action="/geo" method="POST" style="display:none" name="currentlocationsearch">
+                <input name="lat" type="hidden"/>
+                <input name="long" type="hidden"/>
+        </form>
         {% endif %}
         {% if geo == 1 %}
         <button type="button" id="btn_" class="btn submit_btn btn-outline-danger btn-default btn_btn"
