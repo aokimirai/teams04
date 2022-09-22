@@ -9,6 +9,7 @@ function successCallback(position){
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
     send (latitude, longitude);
+    window.location.href="/geo";
 };
 
 // 取得に失敗した場合の処理
