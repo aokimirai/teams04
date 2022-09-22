@@ -8,8 +8,11 @@ document.getElementById("btn_target").onclick = function(){
 function successCallback(position){
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
-    send (latitude, longitude);
-    window.location.href="/geo";
+    //send (latitude, longitude);
+    const form = document.currentlocationsearch;
+    form.lat.value = latitude;
+    form.long.value = longitude;
+    form.submit();
 };
 
 // 取得に失敗した場合の処理
