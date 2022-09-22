@@ -8,7 +8,6 @@ document.getElementById("btn_target").onclick = function(){
 function successCallback(position){
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
-    //send (latitude, longitude);
     const form = document.currentlocationsearch;
     console.log(form);
     form.lat.value = latitude;
