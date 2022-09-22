@@ -10,6 +10,7 @@ function successCallback(position){
     var longitude = position.coords.longitude;
     //send (latitude, longitude);
     const form = document.currentlocationsearch;
+    console.log(form);
     form.lat.value = latitude;
     form.long.value = longitude;
     form.submit();
