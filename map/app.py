@@ -736,24 +736,6 @@ def keyword():
         print(tenantkey)
         return render_template("keyword.html",tenantkey=tenantkey)
 
-@app.route("/geo", methods=["GET","POST"])
-def geo():
-    if request.method == "POST":
-        lat = request.form['lat']
-        long = request.form['long']
-        keyword = ""
-        geo = 1
-        place = search_place(lat,long,lat,long,"driving",60,keyword)
-        return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
-    else:
-        lat = 35.1706431
-        long = 136.8816945
-        keyword = ""
-        geo = 1
-        place = search_place(lat,long,lat,long,"driving",60,keyword)
-        print("ゲット")
-        return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
-
 @app.route("/add_favorite", methods=["GET", "POST"])
 def add_favorite():
     if request.method == "POST":
