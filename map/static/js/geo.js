@@ -20,26 +20,3 @@ function successCallback(position){
 function errorCallback(error){
     alert("位置情報が取得できませんでした");
 };
-
-// APIに緯度と経度を送る
-function send (latitude, longitude){
-  // FormDataオブジェクトの初期化
-  const fd = new FormData();
-
-  // FormDataオブジェクトにデータをセット
-  fd.append('lat', latitude);
-  fd.append('long', longitude);
-
-  // フォームの入力値を送信
-  fetch( '', {
-    method: 'POST',
-    body: fd
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
