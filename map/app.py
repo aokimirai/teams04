@@ -517,7 +517,7 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
         suggest_place.append(temp1)
 
     #print(random.choice(results))
-    print(suggest_place)
+    #print(suggest_place)
     return suggest_place
 
 #distance matrix apiで距離・時間を取得する関数
@@ -735,24 +735,6 @@ def keyword():
             con.close()
         print(tenantkey)
         return render_template("keyword.html",tenantkey=tenantkey)
-
-@app.route("/geo", methods=["GET","POST"])
-def geo():
-    if request.method == "POST":
-        lat = request.form['lat']
-        long = request.form['long']
-        keyword = ""
-        geo = 1
-        place = search_place(lat,long,lat,long,"driving",60,keyword)
-        return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
-    else:
-        lat = 35.1706431
-        long = 136.8816945
-        keyword = ""
-        geo = 1
-        place = search_place(lat,long,lat,long,"driving",60,keyword)
-        return render_template("index.html",lat=lat ,long=long ,place=place ,key=api_key ,geo=geo)
-
 
 @app.route("/add_favorite", methods=["GET", "POST"])
 def add_favorite():
