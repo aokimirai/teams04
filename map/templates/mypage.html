@@ -10,7 +10,11 @@
     <li class="nav-item"><a class="nav-link" href="/favorite">お気に入り</a></li>
     <li class="nav-item"><a class="nav-link" href="/history">履歴</a></li>
 </ul>  -->
-<img src=../static/upload/icon/{{ user[4] }} width="20%" class="icon">
+{% if user[4] == None %}
+<img src="../static/img/map_logo.png" width="20%" class="icon" style="margin-bottom:1vw">
+{% else %}
+<img src=../static/upload/icon/{{ user[4] }} width="20%" class="icon" style="margin-bottom:1vw">
+{% endif %}
 <h3>{{ user[3] }}</h3>
 <button type="button" class="btn submit_btn btn-outline-danger" id="target" style="margin: 0.5vw;"
 onclick="location.href='/profile'">プロフィール変更</button><br>

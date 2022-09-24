@@ -27,3 +27,7 @@ select,input{
     border: 0.3px solid #8D8DAA;
     background-color: rgba(256, 0, 0, 0.1);
 }
+
+.table td{
+    vertical-align: middle;
+}

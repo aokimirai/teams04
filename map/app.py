@@ -619,7 +619,7 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     #それぞれの手段によって半径を変える
     if means == 'driving':
         radius = 360 * int(limit2)
-        via_center =  60 / 60 * int(limit2) * km_ratio
+        via_center =  80 / 60 * int(limit2) * km_ratio
     if means == 'bicycling':
         radius = 250 * int(limit2)
         via_center = 30 / 60 * int(limit2) * km_ratio
