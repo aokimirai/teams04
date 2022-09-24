@@ -583,22 +583,27 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     #loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
     #それぞれの手段によって半径を変える
     if means == 'driving':
-        radius = 360 * int(limit2)/60
-        ra = 5 / 60 * int(limit2) /60
+        radius = 360 * int(limit2) / 60
+        ra = 5 / 60 * int(limit2) / 60
     if means == 'bicycling':
-        radius = 250 * int(limit2)/60
+        radius = 250 * int(limit2) / 60
+        ra = 4 / 60 * int(limit2) / 60
     if means == 'walking':
-        radius = 100 * int(limit2)/60
+        radius = 100 * int(limit2) / 60
+        ra = 0.5 / 60 * int(limit2) / 60
     #placesAPIで検索する際の最大の半径は50kmなので50kmまでに統一する
     if radius > 500000:
         radius = 500000
 
-    print(original_latitude)
-    print(original_longitude)
+#################################################################################################
+#目的地と出発地点の緯度経度から法線の傾きを計算し、正接で傾きを取得、
+#コサイン*斜面とサイン*斜面で中心とする座標を取得
+#取得した緯度経度を中心とした周辺スポットを取得する
+#################################################################################################
     try:
         housenn = - (float(original_longitude) - float(destination_longitude)) / (float(original_latitude) - float(destination_latitude))
-        tyuutenn_lat = (float(original_latitude) + float(destination_latitude))/2
-        tyuutenn_lng = (float(original_longitude) + float(destination_longitude))/2
+        tyuutenn_lat = (float(original_latitude) + float(destination_latitude)) / 2
+        tyuutenn_lng = (float(original_longitude) + float(destination_longitude)) / 2
         degree = math.atan(housenn)
         lat_temp = ra * math.cos(degree) + tyuutenn_lat
         lng_temp = ra * math.sin(degree) + tyuutenn_lng
@@ -606,7 +611,7 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
         print(loc)
     except ZeroDivisionError:
         loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
-
+        
     radius1 = radius / 2
     print(radius)
     print(radius1)
