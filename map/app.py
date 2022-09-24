@@ -16,6 +16,7 @@ import sqlite3
 import re
 import json
 import ast
+import math
 
 
 endpoint = 'https://maps.googleapis.com/maps/api/directions/json?'
@@ -487,50 +488,6 @@ def register():
     else:
         return render_template("register.html")
 
-
-
-#################################################################################################
-#あれ？同じ関数が二つある？？？後で確認します。
-#################################################################################################
-"""
-#経由地候補を返す関数です。
-def suggest_via(origin,destination,place,means,limit):
-    via_candidate = []
-    via_temp = ""
-    # | で区切られた場所を文字列で生成
-    for cycle in place:
-        via_temp += "|" + str(cycle['lat']) + "," + str(cycle['lng'])
-    #先頭の | を削除する
-    via_temp = via_temp[1:]
-
-    #関数を使って所要時間と道のりを取得
-    route1 = route(origin,via_temp,means)
-    route2 = route(via_temp,destination,means)
-
-    i = 0
-    #経由地検索してlistに格納した数だけ回す
-    for cycle in place:
-        #先ほど関数を使い所有時間と道のりを取得した関数から時間と距離を別の関数に入れる
-        add_distance = route1['rows'][0]['elements'][i]['distance']['value'] + route2['rows'][i]['elements'][0]['distance']['value']
-        add_duration = route1['rows'][0]['elements'][i]['duration']['value'] + route2['rows'][i]['elements'][0]['duration']['value']
-
-        #移動手段が車の時は交通情報を加味した時間を入れる
-        if means == "driving":
-            add_duration = route1['rows'][0]['elements'][i]['duration_in_traffic']['value'] + route2['rows'][i]['elements'][0]['duration_in_traffic']['value']
-        #もし取得した時間が入力値以下なら経由地候補に入れる
-        #取得した時間は秒のため、入力値も秒に直す
-        if add_duration <= int(limit) * 60:
-            temp = unit(add_distance,add_duration//60)
-            temp = {'add_distance' : temp[0], 'add_duration' : temp[1]}
-            #辞書式として距離、所要時間を追加
-            cycle.update(temp)
-            #cycleにはname,latitude,longitude,add_distance,add_durationが入っている
-            via_candidate.append(cycle)
-        i += 1
-    #経由地候補を返す
-    return via_candidate
-"""
-
 #################################################################################################
 #単位を整える関数です
 # 入ってくる値は　距離→m　時間→分?(分の法は確証がないので後で確認します。)
@@ -623,10 +580,11 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     #loc = {'lat': 35.6288505, 'lng': 139.65863579999996} # 軽度・緯度を取り出す
 
     #目的地とスタート地点の中心を起点とする
-    loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
+    #loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
     #それぞれの手段によって半径を変える
     if means == 'driving':
         radius = 360 * int(limit2)/60
+        ra = 5 / 60 * int(limit2) /60
     if means == 'bicycling':
         radius = 250 * int(limit2)/60
     if means == 'walking':
@@ -635,7 +593,21 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     if radius > 500000:
         radius = 500000
 
-    radius1 = radius * 9/10
+    print(original_latitude)
+    print(original_longitude)
+    try:
+        housenn = - (float(original_longitude) - float(destination_longitude)) / (float(original_latitude) - float(destination_latitude))
+        tyuutenn_lat = (float(original_latitude) + float(destination_latitude))/2
+        tyuutenn_lng = (float(original_longitude) + float(destination_longitude))/2
+        degree = math.atan(housenn)
+        lat_temp = ra * math.cos(degree) + tyuutenn_lat
+        lng_temp = ra * math.sin(degree) + tyuutenn_lng
+        loc = {'lat':str(lat_temp), 'lng':str(lng_temp)}
+        print(loc)
+    except ZeroDivisionError:
+        loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
+
+    radius1 = radius / 2
     print(radius)
     print(radius1)
     #結果を表示
