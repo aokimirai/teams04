@@ -38,6 +38,12 @@ def clear():
     con.close()
 schedule.every().day.at("00:00").do(clear)
 
+
+#################################################################################################
+#使用するapiの切り替え用
+#　1　-> distance matrix api
+#　2　-> directions api
+#################################################################################################
 api_value = 1
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -92,8 +98,8 @@ def gps():
             #long = request.form['long']
 
             #####################################
-            #DEMODAY用。京都駅の座標をセットしています。
-            #現在地を取得したい場合は削除してください
+            #DEMODAY用。八坂寺の座標をセットしています。
+            #現在地を取得したい場合は削除又はコメントアウトしてください
             #####################################
             lat = 35.0036559
             long = 135.7785534
@@ -200,17 +206,17 @@ def ranking():
         bicycling_score.update({temp_name:score["bicycling"][r]})
         walking_score.update({temp_name:score["walking"][r]})
         r += 1
-    print(driving_score)
+    #print(driving_score)
     #score = {'driving':2,'walking':3,'bicycling':4}
     score = {"walking": sorted(walking_score.items() ,key=lambda x:x[1], reverse=True), "bicycling": sorted(bicycling_score.items() ,key=lambda x:x[1], reverse=True), "driving": sorted(driving_score.items() ,key=lambda x:x[1], reverse=True)}
-    print(score)
+    #print(score)
     """
     score['walking'] = dic.update(score['walking'])
     score['bicycling'] = dic.update(score['bicycling'])
     score['driving'] = dic.update(score['driving'])
     print(score)
     """
-    print(user_data)
+    #print(user_data)
 
     #辞書式で保存した値とユーザー名、移動手段を返す
     return render_template("ranking.html",score=score[means],user=name,means=means,user_data=user_data)
@@ -570,69 +576,89 @@ def get_address(place):
 #移動手段によって検索する経由地の半径を設定する(車→250m/min 自転車→166m/min 歩き→66m/min)
 #最大半径は50kmのため それ以上ならば50kmに設定
 #円の中点は目的地と出発地点の中心
+#半径Xmの経由地スポットをresult,Ymの経由地スポットをresult_pullに格納し、result-result_pullで半径Ym以上、Xm以下の経由地スポットを取得
 #経由地を検索　パラメーターは　目的地と出発地点の中心座標　半径　キーワード　言語(日本語)
 #temp1に緯度経度　temp2に施設名　temp3にGoogleMapの評価　temp4に住所　temp5にGoogleで写真を判別するための文字列を保存 {'キー'：値}
 #temp2 3 4 5 をtemp1に結合 {'location':値,'name':値,'rating':値,'vicinity':値,'photo_place':値}
 #suggest_placeに配列として保存して返す
+
+
+#9/24　　処理方法を変更しました。
+#今までは半径Ym以上,Xm以下のスポットを取得する処理を書いていましたが、どうも上手くいかないため、処理方法を変更しました。(一度に取得できる経由地の量が決まっている？？？)
+#出発地点の緯度経度、目的地の緯度経度の二点を結んだ線の法線を引き、二点の中心から変数で決めた値だけ離れた位置を経由地検索の中心地点として検索する処理方法です。
+#元の処理はコメントアウトしておきました
+#
+# -(緯度の増加量/経度の増加量)　で出てきた傾きを　atan　を使って度数を取得、
+#取得した度数から　斜面の長さ * SIN(傾き) 　　斜面の長さ * COS(傾き)　でそれぞれ　緯度　経度　を取得
+#
+#
+#経度が緯度によって1度当たりの距離が変わってくるので計算しました。
+#三角関数を使った計算です
 #################################################################################################
 def search_place(original_latitude,original_longitude,destination_latitude,destination_longitude,means,limit,keyword,limit2):
     client = googlemaps.Client(api_key) #インスタンス生成
     #loc = {'lat': 35.6288505, 'lng': 139.65863579999996} # 軽度・緯度を取り出す
 
+
+
+    #円周率
+    pi = 3.14
+    #地球の半径
+    earth_radius = 6378
+    #出発地点での経度の円周
+    lat_radius = math.cos(original_latitude / 180 * pi) * 2 * pi * earth_radius
+    #経度1度あたりの距離(km)
+    km = lat_radius / 360
+    #赤道での1度あたりの距離
+    equator_km = 40053
+    #赤道と目的地の緯度での経度の1度あたりの距離の割合
+    km_ratio = km / equator_km
+
     #目的地とスタート地点の中心を起点とする
     #loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
     #それぞれの手段によって半径を変える
     if means == 'driving':
-        radius = 360 * int(limit2) / 60
-        ra = 5 / 60 * int(limit2) / 60
+        radius = 360 * int(limit2)
+        via_center =  60 / 60 * int(limit2) * km_ratio
     if means == 'bicycling':
-        radius = 250 * int(limit2) / 60
-        ra = 4 / 60 * int(limit2) / 60
+        radius = 250 * int(limit2)
+        via_center = 30 / 60 * int(limit2) * km_ratio
     if means == 'walking':
-        radius = 100 * int(limit2) / 60
-        ra = 0.5 / 60 * int(limit2) / 60
+        radius = 100 * int(limit2)
+        via_center = 5 / 60 * int(limit2) * km_ratio
     #placesAPIで検索する際の最大の半径は50kmなので50kmまでに統一する
     if radius > 500000:
         radius = 500000
 
-#################################################################################################
-#目的地と出発地点の緯度経度から法線の傾きを計算し、正接で傾きを取得、
-#コサイン*斜面とサイン*斜面で中心とする座標を取得
-#取得した緯度経度を中心とした周辺スポットを取得する
-#################################################################################################
     try:
         housenn = - (float(original_longitude) - float(destination_longitude)) / (float(original_latitude) - float(destination_latitude))
         tyuutenn_lat = (float(original_latitude) + float(destination_latitude)) / 2
         tyuutenn_lng = (float(original_longitude) + float(destination_longitude)) / 2
         degree = math.atan(housenn)
-        lat_temp = ra * math.cos(degree) + tyuutenn_lat
-        lng_temp = ra * math.sin(degree) + tyuutenn_lng
+        lat_temp = via_center * math.cos(degree) + tyuutenn_lat
+        lng_temp = via_center * math.sin(degree) + tyuutenn_lng
         loc = {'lat':str(lat_temp), 'lng':str(lng_temp)}
-        print(loc)
     except ZeroDivisionError:
         loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
-        
-    radius1 = radius / 2
-    print(radius)
-    print(radius1)
+
+    #radius1 = radius / 2
     #結果を表示
     place_results = client.places_nearby(location=loc, radius=radius ,keyword=keyword ,language='ja')
-    place_results_pull = client.places_nearby(location=loc, radius=radius1 ,keyword=keyword ,language='ja')
+    #place_results_pull = client.places_nearby(location=loc, radius=radius1 ,keyword=keyword ,language='ja')
     results = []
     suggest_place = []
-    results_pull = []
+    #results_pull = []
     #実行結果を保存
     for place_result in place_results['results']:
-        results.append(str(place_result))
-    for place_result_pull in place_results_pull['results']:
-        results_pull.append(str(place_result_pull))
+        results.append(place_result)
+    #for place_result_pull in place_results_pull['results']:
+    #    results_pull.append(str(place_result_pull))
 
-    print(str(results))
-    results_temp = set(results)-set(results_pull)
-    results.clear()
-    print(results)
-    for cycle in results_temp:
-        results.append(ast.literal_eval(cycle))
+    #results_temp = set(results)-set(results_pull)
+    #results.clear()
+    #print(results)
+    #for cycle in results_temp:
+    #    results.append(ast.literal_eval(cycle))
 
     #それぞれの経由地の緯度経度、名前、評価、住所を辞書式で保存
     for temp in results:
@@ -774,7 +800,6 @@ def favorite():
 def add_history():
     history =request.form.get("place")
     history = re.split('url:|name:|distance:|kmmeans:|duration:|destination:',history)
-    print(history)
     dt_now = time.time()
     db.execute("INSERT INTO history (userid ,url ,used_at ,required_at ,distance ,way ,first ,second) VALUES ( ? ,? ,? ,? ,? ,? ,? ,? )",
     session["user_id"] ,history[1] ,dt_now ,history[5] ,history[3] ,history[4] ,history[6] ,history[2])
@@ -980,7 +1005,7 @@ def add_favorite():
         else:
             favorites[3] = favorites[3][2:]
             favorites[3] = favorites[3][:-2]
-        print(favorites[3][0])
+        #print(favorites[3][0])
 
         if favorites[0] == "add":
             db.execute("INSERT INTO favorite (userid ,name ,url) VALUES (? ,? ,?)" ,session['user_id'] ,favorites[1] ,favorites[3][int(favorites[7][1])])
@@ -1069,16 +1094,16 @@ def suggest_via_directions(origin,destination,place,means,limit):
     #dbから読み取った値を一つずつ処理していく
     #処理はroundで移動距離、移動時間を取得して足し算、足した値が入力した値より小さければlistに格納する
     for cycle in place:
-        print(cycle)
+        #print(cycle)
         route1 = route_directions("名古屋駅",str(cycle['lat'])+","+str(cycle['lng']),means)
         route2 = route_directions(str(cycle['lat'])+","+str(cycle['lng']),destination,means)
-        print(route1)
-        print(route2)
+        #print(route1)
+        #print(route2)
         #所要時間と移動距離を足し算する
         add_duration = duration_function(route1[1],route2[1])
         add_distance = distance_function(route1[0],route2[0])
-        print(add_duration)
-        print(add_distance)
+        #print(add_duration)
+        #print(add_distance)
 
         #もし制限時間以内に経由できるのならばlistに加える
         if int(limit) >= int(add_duration):
