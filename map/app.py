@@ -932,7 +932,7 @@ def keyword():
             db.execute("SELECT * FROM tenantkeys WHERE id = ?",(userid,))
             tenantkey=db.fetchone()
             con.close()
-        if tenantkeys[3] == 0:
+        if tenantkey[3] == 0:
             with open("keyword.txt") as f:
                 keyword = f.readlines()
             key_list = [str.rstrip() for str in keyword]
