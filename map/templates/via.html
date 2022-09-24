@@ -51,7 +51,7 @@
             <td>{{ detail[a.cnt]['rating'] }}</td>
             <!--できてるかな？？？よくわからん？？？？-->
             {% if detail[a.cnt]["photo_reference"] == "" %}
-            <td><span>画像が無いよ！！</span></td>
+            <td><span><img src="../static/img/map_logo.jpg" style="width:200px"></span></td>
             {% else %}
             <td><img
                     src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ via['photo_reference'][0]['photo_reference'] }}&key={{ key }}">

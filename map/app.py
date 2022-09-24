@@ -73,8 +73,23 @@ db = SQL("sqlite:///map.db")
 @app.route("/",methods=["GET", "POST"])
 def gps():
         if request.method == "POST":
-            lat = request.form['lat']
-            long = request.form['long']
+
+
+            #####################################
+            #住所バレ防止のため、現在地を取得機能をコメントアウトしています。(DEMODAY用)
+            #住所を取得したい場合は下の値を使ってください
+            #####################################
+            #lat = request.form['lat']
+            #long = request.form['long']
+
+            #####################################
+            #DEMODAY用。京都駅の座標をセットしています。
+            #現在地を取得したい場合は削除してください
+            #####################################
+            lat = 35.0036559
+            long = 135.7785534
+
+
             keyword = ""
             geo = 1
             place = search_place(lat,long,lat,long,"driving",60,keyword,60)
@@ -603,11 +618,11 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     loc = {'lat': str((float(original_latitude) + float(destination_latitude))/2), 'lng': str((float(original_longitude) + float(destination_longitude))/2)}
     #それぞれの手段によって半径を変える
     if means == 'driving':
-        radius = 1000000 * int(limit2)/60
+        radius = 360 * int(limit2)/60
     if means == 'bicycling':
-        radius = 500 * int(limit2)/60
+        radius = 250 * int(limit2)/60
     if means == 'walking':
-        radius = 200 * int(limit2)/60
+        radius = 100 * int(limit2)/60
     #placesAPIで検索する際の最大の半径は50kmなので50kmまでに統一する
     if radius > 500000:
         radius = 500000

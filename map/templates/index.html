@@ -42,9 +42,9 @@
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)" id="btn"
             name="via_btn" value="restaurant">レストラン</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)" id="btn"
-            name="via_btn" value="Italian">イタリアン</input></label>
+            name="via_btn" value="pharmacy">薬局</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)" id="btn"
-            name="via_btn" value="sushi">寿司</input></label>
+            name="via_btn" value="hotel">ホテル</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)" id="btn"
             name="via_btn" value="station">駅</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)" id="btn"
@@ -54,7 +54,7 @@
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)" id="btn"
             name="via_btn" value="museum">美術館、博物館</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)" id="btn"
-            name="via_btn" value="pharmacy">薬局</input></label>
+            name="via_btn" value="Temple">お寺</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)" id="btn"
             name="via_btn" value="convenience store">コンビニ</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)" id="btn"
@@ -98,7 +98,7 @@
                 <span class="name">{{ place['name'] }}</span><br>
             </div>
             {% if place['photo_reference']=="" %}
-            <span><img src="../static/img/map_logo.png"></span>
+            <span><img src="../static/img/map_logo.jpg" style="width:200px"></span>
             {% else %}
             <span><img
                     src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
