@@ -12,32 +12,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
     integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
     crossorigin="anonymous"></script>
-<script type="text/javascript">
-    $(function () {
-        $("#target").on("click", function () {
-            var textData = JSON.stringify({ "url": $("#target").val() });
-            $.ajax({
-                type: 'POST',
-                url: '/add_favorite',
-                data: textData,
-                contentType: 'application/json',
-                // 非同期通信が成功したら実行される
-                success: function (data) {
-                    var result = JSON.parse(data.ResultSet).result;
-                    // 成功時の処理
-                }
-            });
-        });
-    });
-</script>
 <h2>経由地一覧</h2>
 <table class="table table-striped">
     <thead>
         <tr>
+            {% if session_id == 0 %}
             <th>お気に入り</th>
+            {% endif %}
             <th>評価</th>
-            <th>写真</th>
             <th>経由地名</th>
+            <th>写真</th>
             <th>所要時間</th>
             <th>道のり</th>
             <th>MAP</th>
@@ -49,23 +33,25 @@
         {% set a = namespace(cnt=0) %}
         {% for via in via %}
         <tr>
+            {% if session_id == 0 %}
             <td>
                 {% if favorite[a.cnt] == 0 %}
                 <form method="POST" action="/add_favorite">
-                    <button type="button" class="btn addtofavorite" id="target" name="place"
+                    <button type="submit" class="btn addtofavorite" id="target" name="place"
                         value="add _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ [a.cnt] }}">☆</button>
                 </form>
                 {% else %}
                 <form method="POST" action="/add_favorite">
-                    <button type="button" class="btn addtofavorite removefavorite hidden" id="target" name="place"
-                        value="remove : {{ via.name }}">★</button>
+                    <button type="submit" class="btn addtofavorite removefavorite hidden" id="target" name="place"
+                        value="remove _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ [a.cnt] }}">★</button>
                 </form>
                 {% endif %}
             </td>
+            {% endif %}
             <td>{{ detail[a.cnt]['rating'] }}</td>
             <!--できてるかな？？？よくわからん？？？？-->
             {% if detail[a.cnt]["photo_reference"] == "" %}
-            <td><span>画像が無いよ！！</span></td>
+            <td><span><img src="../static/img/map_logo.jpg" style="width:200px"></span></td>
             {% else %}
             <td><img
                     src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ via['photo_reference'][0]['photo_reference'] }}&key={{ key }}">
@@ -77,11 +63,11 @@
             <td>
                 {% if session_id == 0 %}
                 <form method="POST" action="/add_history">
-                    <button type="submit" class="btn" id="target" name="place"
+                    <button type="submit" class="btn btn-outline-danger" id="target" name="place"
                         value="url:{{ url[a.cnt] }}name:{{ via.name }}distance:{{ via.add_distance }}means:{{ means }}duration:{{ via.add_duration }}destination:{{ destination }}">Mapで開く</button>
                 </form>
                 {% else %}
-                <button type="button" class="btn" id="target" onclick="location.href='{{ url[a.cnt] }}'">MAPで開く</button>
+                <button type="button" class="btn btn-outline-danger" id="target" onclick="location.href='{{ url[a.cnt] }}'">MAPで開く</button>
                 {% endif %}
             </td>
         </tr>

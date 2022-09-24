@@ -7,11 +7,14 @@
 {% block main %}
 
 <table class="table table-striped">
+    <h2>履歴</h2>
     <thead>
         <tr>
             <th>経由地名</th>
+            <th>移動手段</th>
             <th>所要時間</th>
             <th>道のり</th>
+            <th>MAP</th>
         </tr>
     </thead>
     <tbody>
@@ -21,8 +24,11 @@
         {% for history in history %}
         <tr>
             <td>{{ history.second }}</td>
+            <td>{{ history.way }}</td>
             <td>{{ history.required_at }}</td>
-            <td>{{ history.distance }}</td>
+            <td>{{ history.distance }}km</td>
+            <td><button onclick="location.href='{{ history.url }}'"
+                class="btn btn-outline-danger">MAPを開く</button></td>
         </tr>
         {% set a.cnt = a.cnt + 1 %}
         {% endfor %}

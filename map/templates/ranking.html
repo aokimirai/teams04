@@ -20,6 +20,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>アイコン</th>
             <th>順位</th>
             <th>名前</th>
             <th>距離</th>
@@ -31,9 +32,20 @@
         {% set a = namespace(cnt=0) %}
         {% for score in score %}
         <tr>
+            {% set b = namespace(cnt=0) %}
+            {% for user_data in user_data %}
+            {% if score[0] == user_data['username'] %}
+            {% if user_data['icon'] != None %}
+            <td><img src=../static/upload/icon/{{ user_data['icon'] }} style="width:4vw"></td>
+            {% else %}
+            <td><img src=../static/img/favcon.png style="width:4vw"></td>
+            {% endif %}
             <td>{{ a.cnt + 1 }}位</td>
-            <td>{{ score[0] }}</td>
-            <td>{{ score[1] }}</td>
+            <td>{{ user_data['display_name'] }}</td>
+            <td>{{ score[1] }}km</td>
+            {% endif %}
+            {% set b.cnt = b.cnt + 1 %}
+            {% endfor %}
         </tr>
         {% set a.cnt = a.cnt + 1 %}
         {% endfor %}

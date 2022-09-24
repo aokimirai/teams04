@@ -31,24 +31,20 @@
                 {% else %}
                 <select aria-label="Default select example" name="means" style="display:inline">
                     <option value="driving">車</option>
-                    <option value="bicycling" >自転車</option>
-                    <option value="walking" >歩き</option>
+                    <option value="bicycling">自転車</option>
+                    <option value="walking">歩き</option>
                 </select>
                 {% endif %}
             </div>
-            <div class="mb-3">
-                <button type="submit" class="btn submit_btn btn-outline-danger btn-default" id="target" name="place"
-                    onclick="location.href='./via.html'">検索</button>
-            </div>
-        </div>
+    </div>
 </div>
 <div class="checkbox">
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(1)" id="btn"
             name="via_btn" value="restaurant">レストラン</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(2)" id="btn"
-            name="via_btn" value="Italian">イタリアン</input></label>
+            name="via_btn" value="pharmacy">薬局</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(3)" id="btn"
-            name="via_btn" value="sushi">寿司</input></label>
+            name="via_btn" value="hotel">ホテル</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(4)" id="btn"
             name="via_btn" value="station">駅</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(5)" id="btn"
@@ -58,7 +54,7 @@
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(7)" id="btn"
             name="via_btn" value="museum">美術館、博物館</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(8)" id="btn"
-            name="via_btn" value="pharmacy">薬局</input></label>
+            name="via_btn" value="Temple">お寺</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(9)" id="btn"
             name="via_btn" value="convenience store">コンビニ</input></label>
     <label><input type="checkbox" class="btn btn-outline-info rounded-pill check_btn" onclick="buttonClick(10)" id="btn"
@@ -67,28 +63,31 @@
 
 <script src="../static/js/google.js"></script>
 <div class="button">
-    <div class="btn-margin mb-3">
+            <div class="btn-margin mb-3">
+
         {% if geo == 0 %}
-        <button type="button" id="btn_target" class="btn submit_btn btn-outline-danger btn-default btn_btn">
+        <button type="button" id="btn_target" class="btn submit_btn btn-outline-danger btn_btn">
             現在地から出発する
         </button>
         {% endif %}
         {% if geo == 1 %}
-        <button type="button" id="btn_" class="btn submit_btn btn-outline-danger btn-default btn_btn"
-            onclick="location.href='/'">
+        <button type="button" id="btn_" class="btn submit_btn btn-outline-danger btn_btn" onclick="location.href='/'">
             出発地点を設定する
         </button>
         {% endif %}
     </div>
-    <button type="button" class="btn submit_btn btn-outline-danger btn-default btn_clear" id="target" name="place"
+    <button type="button" class="btn submit_btn btn-outline-danger btn_clear" id="target" name="place"
         onclick="location.href='/'">クリア</button>
-    <button type="button" class="btn submit_btn btn-outline-danger btn-default btn_clear" id="target" name="place"
+    <button type="button" class="btn submit_btn btn-outline-danger btn_clear" id="target" name="place"
         onclick="location.href='/detail_search'">詳細検索</button>
-</div>
+        <button type="submit" class="btn submit_btn btn-outline-danger btn-default" id="target" name="search_mode"
+        value="normal" onclick="location.href='./via.html'">検索</button>
+        </div>
+    </div>
 </form>
 <form action="/" method="POST" style="display:none" name="currentlocationsearch">
-    <input name="lat" type="hidden"/>
-    <input name="long" type="hidden"/>
+    <input name="lat" type="hidden" />
+    <input name="long" type="hidden" />
 </form>
 <div class="decoration">
     <div class="suggest_place col-xl-7">
@@ -99,9 +98,10 @@
                 <span class="name">{{ place['name'] }}</span><br>
             </div>
             {% if place['photo_reference']=="" %}
-            <span>画像が無いよ！！</span>
+            <span><img src="../static/img/map_logo.jpg" style="width:200px"></span>
             {% else %}
-            <span><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
+            <span><img
+                    src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ place['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
             {% endif %}
             <div class="detail2">
                 <span class="vicinity">{{ place['vicinity'] }}</span><br>
@@ -113,8 +113,8 @@
     </div>
     <div class="map col-xl-3">
         <iframe src="https://maps.google.co.jp/maps?output=embed&t=m&hl=ja&z=18&ll={{ lat }},{{ long }}" frameborder="0"
-        scrolling="no" width="700px" height="420px"
-        style="filter:hue-rotate(200deg);-webkit-filter:hue-rotate(200deg)"></iframe>
+            scrolling="no" width="700px" height="420px"
+            style="filter:hue-rotate(200deg);-webkit-filter:hue-rotate(200deg)"></iframe>
     </div>
 </div>
 </div>
