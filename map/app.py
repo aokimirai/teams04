@@ -704,19 +704,27 @@ def tenanthome():
 def keyword():
     if request.method == "POST":
         userid=session["tenant_user_id"]
-        mode = int(request.form.get("mode"))
-        if mode == 1:
+        if request.form.get("keyword"):
+            keyword = request.form.get("keyword")
             con = sqlite3.connect('./map.db')
             db = con.cursor()
-            db.execute("UPDATE tenantkeys SET 'set'=? WHERE id=?", (mode,userid))
+            db.execute("UPDATE tenantkeys SET 'keyword'=? WHERE id=?", (keyword,userid))
             con.commit()
             con.close()
-        elif mode == 0:
-            con = sqlite3.connect('./map.db')
-            db = con.cursor()
-            db.execute("UPDATE tenantkeys SET 'set'=? WHERE id=?", (mode,userid))
-            con.commit()
-            con.close()
+        if request.form.get("mode"):
+            mode = int(request.form.get("mode"))
+            if mode == 1:
+                con = sqlite3.connect('./map.db')
+                db = con.cursor()
+                db.execute("UPDATE tenantkeys SET 'set'=? WHERE id=?", (mode,userid))
+                con.commit()
+                con.close()
+            elif mode == 0:
+                con = sqlite3.connect('./map.db')
+                db = con.cursor()
+                db.execute("UPDATE tenantkeys SET 'set'=? WHERE id=?", (mode,userid))
+                con.commit()
+                con.close()
         return redirect("/keyword")
     else:
         userid=session["tenant_user_id"]
@@ -733,7 +741,6 @@ def keyword():
             db.execute("SELECT * FROM tenantkeys WHERE id = ?",(userid,))
             tenantkey=db.fetchone()
             con.close()
-        print(tenantkey)
         return render_template("keyword.html",tenantkey=tenantkey)
 
 @app.route("/add_favorite", methods=["GET", "POST"])
