@@ -773,7 +773,7 @@ def favorite():
 @app.route("/add_history" ,methods=["GET","POST"])
 def add_history():
     history =request.form.get("place")
-    history = re.split('url:|name:|distance:|means:|duration:|destination:',history)
+    history = re.split('url:|name:|distance:|kmmeans:|duration:|destination:',history)
     print(history)
     dt_now = time.time()
     db.execute("INSERT INTO history (userid ,url ,used_at ,required_at ,distance ,way ,first ,second) VALUES ( ? ,? ,? ,? ,? ,? ,? ,? )",
