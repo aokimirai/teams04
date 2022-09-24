@@ -14,14 +14,14 @@
     {% if tenantkey[2] == 0 %}
         <h3>今日のキーワード</h3>
         <p style="font-size:xxx-large">{{ tenantkey[1] }}</p>
-        <p>キーワード設定モード</p>
+        <p style="margin-top:30px">キーワード設定モード</p>
         <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-on="ON" date-off="OFF" id="mode">
     {% elif tenantkey[2] == 1 %}
         <form action="/keyword" method="post" enctype="multipart/form-data">
             <input type="text" name="keyword" size="15" maxlength="20" placeholder="キーワード" value={{ tenantkey[1] }}>
-            <button class="btn" type="submit">設定</button>
+            <button class="btn submit_btn btn-outline-danger btn_clear" type="submit">設定</button>
         </form>
-        <p>キーワード設定モード</p>
+        <p style="margin-top:30px">キーワード設定モード</p>
         <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-on="ON" date-off="OFF" id="mode" checked>
     {% endif %}
 

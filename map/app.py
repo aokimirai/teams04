@@ -28,13 +28,13 @@ with open("APIkey.txt") as f:
     print(APIkey)
 api_key = APIkey
 
+# 毎日12:00にキーワードを変更する
 def clear():
     con = sqlite3.connect('./map.db')
     db = con.cursor()
     db.execute("SELECT REPLACE(keycount,'1','0') FROM tenantkeys")
     con.commit()
     con.close()
-
 schedule.every().day.at("00:00").do(clear)
 
 api_value = 1
