@@ -1,5 +1,4 @@
 import os
-import time
 import cgi
 import urllib.request, json
 import urllib.parse
@@ -10,7 +9,9 @@ import requests
 import googlemaps
 import io
 import werkzeug
+import time
 from datetime import datetime
+import schedule
 import sqlite3
 import re
 import json
@@ -20,6 +21,16 @@ with open("APIkey.txt") as f:
     APIkey = f.read()
     print(APIkey)
 api_key = APIkey
+
+
+def clear():
+    con = sqlite3.connect('./map.db')
+    db = con.cursor()
+    db.execute("SELECT REPLACE(keycount,'1','0') FROM tenantkeys")
+    con.commit()
+    con.close()
+
+schedule.every().day.at("00:00").do(clear)
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -737,6 +748,28 @@ def keyword():
             con = sqlite3.connect('./map.db')
             db = con.cursor()
             db.execute("INSERT INTO tenantkeys (id) VALUES(?)",(userid,))
+            con.commit()
+            db.execute("SELECT * FROM tenantkeys WHERE id = ?",(userid,))
+            tenantkey=db.fetchone()
+            con.close()
+
+        con = sqlite3.connect('./map.db')
+        db = con.cursor()
+        db.execute("SELECT keycount FROM tenantkeys WHERE id=?",(userid,))
+        keycount = db.fetchone()
+        con.close()
+        print(keycount)
+        if keycount[0] == 0:
+            with open("keyword.txt") as f:
+                keyword = f.readlines()
+            key_list = [str.rstrip() for str in keyword]
+            list = len(key_list)
+            rand = random.randint(0,list)
+            key = key_list[rand]
+            print(key)
+            con = sqlite3.connect('./map.db')
+            db = con.cursor()
+            db.execute("UPDATE tenantkeys SET 'keyword'=?,'keycount'=? WHERE id=?", (key,1,userid))
             con.commit()
             db.execute("SELECT * FROM tenantkeys WHERE id = ?",(userid,))
             tenantkey=db.fetchone()
