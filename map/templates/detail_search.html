@@ -5,6 +5,18 @@
 {% endblock %}
 
 {% block main %}
+<form method="POST" action="/detail_search">
+    <button type="submit" class="btn submit_btn btn-outline-danger btn_btn" name="btn" value="address" onclick="location.href='/detail_search'">住所から検索する</button><br>
+    <button type="submit" class="btn submit_btn btn-outline-danger btn_btn" name="btn" value="latlng" onclick="location.href='/detail_search'">緯度経度から検索する</button><br>
+    <button type="submit" class="btn submit_btn btn-outline-danger btn_btn" name="btn" value="keyword" onclick="location.href='/detail_search'">キーワードを入力する</button>
+</form>
+
+
+
+
+
+
+<!--
 <form method="POST" action="/via">
     <div class="mb-3">
         所要時間
@@ -38,4 +50,5 @@
             onclick="location.href='./via.html'">検索</button>
     </div>
 </form>
+-->
 {% endblock %}
