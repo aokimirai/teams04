@@ -20,6 +20,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>アイコン</th>
             <th>順位</th>
             <th>名前</th>
             <th>距離</th>
@@ -41,7 +42,7 @@
             {% endif %}
             <td>{{ a.cnt + 1 }}位</td>
             <td>{{ user_data['display_name'] }}</td>
-            <td>{{ score[1] }}</td>
+            <td>{{ score[1] }}km</td>
             {% endif %}
             {% set b.cnt = b.cnt + 1 %}
             {% endfor %}

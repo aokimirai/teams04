@@ -16,7 +16,9 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            {% if session_id == 0 %}
             <th>お気に入り</th>
+            {% endif %}
             <th>評価</th>
             <th>経由地名</th>
             <th>写真</th>
