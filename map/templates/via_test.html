@@ -7,8 +7,8 @@
 {% block main %}
 <div class="via_top">
     <div class="via_name">
-        <h3>星{{ via['rating'] }} </h3>
-        <h3>{{ via.name }}</h3>
+        <h5>星{{ via['rating'] }} </h5>
+        <h3 class="red_word">{{ via.name }}</h3>
         {% if favorite[0] == 0 %}
         <form method="POST" action="/add_favorite">
             <button type="submit" class="btn addtofavorite" id="target" name="place"
@@ -27,24 +27,32 @@
     <img src="https://maps.googleapis.com/maps/api/place/photo?maxheight=230&photoreference={{ via['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></imgsrc>
     {% endif %}
     <div>
-        <p>所要時間　約{{ via['add_duration']['text'] }}</p>
-        <p>移動距離　約{{ via['add_distance']['text'] }}</p>
+        <p style="font-weight:600; font-size:20px;">所要時間　<span class="red_word" style="font-weight:600; font-size:20px;">約{{ via['add_duration']['text'] }}</span></p>
+        <p style="font-weight:600; font-size:20px;">移動距離　<span class="red_word" style="font-weight:600; font-size:20px;">約{{ via['add_distance']['text'] }}</span></p>
+        {% if session_id == 0 %}
+        <form method="POST" action="/add_history">
+            <button type="submit" class="btn btn-outline-danger" id="target" name="place"
+                value="url:{{ url }}name:{{ via.name }}distance:{{ via.add_distance.value }}means:{{ means }}duration:{{ via.add_duration.value }}destination:{{ destination }}">Mapで開く</button>
+        </form>
+        {% else %}
+        <button type="button" class="btn btn-outline-danger" id="target" onclick="location.href='{{ url[a.cnt] }}'">MAPで開く</button>
+        {% endif %}
     </div>
-    {% if session_id == 0 %}
-    <form method="POST" action="/add_history">
-        <button type="submit" class="btn btn-outline-danger" id="target" name="place"
-            value="url:{{ url }}name:{{ via.name }}distance:{{ via.add_distance.value }}means:{{ means }}duration:{{ via.add_duration.value }}destination:{{ destination }}">Mapで開く</button>
-    </form>
-    {% else %}
-    <button type="button" class="btn btn-outline-danger" id="target" onclick="location.href='{{ url[a.cnt] }}'">MAPで開く</button>
-    {% endif %}
     <div>
-    <h5>レビュー</h5>
-    <div class="rate_text col-xl-7" style="width:30vw">
+    <h5 class="red_word" style="font-weight:600">レビュー</h5>
+    <div class="rate_text col-xl-7" style="width:33vw">
         {% for rate in rate %}
         <div class="rate_box">
+            <div class="user">
+            <img src="{{ rate["profile_photo_url"] }}"  style="width:2.5vw; margin:2vw;">
+            <p style="text-align:center">{{ rate['author_name'] }}</p>
+        </div>
+        <div class="rate">
+            <h6>星{{ rate['rating'] }}</h6>
             <p>{{ rate['text'] }}</p>
         </div>
+        </div>
+        <hr>
         {% endfor %}
     </div>
 </div>
@@ -76,7 +84,10 @@
         </div>
         {% endfor %}
     </div>
+
+
     <div class="map col-xl-3">
+        <h5 class="red_word" style="font-weight:600">MAP</h5>
         <iframe
         width="700"
         height="420"

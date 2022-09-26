@@ -275,11 +275,9 @@ def via_suggest():
         keyword = keyword[1:]
         #関数を使って施設名から緯度経度を取得
         destination_cie = get_address(destination)
-        print(destination_cie)
         if destination_cie == False:
             return apology("住所が見つかりませんでした。",501)
         origin_cie = get_address(origin)
-        print(origin_cie)
         if destination_cie == False:
             return apology("住所が見つかりませんでした。",501)
 
@@ -289,9 +287,6 @@ def via_suggest():
             return apology("入力した時間では目的地に到着できません",400)
 
         limit2 = (int(limit)*60 - int(intime['rows'][0]['elements'][0]['duration']['value']))/60
-        print(limit2)
-
-
 
         #関数をつかって経由地を検索
         suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit,keyword,limit2=limit2)
@@ -339,14 +334,12 @@ def via_suggest():
                         break
                 x += 1
         if api_value == 2:
-            print(via)
-
-        via = random.choice(via)
+            via = random.choice(via)
         next_via = search_place(via['lat'],via['lng'],via['lat'],via['lng'],"driving",15,means,15)
 
         print(origin_cie)
         url = "https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via['lat'])+","+str(via['lng'])
-        rate = get_rate()
+        rate = get_rate(via['place_id'])
         return render_template("via_test.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite ,destination=destination ,session_id=session_id ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate ,next_via=next_via)
     else:
         return apology("パラメータが入力されていません",501)
@@ -699,11 +692,16 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
             temp5={'photo_reference':''}
         else:
             temp5 = {'photo_reference':temp['photos']}
+        if not 'photos' in temp.keys():
+            temp6={'place_id':''}
+        else:
+            temp6 = {'place_id':temp['place_id']}
         #temp1に結合
         temp1.update(temp2)
         temp1.update(temp3)
         temp1.update(temp4)
         temp1.update(temp5)
+        temp1.update(temp6)
         #配列に保存
         suggest_place.append(temp1)
     return suggest_place
@@ -1137,7 +1135,7 @@ def add_favorite():
             #    x += 1
         origin_cie = [favorites[9],favorites[10]]
         destination_cie = [favorites[11],favorites[12]]
-        rate = get_rate()
+        rate = get_rate(favorites[2]['place_id'])
         return render_template("via_test.html" ,via=favorites[2] ,url=favorites[3] ,means=favorites[4] ,key=api_key ,favorite=favorite ,session_id=session_id ,next_via=favorites[8][0] ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate)
 
 
@@ -1153,29 +1151,30 @@ def suggest_via_directions(origin,destination,place,means,limit):
 
     #処理はroundで移動距離、移動時間を取得して足し算、足した値が入力した値より小さければlistに格納する
     for cycle in place:
-        request = "https://maps.googleapis.com/maps/api/directions/json?origin="+origin+"&destination="+destination+"&waypoints=via:"+str(cycle['lat'])+","+str(cycle['lng'])+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
-        response = urllib.request.urlopen(request).read()
+        urlName = "https://maps.googleapis.com/maps/api/directions/json?origin="+origin+"&destination="+destination+"&waypoints=via:"+str(cycle['lat'])+","+str(cycle['lng'])+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
+        req = urllib.request.Request(urlName)
+        req.add_header("accept-language", "ja,en-US;q=0.9,en;q=0.8")
+        response = urllib.request.urlopen(req).read()
         directions = json.loads(response)
         #print(int(limit) * 60)
         #print(directions['routes'][0]['legs'][0]['duration'])
         #もし制限時間以内に経由できるのならばlistに加える
-        print(directions)
         if int(limit) * 60 >= int(directions['routes'][0]['legs'][0]['duration']['value']):
-            print(directions['routes'][0]['legs'][0]['duration'])
             if means == 'driving':
                 temp = {'add_distance' : directions['routes'][0]['legs'][0]['distance'], 'add_duration' : directions['routes'][0]['legs'][0]['duration']}
             else:
                 temp = {'add_distance' : directions['routes'][0]['legs'][0]['distance'], 'add_duration' : directions['routes'][0]['legs'][0]['duration']}
+
             cycle.update(temp)
             #cycleにはid,name,latitude,longitude,add_distance,add_durationが入っている
             via_candidate.append(cycle)
     #候補を返す
     return via_candidate
 
-def get_rate():
+def get_rate(place_id):
     placeId = 'ChIJJ4-os2znAGAReJ4AQRGTrcs'
 
-    urlName = "https://maps.googleapis.com/maps/api/place/details/json?place_id={0}&key={1}".format(placeId,api_key)
+    urlName = "https://maps.googleapis.com/maps/api/place/details/json?place_id={0}&key={1}".format(place_id,api_key)
     print(urlName)
     req = urllib.request.Request(urlName)
     req.add_header("accept-language", "ja,en-US;q=0.9,en;q=0.8")
@@ -1232,6 +1231,6 @@ def next_via():
 
     via = value[0]
 
-    rate = get_rate()
+    rate = get_rate(via['place_id'])
     next_via = search_place(via['lat'],via['lng'],via['lat'],via['lng'],"driving",15,means,15)
     return render_template("via_test.html" ,via=value[0] ,favorite=favorite ,url=url ,means=means ,key=api_key ,session_id=session_id ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate ,next_via=next_via)

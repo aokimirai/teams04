@@ -8,11 +8,9 @@
 }
 
 .rate_box{
+    margin:1vw 1.5vw;
     display:flex;
-    margin:1vw;
-    justify-content: center;
-    align-items: left;
-    margin: 1vw;
+    text-align:left;
 }
 
 .rate_text{
@@ -22,4 +20,24 @@
     border-radius:7px;
     overflow-y: scroll;
     margin-right:2vw;
+    margin-left:6vw;
+    text-align:left;
+}
+
+.via_name{
+    width:20vw
+}
+
+.red_word{
+    color:#f0828d
+}
+
+iframe{
+    -webkit-filter: hue-rotate(200deg);
+    filter: hue-rotate(200deg);
+}
+
+.title_place{
+    width: 45vw;
+    height: 43vh;
 }
