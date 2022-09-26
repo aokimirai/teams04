@@ -338,7 +338,16 @@ def via_suggest():
                         favorite[x] = 1
                         break
                 x += 1
-        return render_template("via.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite ,destination=destination ,session_id=session_id)
+        if api_value == 2:
+            print(via)
+
+        via = random.choice(via)
+        next_via = search_place(via['lat'],via['lng'],via['lat'],via['lng'],"driving",15,means,15)
+
+        print(origin_cie)
+        url = "https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via['lat'])+","+str(via['lng'])
+        rate = get_rate()
+        return render_template("via_test.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite ,destination=destination ,session_id=session_id ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate ,next_via=next_via)
     else:
         return apology("パラメータが入力されていません",501)
 
@@ -572,6 +581,7 @@ def get_address(place):
 
     #リクエスト結果
     answer = requests.get(Url, params).json()
+    print(answer)
 
     #取得したデータから緯度経度を抽出し、　緯度,経度　の形にして変数に保存する
     #address = str(answer['results'][0]['geometry']['location']['lat']) + "," + str(answer['results'][0]['geometry']['location']['lng'])
@@ -629,10 +639,10 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     #それぞれの手段によって半径を変える
     if means == 'driving':
         radius = 360 * int(limit2)
-        via_center =  50 / 60 * int(limit2) * km_ratio
+        via_center =  40 / 60 * int(limit2) * km_ratio
     if means == 'bicycling':
         radius = 250 * int(limit2)
-        via_center = 30 / 60 * int(limit2) * km_ratio
+        via_center = 20 / 60 * int(limit2) * km_ratio
     if means == 'walking':
         radius = 100 * int(limit2)
         via_center = 5 / 60 * int(limit2) * km_ratio
@@ -773,6 +783,21 @@ def test3():
     directions = json.loads(response)
     print(directions['routes'][0]['legs'][0]['distance'])
     return redirect(url)
+
+@app.route("/test4")
+def test4():
+    placeId = 'ChIJJ4-os2znAGAReJ4AQRGTrcs'
+    urlName = "https://maps.googleapis.com/maps/api/place/details/json?place_id={0}&key={1}".format(placeId,api_key)
+    print(urlName)
+
+    req = urllib.request.Request(urlName)
+    req.add_header("accept-language", "ja,en-US;q=0.9,en;q=0.8")
+
+    response = urllib.request.urlopen(urlName).read()
+    parsed_response = json.loads(response)
+    print(parsed_response)
+
+    return render_template("index.html")
 
 @app.route("/mypage")
 def mypage():
@@ -1043,6 +1068,11 @@ def add_favorite():
         #値を取り出す
         favorites = re.split(" _=_ ",favorite_temp)
         length = favorites[3].count("https")
+        favorites[8] = favorites[8][1:]
+        favorites[8] = favorites[8][:-1]
+        favorites[8] = [ast.literal_eval(favorites[8])]
+        print(favorites[8][0])
+        """
         #受け取った値は文字列になってしまっているので気合で配列に戻す
         if length >= 2:
             favorites[3] = favorites[3][1:]
@@ -1057,13 +1087,17 @@ def add_favorite():
         else:
             favorites[3] = favorites[3][2:]
             favorites[3] = favorites[3][:-2]
-        #print(favorites[3][0])
+        print(favorites[3])
+        """
 
         if favorites[0] == "add":
-            db.execute("INSERT INTO favorite (userid ,name ,url) VALUES (? ,? ,?)" ,session['user_id'] ,favorites[1] ,favorites[3][int(favorites[7][1])])
+            #db.execute("INSERT INTO favorite (userid ,name ,url) VALUES (? ,? ,?)" ,session['user_id'] ,favorites[1] ,favorites[3][int(favorites[7])])
+            db.execute("INSERT INTO favorite (userid ,name ,url) VALUES (? ,? ,?)" ,session['user_id'] ,favorites[1] ,favorites[3])
         else:
             db.execute("DELETE FROM favorite WHERE userid=? AND name=?" ,session['user_id'] ,favorites[1])
 
+        """
+        print(favorites[5])
         favorites[5] = favorites[5][1:][:-1]
         favorites[5] = re.split('}, {',favorites[5])
         dict_detail = []
@@ -1071,12 +1105,17 @@ def add_favorite():
             favorites[5][y] = "{" + favorites[5][y] + "}"
         favorites[5][0] = favorites[5][0][1:]
         favorites[5][2] = favorites[5][2][:-1]
-        for cycle in favorites[5]:
-            dict_detail.append(ast.literal_eval(cycle))
+        """
+        favorites[2] = ast.literal_eval(favorites[2])
+
+        #for cycle in favorites[5]:
+        #    print(cycle)
+        #    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        #    dict_detail.append(ast.literal_eval(cycle))
         #経由地がお気に入り指定されているかを確認する
         #お気に入りにしていたら1,していなかったら0を配列に入れる
         favorite=[0,0,0]
-        favorite_temp = db.execute("SELECT name FROM favorite WHERE userid = ?", session['user_id'])
+        #favorite_temp = db.execute("SELECT name FROM favorite WHERE userid = ?", session['user_id'])
         #ログイン中のユーザーのお気に入り指定した経由地をすべて取り出し、経由地と比較。もし同じものがあれば1に変化させる
         #ログインされているかを確認する。ログインされていなかったら1を返す
         session_id = 0
@@ -1087,14 +1126,19 @@ def add_favorite():
             #お気に入りにしていたら1,していなかったら0を配列に入れる
             favorite_temp = db.execute("SELECT name FROM favorite WHERE userid = ?", session['user_id'])
             #ログイン中のユーザーのお気に入り指定した経由地をすべて取り出し、経由地と比較。もし同じものがあれば1に変化させる
-            x = 0
-            for cycle in dict_detail:
-                for favorite_cycle in favorite_temp:
-                    if cycle['name'] == favorite_cycle['name']:
-                        favorite[x] = 1
-                        break
-                x += 1
-        return render_template("via.html" ,via=dict_detail ,url=favorites[3] ,means=favorites[4] ,detail=dict_detail ,key=api_key ,favorite=favorite ,session_id=session_id)
+            #x = 0
+            #for cycle in dict_detail:
+            print(favorites[2])
+            print(favorite_temp)
+            for favorite_cycle in favorite_temp:
+                if favorites[2]['name'] == favorite_cycle['name']:
+                    favorite[0] = 1
+                    break
+            #    x += 1
+        origin_cie = [favorites[9],favorites[10]]
+        destination_cie = [favorites[11],favorites[12]]
+        rate = get_rate()
+        return render_template("via_test.html" ,via=favorites[2] ,url=favorites[3] ,means=favorites[4] ,key=api_key ,favorite=favorite ,session_id=session_id ,next_via=favorites[8][0] ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate)
 
 
 
@@ -1115,6 +1159,7 @@ def suggest_via_directions(origin,destination,place,means,limit):
         #print(int(limit) * 60)
         #print(directions['routes'][0]['legs'][0]['duration'])
         #もし制限時間以内に経由できるのならばlistに加える
+        print(directions)
         if int(limit) * 60 >= int(directions['routes'][0]['legs'][0]['duration']['value']):
             print(directions['routes'][0]['legs'][0]['duration'])
             if means == 'driving':
@@ -1127,117 +1172,66 @@ def suggest_via_directions(origin,destination,place,means,limit):
     #候補を返す
     return via_candidate
 
+def get_rate():
+    placeId = 'ChIJJ4-os2znAGAReJ4AQRGTrcs'
+
+    urlName = "https://maps.googleapis.com/maps/api/place/details/json?place_id={0}&key={1}".format(placeId,api_key)
+    print(urlName)
+    req = urllib.request.Request(urlName)
+    req.add_header("accept-language", "ja,en-US;q=0.9,en;q=0.8")
+    response = urllib.request.urlopen(req).read()
+    parsed_response = json.loads(response)
+    print(parsed_response['result']["reviews"][0]['rating'])
+    print(parsed_response['result']["reviews"][0]['text'])
+
+    return parsed_response['result']['reviews']
 
 
-"""
-# 引数で与えられた出発地点と目的地、移動手段から移動距離、移動時間を求める関数
-def route_directions(origin,destination,means):
 
-    #現在時刻を取得
-    unix_time = int(time.time())
+@app.route("/next_via", methods=["GET", "POST"])
+def next_via():
+    value = []
+    url = [0,0,0]
+    basic_value = request.form.get('next_via')
+    print(basic_value)
+    value = re.split("_=_",basic_value)
+    value[1] = re.split("[(,)]",value[1])
+    value[2] = re.split("[(,)]",value[2])
+    value[0] = (ast.literal_eval(value[0]))
+    print(value)
 
-    #デバッグ用-時間を表示
-    print('=====')
-    print('unixtime')
-    print(unix_time)
-    print('=====')
+    means = value[3]
+    session_id = 0
+    if len(session) == 0:
+        session_id = 1
+    else:
+        #経由地がお気に入り指定されているかを確認する
+        #お気に入りにしていたら1,していなかったら0を配列に入れる
+        favorite_temp = db.execute("SELECT name FROM favorite WHERE userid = ?", session['user_id'])
+        #ログイン中のユーザーのお気に入り指定した経由地をすべて取り出し、経由地と比較。もし同じものがあれば1に変化させる
+        for favorite_cycle in favorite_temp:
+            if value[0]['name'] == favorite_cycle['name']:
+                favorite[0] = 1
+                break
+    origin_cie = [value[1][1],value[1][2]]
+    print(value[2][1])
+    destination_cie = [value[2][1],value[2][2]]
+    print(origin_cie)
 
-    #GoogleApiを使ってjsonファイルを取得するための文字列を生成
-    nav_request = 'language=ja&origin={}&destination={}&departure_time={}&key={}&mode={}'.format(origin,destination,unix_time,api_key,means)
-    nav_request = urllib.parse.quote_plus(nav_request, safe='=&')
-    request = endpoint + nav_request
-
-    #デバッグ用_取得したjsonファイルを表示
-    print('')
-    print('=====')
-    print('url')
-    print(request)
-    print('=====')
-
-    #Google Maps Platform Directions APIを実行
-    response = urllib.request.urlopen(request).read()
-
-    #結果(JSON)を取得
+    req = "https://maps.googleapis.com/maps/api/directions/json?origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&waypoints=via:"+str(value[0]['lat'])+","+str(value[0]['lng'])+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
+    print(req)
+    response = urllib.request.urlopen(req).read()
     directions = json.loads(response)
-    print("b")
+    url = "https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ value[3] +"&waypoints="+str(value[0]['lat'])+","+str(value[0]['lng'])
 
-    #所要時間を取得
-    for key in directions['routes']:
-        #print(key) # titleのみ参照
-        #print(key['legs'])
-        print("a")
-        for key2 in key['legs']:
-            print('')
-            print('=====')
-            distance = key2['distance']['text']
-            if means == "driving":
-                #_in_trafficが付くと交通状態を加味した時間を取得できる。車で移動する時はこれを使う
-                duration = key2['duration_in_traffic']['text']
-                #車以外の交通状態を考えなくてよいものはこっちを使う
-            else:
-                duration = key2['duration']['text']
-            #デバッグ用＿道のりと必要時間を表示
-            print(distance)
-            print(duration)
-            print('=====')
-    #道のりと必要時間を返す
-    return distance,duration
+    if means == 'driving':
+        temp = {'add_distance' : directions['routes'][0]['legs'][0]['distance'], 'add_duration' : directions['routes'][0]['legs'][0]['duration']}
+    else:
+        temp = {'add_distance' : directions['routes'][0]['legs'][0]['distance'], 'add_duration' : directions['routes'][0]['legs'][0]['duration']}
+    value[0].update(temp)
 
+    via = value[0]
 
-#合計時間を計算する関数です
-def duration_function(time1,time2):
-    time = [time1,time2]
-    i,n,x,y,xx,yy = 0,0,0,0,0,0
-    hour,day,minutes = 0,0,0
-    while i != 2:
-        while n != len(time[i]):
-            if time[i][n] == "日":
-                #　日　が出てくるまでの数字を文字型から整数型に変換して変数に代入
-                day += int(time[i][0:n])
-                x = 1
-                xx = n+1
-            if time[i][n] == "時":
-                #　日　以降で　時間　が出てくるまでの数字を文字型から整数型に変換して変数に代入
-                hour += int(time[i][xx:n])
-                y = 1
-                yy = n+2
-            if time[i][n] == "分":
-                #　時間　以降で　分　が出てくるまでの数字を文字型から整数型に変換して変数に代入
-                minutes += int(time[i][yy:n])
-            n += 1
-        i += 1
-        x,y,n,xx,yy = 0,0,0,0,0
-
-    minutes += ((day * 24) + hour) * 60
-    print(minutes)
-    #if minutes >= 60:
-        #hour += minutes // 60
-        #minutes = minutes % 60
-    #if hour >= 24:
-        #day += hour // 24
-        #hour = hour % 24
-        # print(str(day)+'日'+str(hour)+'時間'+str(minutes)+'分')
-
-    return minutes
-
-#合計距離を計算する関数
-def distance_function(distance1,distance2):
-    distance = [distance1,distance2]
-    add_distance = 0
-    i,n,k = 0,0,0
-
-
-    #なぜか i!=2 にするとエラーが出ます。
-    while i != 1:
-        while n != len(distance[i]):
-            if distance[i][n] == "k":
-                #数字と単位(km)を分割してmへ変換。1.1のように小数点で出てくる可能性があるのでfloatにしてみました。
-                add_distance += float(distance[i].split('km')[0])*1000
-                k = 1
-            n += 1
-        if k == 0:
-            add_distance += float(distance[i].split("m")[0])
-        i += 1
-
-    return add_distance
-"""
+    rate = get_rate()
+    next_via = search_place(via['lat'],via['lng'],via['lat'],via['lng'],"driving",15,means,15)
+    return render_template("via_test.html" ,via=value[0] ,favorite=favorite ,url=url ,means=means ,key=api_key ,session_id=session_id ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate ,next_via=next_via)

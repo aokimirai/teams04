@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block title %}
+経由地
+{% endblock %}
+
+{% block main %}
+<div class="via_top">
+    <div class="via_name">
+        <h3>星{{ via['rating'] }} </h3>
+        <h3>{{ via.name }}</h3>
+        {% if favorite[0] == 0 %}
+        <form method="POST" action="/add_favorite">
+            <button type="submit" class="btn addtofavorite" id="target" name="place"
+                value="add _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ 0 }} _=_ {{ next_via }} _=_ {{ origin_cie[0] }} _=_ {{ origin_cie[1] }} _=_ {{ destination_cie[0] }} _=_ {{ destination_cie[1] }}">☆</button>
+        </form>
+        {% else %}
+        <form method="POST" action="/add_favorite">
+            <button type="submit" class="btn addtofavorite removefavorite hidden" id="target" name="place"
+                value="remove _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ 0 }} _=_ {{ next_via }} _=_ {{ origin_cie[0] }} _=_ {{ origin_cie[1] }} _=_ {{ destination_cie[0] }} _=_ {{ destination_cie[1] }}">★</button>
+        </form>
+        {% endif %}
+    </div>
+    {% if via["photo_reference"] == "" %}
+    <img src="../static/img/map_logo.jpg" style="width:200px">
+    {% else %}
+    <img src="https://maps.googleapis.com/maps/api/place/photo?maxheight=230&photoreference={{ via['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></imgsrc>
+    {% endif %}
+    <div>
+        <p>所要時間　約{{ via['add_duration']['text'] }}</p>
+        <p>移動距離　約{{ via['add_distance']['text'] }}</p>
+    </div>
+    {% if session_id == 0 %}
+    <form method="POST" action="/add_history">
+        <button type="submit" class="btn btn-outline-danger" id="target" name="place"
+            value="url:{{ url }}name:{{ via.name }}distance:{{ via.add_distance.value }}means:{{ means }}duration:{{ via.add_duration.value }}destination:{{ destination }}">Mapで開く</button>
+    </form>
+    {% else %}
+    <button type="button" class="btn btn-outline-danger" id="target" onclick="location.href='{{ url[a.cnt] }}'">MAPで開く</button>
+    {% endif %}
+    <div>
+    <h5>レビュー</h5>
+    <div class="rate_text col-xl-7" style="width:30vw">
+        {% for rate in rate %}
+        <div class="rate_box">
+            <p>{{ rate['text'] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+
+
+
+<div class="decoration">
+    <div class="suggest_place col-xl-7">
+        {% for next_via in next_via %}
+        <div class="suggest_box">
+            <div class="detail1">
+                <span class="rating">星{{ next_via['rating'] }}</span><br>
+                <span class="name">{{ next_via['name'] }}</span><br>
+            </div>
+            {% if next_via['photo_reference']=="" %}
+            <span><img src="../static/img/map_logo.jpg" style="width:200px"></span>
+            {% else %}
+            <span><img
+                src="../static/img/map_logo.jpg" style="width:200px"></span>
+            {% endif %}
+            <div class="detail2">
+                <span class="vicinity">{{ next_via['vicinity'] }}</span><br>
+                <form method="POST" action="/next_via">
+                <button type="submit" name="next_via" value="{{ next_via }}_=_({{ origin_cie[0] }},{{ origin_cie[1] }})_=_({{ destination_cie[0] }},{{ destination_cie[1] }})_=_{{ means}}"
+                    class="btn btn-outline-danger">経由地を変更する</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="map col-xl-3">
+        <iframe
+        width="700"
+        height="420"
+        style="border:0"
+        loading="lazy"
+        allowfullscreen
+        style="filter:hue-rotate(200deg);-webkit-filter:hue-rotate(200deg)"
+        src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs
+          &origin={{ origin_cie[0] }},{{ origin_cie[1] }}&destination={{ destination_cie[0] }},{{ destination_cie[1] }}&waypoints={{ via['lat'] }},{{ via['lng'] }}">
+      </iframe>
+    </div>
+</div>
+</div>
+<script src="/static/js/geo.js"></script>
+{% endblock %}
