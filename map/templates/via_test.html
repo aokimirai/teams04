@@ -7,18 +7,21 @@
 {% block main %}
 <div class="via_top">
     <div class="via_name">
-        <h5>星{{ via['rating'] }} </h5>
+        <span class="star5_rating" data-rate="{{ via['rating'] }}"></span>
+        <span>{{ via['rating'] }}</span>
         <h3 class="red_word">{{ via.name }}</h3>
+        {% if session_id == 0 %}
         {% if favorite[0] == 0 %}
         <form method="POST" action="/add_favorite">
-            <button type="submit" class="btn addtofavorite" id="target" name="place"
-                value="add _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ 0 }} _=_ {{ next_via }} _=_ {{ origin_cie[0] }} _=_ {{ origin_cie[1] }} _=_ {{ destination_cie[0] }} _=_ {{ destination_cie[1] }}">☆</button>
+            <button type="submit" class="btn addtofavorite btn-outline-danger" id="target" name="place"
+                value="add _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ 0 }} _=_ {{ next_via }} _=_ {{ origin_cie[0] }} _=_ {{ origin_cie[1] }} _=_ {{ destination_cie[0] }} _=_ {{ destination_cie[1] }}">お気に入りに登録する</button>
         </form>
         {% else %}
         <form method="POST" action="/add_favorite">
-            <button type="submit" class="btn addtofavorite removefavorite hidden" id="target" name="place"
-                value="remove _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ 0 }} _=_ {{ next_via }} _=_ {{ origin_cie[0] }} _=_ {{ origin_cie[1] }} _=_ {{ destination_cie[0] }} _=_ {{ destination_cie[1] }}">★</button>
+            <button type="submit" class="btn addtofavorite removefavorite hidden btn-danger" id="target" name="place"
+                value="remove _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ 0 }} _=_ {{ next_via }} _=_ {{ origin_cie[0] }} _=_ {{ origin_cie[1] }} _=_ {{ destination_cie[0] }} _=_ {{ destination_cie[1] }}">お気に入りを解除する</button>
         </form>
+        {% endif %}
         {% endif %}
     </div>
     {% if via["photo_reference"] == "" %}
@@ -35,44 +38,51 @@
                 value="url:{{ url }}name:{{ via.name }}distance:{{ via.add_distance.value }}means:{{ means }}duration:{{ via.add_duration.value }}destination:{{ destination }}">Mapで開く</button>
         </form>
         {% else %}
-        <button type="button" class="btn btn-outline-danger" id="target" onclick="location.href='{{ url[a.cnt] }}'">MAPで開く</button>
+        <button type="button" class="btn btn-outline-danger" id="target" onclick="location.href='{{ url }}'">MAPで開く</button>
         {% endif %}
     </div>
     <div>
     <h5 class="red_word" style="font-weight:600">レビュー</h5>
     <div class="rate_text col-xl-7" style="width:33vw">
+        {% if rate == 'no_review' %}
+        <p>レビューがないよ！</p>
+        {% else %}
         {% for rate in rate %}
         <div class="rate_box">
             <div class="user">
-            <img src="{{ rate["profile_photo_url"] }}"  style="width:2.5vw; margin:2vw;">
-            <p style="text-align:center">{{ rate['author_name'] }}</p>
+            <img src="{{ rate["profile_photo_url"] }}"  style="width:4vw; margin:2vw 2.5vw 0.5vw 1.5vw;">
+            <p style="text-align:center; margin-right:1.5vw;">{{ rate['author_name'] }}</p>
         </div>
         <div class="rate">
-            <h6>星{{ rate['rating'] }}</h6>
-            <p>{{ rate['text'] }}</p>
+            <span class="star5_rating" data-rate="{{ rate['rating'] }}" style="margin: 0.25vh 0.8vh"></span>
+            <span>{{ rate['rating'] }}</span>
+            <p class="font-size:18px;">{{ rate['text'] }}</p>
         </div>
         </div>
         <hr>
         {% endfor %}
+        {% endif %}
     </div>
 </div>
 </div>
 
-
-
-<div class="decoration">
+<div class="daimei">
+    <span><h5 class="red_word flex-item" style="font-weight:600; margin-right:40vw;">周辺の経由地スポット</h5></span>
+    <span><h5 class="red_word flex-item" style="font-weight:600">MAP</h5></span>
+</div>
+<div class="decoration" style="height:300px;">
     <div class="suggest_place col-xl-7">
         {% for next_via in next_via %}
         <div class="suggest_box">
             <div class="detail1">
-                <span class="rating">星{{ next_via['rating'] }}</span><br>
+                <span class="star5_rating" data-rate="{{ next_via['rating'] }}"></span><span>{{ next_via['rating'] }}</span><br>
                 <span class="name">{{ next_via['name'] }}</span><br>
             </div>
             {% if next_via['photo_reference']=="" %}
             <span><img src="../static/img/map_logo.jpg" style="width:200px"></span>
             {% else %}
             <span><img
-                src="../static/img/map_logo.jpg" style="width:200px"></span>
+                src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference={{ next_via['photo_reference'][0]['photo_reference'] }}&key={{ key }}"></span>
             {% endif %}
             <div class="detail2">
                 <span class="vicinity">{{ next_via['vicinity'] }}</span><br>
@@ -87,7 +97,6 @@
 
 
     <div class="map col-xl-3">
-        <h5 class="red_word" style="font-weight:600">MAP</h5>
         <iframe
         width="700"
         height="420"
@@ -101,5 +110,6 @@
     </div>
 </div>
 </div>
+<script>window.addEventListener('DOMContentLoaded', function(){document.getElementById("footer").style.display="none";});</script>
 <script src="/static/js/geo.js"></script>
 {% endblock %}

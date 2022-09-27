@@ -135,7 +135,7 @@ def point():
     userid = 1
     if request.method == "POST":
         keyword = request.form.get("keyword")
-        print(keyword)
+        #print(keyword)
         #データベースにあるキーワード分だけ回す
         a = db.execute(("SELECT * FROM test_point"))
         for cycle in a:
@@ -335,9 +335,9 @@ def via_suggest():
                 x += 1
         if api_value == 2:
             via = random.choice(via)
-        next_via = search_place(via['lat'],via['lng'],via['lat'],via['lng'],"driving",15,means,15)
+        next_via = search_place(via['lat'],via['lng'],via['lat'],via['lng'],means,15,"",15)
 
-        print(origin_cie)
+        #print(origin_cie)
         url = "https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via['lat'])+","+str(via['lng'])
         rate = get_rate(via['place_id'])
         return render_template("via_test.html" ,via=via ,url=url ,means=means ,detail=place ,key=api_key ,favorite=favorite ,destination=destination ,session_id=session_id ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate ,next_via=next_via)
@@ -390,8 +390,8 @@ def suggest_via(origin,destination,place,means,limit):
     #関数を使って所要時間と道のりを取得
     route1 = route(origin,via_temp,means)
     route2 = route(via_temp,destination,means)
-    print(route1)
-    print(route2)
+    #print(route1)
+    #print(route2)
     i = 0
     #経由地検索してlistに格納した数だけ回す
     for cycle in place:
@@ -574,7 +574,7 @@ def get_address(place):
 
     #リクエスト結果
     answer = requests.get(Url, params).json()
-    print(answer)
+    #print(answer)
 
     #取得したデータから緯度経度を抽出し、　緯度,経度　の形にして変数に保存する
     #address = str(answer['results'][0]['geometry']['location']['lat']) + "," + str(answer['results'][0]['geometry']['location']['lng'])
@@ -1069,7 +1069,7 @@ def add_favorite():
         favorites[8] = favorites[8][1:]
         favorites[8] = favorites[8][:-1]
         favorites[8] = [ast.literal_eval(favorites[8])]
-        print(favorites[8][0])
+        #print(favorites[8][0])
         """
         #受け取った値は文字列になってしまっているので気合で配列に戻す
         if length >= 2:
@@ -1126,7 +1126,6 @@ def add_favorite():
             #ログイン中のユーザーのお気に入り指定した経由地をすべて取り出し、経由地と比較。もし同じものがあれば1に変化させる
             #x = 0
             #for cycle in dict_detail:
-            print(favorites[2])
             print(favorite_temp)
             for favorite_cycle in favorite_temp:
                 if favorites[2]['name'] == favorite_cycle['name']:
@@ -1137,7 +1136,6 @@ def add_favorite():
         destination_cie = [favorites[11],favorites[12]]
         rate = get_rate(favorites[2]['place_id'])
         return render_template("via_test.html" ,via=favorites[2] ,url=favorites[3] ,means=favorites[4] ,key=api_key ,favorite=favorite ,session_id=session_id ,next_via=favorites[8][0] ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate)
-
 
 
 
@@ -1180,8 +1178,14 @@ def get_rate(place_id):
     req.add_header("accept-language", "ja,en-US;q=0.9,en;q=0.8")
     response = urllib.request.urlopen(req).read()
     parsed_response = json.loads(response)
-    print(parsed_response['result']["reviews"][0]['rating'])
-    print(parsed_response['result']["reviews"][0]['text'])
+    #print(parsed_response)
+    if ('error_message' in parsed_response):
+        return "no_review"
+    elif ('reviews' in parsed_response['result']):
+        print(parsed_response['result']["reviews"][0]['rating'])
+        #print(parsed_response['result']["reviews"][0]['text'])
+    else:
+        return "no_review"
 
     return parsed_response['result']['reviews']
 
@@ -1192,12 +1196,12 @@ def next_via():
     value = []
     url = [0,0,0]
     basic_value = request.form.get('next_via')
-    print(basic_value)
+    #print(basic_value)
     value = re.split("_=_",basic_value)
     value[1] = re.split("[(,)]",value[1])
     value[2] = re.split("[(,)]",value[2])
     value[0] = (ast.literal_eval(value[0]))
-    print(value)
+    #print(value)
 
     means = value[3]
     session_id = 0
@@ -1213,12 +1217,14 @@ def next_via():
                 favorite[0] = 1
                 break
     origin_cie = [value[1][1],value[1][2]]
-    print(value[2][1])
+    #print(value[2][1])
     destination_cie = [value[2][1],value[2][2]]
-    print(origin_cie)
+    #print(origin_cie)
 
-    req = "https://maps.googleapis.com/maps/api/directions/json?origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&waypoints=via:"+str(value[0]['lat'])+","+str(value[0]['lng'])+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
-    print(req)
+    urlName = "https://maps.googleapis.com/maps/api/directions/json?origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&waypoints=via:"+str(value[0]['lat'])+","+str(value[0]['lng'])+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
+    #print(req)
+    req = urllib.request.Request(urlName)
+    req.add_header("accept-language", "ja,en-US;q=0.9,en;q=0.8")
     response = urllib.request.urlopen(req).read()
     directions = json.loads(response)
     url = "https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ value[3] +"&waypoints="+str(value[0]['lat'])+","+str(value[0]['lng'])
@@ -1231,6 +1237,25 @@ def next_via():
 
     via = value[0]
 
+
+    session_id = 0
+    favorite = [0,0,0]
+    print(value[0]['name'])
+    if len(session) == 0:
+        session_id = 1
+    else:
+        #経由地がお気に入り指定されているかを確認する
+        #お気に入りにしていたら1,していなかったら0を配列に入れる
+        favorite_temp = db.execute("SELECT name FROM favorite WHERE userid = ?", session['user_id'])
+        #ログイン中のユーザーのお気に入り指定した経由地をすべて取り出し、経由地と比較。もし同じものがあれば1に変化させる
+        #x = 0
+        #for cycle in dict_detail:
+        print(favorite_temp)
+        for favorite_cycle in favorite_temp:
+            if value[0]['name'] == favorite_cycle['name']:
+                favorite[0] = 1
+                break
+
     rate = get_rate(via['place_id'])
-    next_via = search_place(via['lat'],via['lng'],via['lat'],via['lng'],"driving",15,means,15)
+    next_via = search_place(via['lat'],via['lng'],via['lat'],via['lng'],means,15,"",15)
     return render_template("via_test.html" ,via=value[0] ,favorite=favorite ,url=url ,means=means ,key=api_key ,session_id=session_id ,origin_cie=origin_cie ,destination_cie=destination_cie ,rate=rate ,next_via=next_via)

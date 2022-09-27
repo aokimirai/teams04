@@ -94,7 +94,8 @@
         {% for place in place %}
         <div class="suggest_box">
             <div class="detail1">
-                <span class="rating">星{{ place['rating'] }}</span><br>
+                <span class="star5_rating" data-rate="{{ place['rating'] }}"></span>
+                <span>{{ place['rating'] }}</span><br>
                 <span class="name">{{ place['name'] }}</span><br>
             </div>
             {% if place['photo_reference']=="" %}

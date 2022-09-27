@@ -41,3 +41,20 @@ iframe{
     width: 45vw;
     height: 43vh;
 }
+
+.daimei{
+    display:flex;
+    margin:0 20vw 0 25vw;
+}
+
+.flex-item:nth-child(1){
+    align-self: flex-start;
+}
+
+.flex-item:nth-child(2){
+    align-self: flex-end;
+}
+
+.via_top{
+    margin:1vh 0 2vh;
+}
