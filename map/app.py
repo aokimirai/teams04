@@ -107,6 +107,9 @@ def gps():
             lat = 35.0036559
             long = 135.7785534
 
+            print(lat)
+            print(long)
+
 
             keyword = ""
             geo = 1
@@ -283,6 +286,7 @@ def via_suggest():
 
         intime = route(str(origin_cie[0])+","+str(origin_cie[1]),str(destination_cie[0])+","+str(destination_cie[1]),means)
         #intime = route(origin,destination,means)
+        print(intime['rows'][0]['elements'][0])
         if int(intime['rows'][0]['elements'][0]['duration']['value']) >= int(limit)*60:
             return apology("入力した時間では目的地に到着できません",400)
 
@@ -611,15 +615,13 @@ def get_address(place):
 def search_place(original_latitude,original_longitude,destination_latitude,destination_longitude,means,limit,keyword,limit2):
     client = googlemaps.Client(api_key) #インスタンス生成
     #loc = {'lat': 35.6288505, 'lng': 139.65863579999996} # 軽度・緯度を取り出す
-
-
-
+    
     #円周率
     pi = 3.14
     #地球の半径
     earth_radius = 6378
     #出発地点での経度の円周
-    lat_radius = math.cos(original_latitude / 180 * pi) * 2 * pi * earth_radius
+    lat_radius = math.cos(float(original_latitude) / 180 * pi) * 2 * pi * earth_radius
     #経度1度あたりの距離(km)
     km = lat_radius / 360
     #赤道での1度あたりの距離
@@ -632,10 +634,13 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     #それぞれの手段によって半径を変える
     if means == 'driving':
         radius = 360 * int(limit2)
-        via_center =  40 / 60 * int(limit2) * km_ratio
+        via_center =  80 / 60 * int(limit2) * km_ratio
     if means == 'bicycling':
         radius = 250 * int(limit2)
-        via_center = 20 / 60 * int(limit2) * km_ratio
+        via_center = 50 / 60 * int(limit2) * km_ratio
+    if means == 'bicycle':
+        radius = 250 * int(limit2)
+        via_center = 50 / 60 * int(limit2) * km_ratio
     if means == 'walking':
         radius = 100 * int(limit2)
         via_center = 5 / 60 * int(limit2) * km_ratio
@@ -717,6 +722,8 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
 def route(origin,destination,means):
     api = 'https://maps.googleapis.com/maps/api/distancematrix/json'
     #リクエストするためのパラメーターを設定
+    if means == "bicycling":
+        means = "bicycle"
     params = {
         'key': api_key,
         'mode': means,
@@ -1147,6 +1154,9 @@ def add_favorite():
 def suggest_via_directions(origin,destination,place,means,limit):
     via_candidate = []
 
+    if means == "bicycling":
+        means = "bicycle"
+
     #処理はroundで移動距離、移動時間を取得して足し算、足した値が入力した値より小さければlistに格納する
     for cycle in place:
         urlName = "https://maps.googleapis.com/maps/api/directions/json?origin="+origin+"&destination="+destination+"&waypoints=via:"+str(cycle['lat'])+","+str(cycle['lng'])+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
@@ -1220,7 +1230,8 @@ def next_via():
     #print(value[2][1])
     destination_cie = [value[2][1],value[2][2]]
     #print(origin_cie)
-
+    if means == "bicycling":
+        means = "bicycle"
     urlName = "https://maps.googleapis.com/maps/api/directions/json?origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&waypoints=via:"+str(value[0]['lat'])+","+str(value[0]['lng'])+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
     #print(req)
     req = urllib.request.Request(urlName)
