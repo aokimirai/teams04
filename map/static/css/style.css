@@ -32,22 +32,6 @@ select,input{
     vertical-align: middle;
 }
 
-/*
-.table th{
-    color: #89cfc1;
-}
-
-.via_tr{
-    text-align:left;
-    border: 1px solid 	#dc3545;
-    border-radius:7px;
-    margin: 2vw 0;
-}*/
-
-
-
-
-
 .star5_rating{
     position: relative;
     z-index: 0;
@@ -71,6 +55,7 @@ select,input{
     color: #ffcf32; /* イエローカラー 自由に設定化 */
 }
 
+/*ゴリ押し実装。*/
 .star5_rating[data-rate="5"]:after{ width: 100%; }
 .star5_rating[data-rate="4.9"]:after{ width: 98%; }
 .star5_rating[data-rate="4.8"]:after{ width: 96%; }

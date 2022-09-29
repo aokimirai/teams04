@@ -305,6 +305,9 @@ def via_suggest():
                     h += 1
             i += 1
 
+        if i == 10:
+            return apology("時間内にいける経由地スポットが見つかりませんでした。所要時間を変更するか、目的地を変更してください。",501)
+
         #GoogleMapのurlを生成してlistに追加
         url = ("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via['lat'])+","+str(via['lng']))
         #ログインされているかを確認する。ログインされていなかったら1を返す
@@ -748,13 +751,6 @@ def profile():
 #################################################################################################
 @app.route("/history")
 def history():
-    #history = db.execute("SELECT  FROM histories WHERE user_id = ?", session["user_id"])
-    if request.method == "POST":
-        means = request.form.get('means')
-    #デバッグ用
-    else:
-        means = "driving"
-
     history = db.execute("SELECT * FROM history WHERE userid=?",session['user_id'])
     return render_template("history.html", history = history)
 
