@@ -11,7 +11,7 @@
         <span>{{ via['rating'] }}</span>
         <h3 class="red_word">{{ via.name }}</h3>
         {% if session_id == 0 %}
-        {% if favorite[0] == 0 %}
+        {% if favorite == 0 %}
         <form method="POST" action="/add_favorite">
             <button type="submit" class="btn addtofavorite btn-outline-danger" id="target" name="place"
                 value="add _=_ {{ via.name }} _=_ {{ via }} _=_ {{ url }} _=_ {{ means }} _=_ {{ detail }} _=_ {{ favorite }} _=_ {{ 0 }} _=_ {{ next_via }} _=_ {{ origin_cie[0] }} _=_ {{ origin_cie[1] }} _=_ {{ destination_cie[0] }} _=_ {{ destination_cie[1] }}">お気に入りに登録する</button>
@@ -50,7 +50,7 @@
         {% for rate in rate %}
         <div class="rate_box">
             <div class="user">
-            <img src="{{ rate["profile_photo_url"] }}"  style="width:4vw; margin:2vw 2.5vw 0.5vw 1.5vw;">
+            <img src="{{ rate['profile_photo_url'] }}"  style="width:4vw; margin:2vw 2.5vw 0.5vw 1.5vw;">
             <p style="text-align:center; margin-right:1.5vw;">{{ rate['author_name'] }}</p>
         </div>
         <div class="rate">
@@ -105,7 +105,7 @@
         allowfullscreen
         style="filter:hue-rotate(200deg);-webkit-filter:hue-rotate(200deg)"
         src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAXJI-ZznTxw_cMvR8iiYQXV7O_o4H6lHs
-          &origin={{ origin_cie[0] }},{{ origin_cie[1] }}&destination={{ destination_cie[0] }},{{ destination_cie[1] }}&waypoints={{ via['lat'] }},{{ via['lng'] }}">
+          &origin={{ origin_cie[0] }},{{ origin_cie[1] }}&destination={{ destination_cie[0] }},{{ destination_cie[1] }}&mode={{ means }}&waypoints={{ via['lat'] }},{{ via['lng'] }}">
       </iframe>
     </div>
 </div>
