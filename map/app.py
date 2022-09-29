@@ -267,13 +267,17 @@ def via_suggest():
         if destination_cie == False:
             return apology("住所が見つかりませんでした。",501)
 
+        print(origin_cie)
+        print(destination_cie)
+
         intime = route(str(origin_cie[0])+","+str(origin_cie[1]),str(destination_cie[0])+","+str(destination_cie[1]),means)
-        #intime = route(origin,destination,means)
-        print(intime['rows'][0]['elements'][0])
-        if int(intime['rows'][0]['elements'][0]['duration']['value']) >= int(limit)*60:
+        print(intime)
+        if intime['status'] == "ZERO_RESULTS":
+            return apology("経路が見つかりませんでした",501)
+        if int(intime['routes'][0]['legs'][0]['duration']['value']) >= int(limit)*60:
             return apology("入力した時間では目的地に到着できません",400)
 
-        limit2 = (int(limit)*60 - int(intime['rows'][0]['elements'][0]['duration']['value']))/60
+        limit2 = (int(limit)*60 - int(intime['routes'][0]['legs'][0]['duration']['value']))/60
 
         #関数をつかって経由地を検索
         suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit,keyword,limit2=limit2)
@@ -678,7 +682,9 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
 #パラメーターを設定
 #結果をjson形式で受け取り、プログラムが読めるかたちに変換する
 #################################################################################################
+"""
 def route(origin,destination,means):
+    means =
     api = 'https://maps.googleapis.com/maps/api/distancematrix/json'
     #リクエストするためのパラメーターを設定
     params = {
@@ -697,6 +703,15 @@ def route(origin,destination,means):
 
     #取得したデータを返す
     return parsed_response
+    """
+
+def route(origin,destination,means):
+        urlName = "https://maps.googleapis.com/maps/api/directions/json?origin="+origin+"&destination="+destination+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
+        req = urllib.request.Request(urlName)
+        req.add_header("accept-language", "ja,en-US;q=0.9,en;q=0.8")
+        response = urllib.request.urlopen(req).read()
+        directions = json.loads(response)
+        return directions
 
 
 @app.route("/mypage")
