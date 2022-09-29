@@ -74,7 +74,10 @@ Google Map APIを使用して経由地を検索しているため、DBにない�
 <br><br><br>
 
 ## 目指した問題解決
-
+* 散歩やドライブに対するハードルを下げる
+* アイディアを必要とする人たちへの環境提供
+* SNS疲れ解消
+* 
 <br><br><br>
 
 
@@ -84,13 +87,9 @@ Google Map APIを使用して経由地を検索しているため、DBにない�
 ・ポイント機能
 <br><br><br>
 
-## データベース設計
-
-<br><br><br>
-
 ## 動作方法
 動作環境　CS50のコードスペース<br>
-使用技術　フレームワーク:Flask　言語:Python HTML CSS JavaScript<br>
+使用技術　フレームワーク:Flask Bootstrap　言語:Python HTML CSS JavaScript<br>
 <br>
 git cloneをした後、mapフォルダ直下に APIkey.txt というテキストファイルを作成し、テキストファイル内にGoogleMapAPIのキーの文字列を記述<br>
 ターミナルを開き、　pip install googlemapsとpip install schedule　というコマンドを実行する
