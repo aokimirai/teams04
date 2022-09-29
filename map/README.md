@@ -88,7 +88,10 @@ Google Map APIを使用して経由地を検索しているため、DBにない�
 
 ## 動作方法
 動作環境　CS50のコードスペース<br>
-使用技術　フレームワーク:Flask Bootstrap　言語:Python HTML CSS JavaScript データベース:SQLite<br>
+使用技術<br>
+データベース:SQLite<br>
+言語:Python HTML CSS JavaScript<br>
+フレームワーク:Flask Bootstrap<br>　
 <br>
 git cloneをした後、mapフォルダ直下に APIkey.txt というテキストファイルを作成し、テキストファイル内にGoogleMapAPIのキーの文字列を記述<br>
 ターミナルを開き、　pip install googlemapsとpip install schedule　というコマンドを実行する
