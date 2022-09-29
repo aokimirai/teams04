@@ -98,10 +98,6 @@ def gps():
             lat = 35.0036559
             long = 135.7785534
 
-            #print(lat)
-            #print(long)
-
-
             keyword = ""
             geo = 1
             place = search_place(lat,long,lat,long,"driving",60,keyword,60)
@@ -281,9 +277,6 @@ def via_suggest():
         #関数をつかって経由地を検索
         suggest_place = search_place(origin_cie[0],origin_cie[1],destination_cie[0],destination_cie[1],means,limit,keyword,limit2=limit2)
 
-
-
-
         r = 1
         i = 0
         while (r == 1):
@@ -311,12 +304,6 @@ def via_suggest():
                         break
                     h += 1
             i += 1
-            print(r)
-
-
-
-
-
 
         #GoogleMapのurlを生成してlistに追加
         url = ("https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via['lat'])+","+str(via['lng']))
@@ -335,12 +322,12 @@ def via_suggest():
             favorite_temp = db.execute("SELECT name FROM favorite WHERE userid = ?", session['user_id'])
             #ログイン中のユーザーのお気に入り指定した経由地をすべて取り出し、経由地と比較。もし同じものがあれば1に変化させる
             x = 0
-            for cycle in via:
-                for favorite_cycle in favorite_temp:
-                    if via['name'] == favorite_cycle['name']:
-                        favorite = 1
-                        break
-                x += 1
+
+            for favorite_cycle in favorite_temp:
+                if via['name'] == favorite_cycle['name']:
+                    favorite = 1
+                    break
+            x += 1
 
         url = "https://www.google.com/maps/dir/?api=1&origin="+str(origin_cie[0])+","+str(origin_cie[1])+"&destination="+str(destination_cie[0])+","+str(destination_cie[1])+"&travelmode="+ means +"&waypoints="+str(via['lat'])+","+str(via['lng'])
         rate = get_rate(via['place_id'])
@@ -709,29 +696,6 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
 #パラメーターを設定
 #結果をjson形式で受け取り、プログラムが読めるかたちに変換する
 #################################################################################################
-"""
-def route(origin,destination,means):
-    means =
-    api = 'https://maps.googleapis.com/maps/api/distancematrix/json'
-    #リクエストするためのパラメーターを設定
-    params = {
-        'key': api_key,
-        'mode': means,
-        'departure_time': 'now',
-        'origins': origin,
-        'destinations': destination,
-        'language': "ja"
-    }
-
-    #APIにリクエストして結果を受け取る
-    raw_response = requests.get(api, params)
-    #JSONファイルをデコードしてプログラムが読める形に変形する
-    parsed_response = json.loads(raw_response.text)
-
-    #取得したデータを返す
-    return parsed_response
-    """
-
 def route(origin,destination,means):
         urlName = "https://maps.googleapis.com/maps/api/directions/json?origin="+origin+"&destination="+destination+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
         req = urllib.request.Request(urlName)
@@ -1053,32 +1017,6 @@ def add_favorite():
 #urlに条件(出発地点、目的地、経由地の緯度経度　出発時間　移動手段　apiキー)を入力し、リクエストする
 #もし制限時間内に移動できそうならばlistに加えるようにする
 #################################################################################################
-"""
-def suggest_via_directions(origin,destination,place,means,limit):
-    via_candidate = []
-
-    #処理はroundで移動距離、移動時間を取得して足し算、足した値が入力した値より小さければlistに格納する
-    for cycle in place:
-        urlName = "https://maps.googleapis.com/maps/api/directions/json?origin="+origin+"&destination="+destination+"&waypoints=via:"+str(cycle['lat'])+","+str(cycle['lng'])+"&departure_time=now&mode="+means+"&key="+api_key+"&language=jp&region=jp"
-        req = urllib.request.Request(urlName)
-        req.add_header("accept-language", "ja,en-US;q=0.9,en;q=0.8")
-        response = urllib.request.urlopen(req).read()
-        directions = json.loads(response)
-        #もし制限時間以内に経由できるのならばlistに加える
-        if int(limit) * 60 >= int(directions['routes'][0]['legs'][0]['duration']['value']):
-            if means == 'driving':
-                temp = {'add_distance' : directions['routes'][0]['legs'][0]['distance'], 'add_duration' : directions['routes'][0]['legs'][0]['duration']}
-            else:
-                temp = {'add_distance' : directions['routes'][0]['legs'][0]['distance'], 'add_duration' : directions['routes'][0]['legs'][0]['duration']}
-
-            cycle.update(temp)
-            #cycleにはid,name,latitude,longitude,add_distance,add_durationが入っている
-            via_candidate.append(cycle)
-    #候補を返す
-    return via_candidate
-"""
-
-
 def suggest_via_directions(origin,destination,place,means,limit):
 
     #処理はroundで移動距離、移動時間を取得して足し算、足した値が入力した値より小さければlistに格納する
