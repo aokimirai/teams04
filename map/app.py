@@ -634,8 +634,10 @@ def search_place(original_latitude,original_longitude,destination_latitude,desti
     suggest_place = []
     #実行結果を保存
     for place_result in place_results['results']:
-        results.append(place_result)
-    print(results)
+        if 'political' in place_result['types']:
+            print(place_result)
+        else:
+            results.append(place_result)
 
     #それぞれの経由地の緯度経度、名前、評価、住所を辞書式で保存
     for temp in results:
